@@ -1,4 +1,4 @@
-package com.appleframework.config.diamond.spring;
+package com.appleframework.config;
 
 import java.io.IOException;
 import java.io.StringReader;
