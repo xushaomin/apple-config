@@ -69,11 +69,7 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 					// 客户端处理数据的逻辑
 					logger.warn("已改动的配置：\n"+configInfo);
 					StringReader reader = new StringReader(configInfo);
-					try {
-						PropertyConfigurer.props.load(reader);
-					} catch (IOException e) {
-						logger.error(e);
-					}
+					PropertyConfigurer.load(reader);
 				}
 			});
 			
