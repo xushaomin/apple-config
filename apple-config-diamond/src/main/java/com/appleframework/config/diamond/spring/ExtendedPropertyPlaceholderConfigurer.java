@@ -45,29 +45,29 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 		String group = props.getProperty("deploy.group");
 		String dataId = props.getProperty("deploy.dataId");
 		
-		logger.warn("ÅäÖÃÏî£ºgroup=" + group);
-		logger.warn("ÅäÖÃÏî£ºdataId=" + dataId);
+		logger.warn("é…ç½®é¡¹ï¼šgroup=" + group);
+		logger.warn("é…ç½®é¡¹ï¼šdataId=" + dataId);
 		
 		
 		if(!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
 			if(!StringUtils.isEmpty(EnvConfigurer.env)){
 				dataId += "-" + EnvConfigurer.env;
-				logger.warn("ÅäÖÃÏî£ºenv=" + EnvConfigurer.env);
+				logger.warn("é…ç½®é¡¹ï¼šenv=" + EnvConfigurer.env);
 			}
 			else {
 				String env = props.getProperty("deploy.env");
 				if(!StringUtils.isEmpty(env)){
 					dataId += "-" + env;
 				}
-				logger.warn("ÅäÖÃÏî£ºenv=" + env);
+				logger.warn("é…ç½®é¡¹ï¼šenv=" + env);
 			}
 			DiamondManager manager = new DefaultDiamondManager(group, dataId, new ManagerListener() {
 				public Executor getExecutor() {
 					return null;
 				}
 				public void receiveConfigInfo(String configInfo) {
-					// ¿Í»§¶Ë´¦ÀíÊı¾İµÄÂß¼­
-					logger.warn("ÒÑ¸Ä¶¯µÄÅäÖÃ£º\n"+configInfo);
+					// å®¢æˆ·ç«¯å¤„ç†æ•°æ®çš„é€»è¾‘
+					logger.warn("å·²æ”¹åŠ¨çš„é…ç½®ï¼š\n"+configInfo);
 					StringReader reader = new StringReader(configInfo);
 					try {
 						PropertyConfigurer.props.load(reader);
@@ -79,14 +79,14 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 			
 			try {
 				String configInfo = manager.getAvailableConfigureInfomation(30000);
-				logger.warn("ÅäÖÃÏîÄÚÈİ: \n" + configInfo);
+				logger.warn("é…ç½®é¡¹å†…å®¹: \n" + configInfo);
 				if(!StringUtils.isEmpty(configInfo)) {
 					StringReader reader = new StringReader(configInfo);
 					props.load(reader);
 					PropertyConfigurer.load(props);
 				}
 				else {
-					logger.error("ÔÚÅäÖÃ¹ÜÀíÖĞĞÄÕÒ²»µ½ÅäÖÃĞÅÏ¢");
+					logger.error("åœ¨é…ç½®ç®¡ç†ä¸­å¿ƒæ‰¾ä¸åˆ°é…ç½®ä¿¡æ¯");
 				}				
 			} catch (IOException e) {
 				logger.error(e);
