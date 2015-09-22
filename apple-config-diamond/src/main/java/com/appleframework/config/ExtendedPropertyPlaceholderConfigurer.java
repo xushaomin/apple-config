@@ -24,7 +24,7 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 	private Properties props;
 	
 	private boolean loadRemote = true;
-
+	
 	public boolean isLoadRemote() {
 		return loadRemote;
 	}
@@ -35,7 +35,7 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 
 	@Override
 	protected void processProperties(ConfigurableListableBeanFactory beanFactory, Properties props) throws BeansException {
-		if(!loadRemote) {
+		if(!isLoadRemote()) {
 			super.processProperties(beanFactory, props);
 			this.props = props;
 			PropertyConfigurer.load(props);
@@ -47,7 +47,6 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 		
 		logger.warn("配置项：group=" + group);
 		logger.warn("配置项：dataId=" + dataId);
-		
 		
 		if(!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
 			if(!StringUtils.isEmpty(EnvConfigurer.env)){
@@ -69,7 +68,11 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 					// 客户端处理数据的逻辑
 					logger.warn("已改动的配置：\n"+configInfo);
 					StringReader reader = new StringReader(configInfo);
-					PropertyConfigurer.load(reader);
+					try {
+						PropertyConfigurer.props.load(reader);
+					} catch (IOException e) {
+						logger.error(e);
+					}
 				}
 			});
 			
