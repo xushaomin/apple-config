@@ -6,11 +6,11 @@
 	<parent>
 		<artifactId>apple-config</artifactId>
 		<groupId>com.appleframework.config</groupId>
-		<version>0.1.2.RELEASE</version>
+		<version>0.1.1.RELEASE</version>
 	</parent>
 	<artifactId>apple-config-disconf</artifactId>
 	<name>apple-config-disconf</name>
-	<url>http://maven.appleframework.com</url>
+	<url>http://maven.apache.org</url>
 
 	<dependencies>
 
@@ -33,13 +33,8 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-		
-		<dependency>
-			<groupId>com.baidu.disconf</groupId>
-			<artifactId>disconf-client</artifactId>
-		</dependency>
-			
 	</dependencies>
 </project>
