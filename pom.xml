@@ -68,7 +68,7 @@
 	<modules>
 		<module>apple-config-core</module>
 		<module>apple-config-diamond</module>
-    	<!-- <module>apple-config-disconf</module> -->
+    	<module>apple-config-disconf</module>
   	</modules>
 	
 	<build>
