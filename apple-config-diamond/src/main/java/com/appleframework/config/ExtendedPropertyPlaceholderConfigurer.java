@@ -2,6 +2,8 @@ package com.appleframework.config;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
@@ -23,6 +25,8 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 	
 	private Properties props;
 	
+	private String eventListenerClass;
+	
 	private boolean loadRemote = true;
 	
 	public boolean isLoadRemote() {
@@ -31,6 +35,10 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 
 	public void setLoadRemote(boolean loadRemote) {
 		this.loadRemote = loadRemote;
+	}
+
+	public void setEventListenerClass(String eventListenerClass) {
+		this.eventListenerClass = eventListenerClass;
 	}
 
 	@Override
@@ -60,7 +68,11 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 				}
 				logger.warn("配置项：env=" + env);
 			}
-			DiamondManager manager = new DefaultDiamondManager(group, dataId, new ManagerListener() {
+			
+			List<ManagerListener> managerListeners = new ArrayList<>();
+			
+			ManagerListener springMamagerListener = new ManagerListener() {
+		        
 				public Executor getExecutor() {
 					return null;
 				}
@@ -74,7 +86,22 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 						logger.error(e);
 					}
 				}
-			});
+			};
+			managerListeners.add(springMamagerListener);
+			
+			//定义事件源 
+			try {
+				if(!StringUtils.isNullOrEmpty(eventListenerClass)) {
+					//定义并向事件源中注册事件监听器  
+					Class<?> clazz = Class.forName(eventListenerClass);
+					ManagerListener managerListener = (ManagerListener)clazz.newInstance();
+					managerListeners.add(managerListener);
+				}
+			} catch (Exception e) {
+				logger.error(e);
+			}
+	        
+			DiamondManager manager = new DefaultDiamondManager(group, dataId, managerListeners);
 			
 			try {
 				String configInfo = manager.getAvailableConfigureInfomation(30000);
