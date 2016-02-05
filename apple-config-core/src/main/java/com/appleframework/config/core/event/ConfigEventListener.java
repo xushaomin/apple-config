@@ -4,7 +4,7 @@ import java.util.EventListener;
 
 /** 
  * ConfigEvent事件监听器接口 
- * @author administrator 
+ * @author cruise.xu 
  * 
  */  
 public interface ConfigEventListener extends EventListener {
