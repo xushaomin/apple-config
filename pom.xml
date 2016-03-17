@@ -4,17 +4,17 @@
 
 	<groupId>com.appleframework.config</groupId>
 	<artifactId>apple-config</artifactId>
-	<version>0.1.6.RELEASE</version>
+	<version>0.1.7.RELEASE</version>
 	<packaging>pom</packaging>
 
 	<name>apple-config</name>
 	<url>http://mvnrepo.appleframework.com</url>
 
 	<properties>
-		<project.version>0.1.6.RELEASE</project.version>
+		<project.version>0.1.7.RELEASE</project.version>
 		<java.version>1.7</java.version>
 		<log4j.version>1.2.16</log4j.version>
-		<diamond.version>2.1.1.RELEASE</diamond.version>
+		<diamond.version>2.1.2.RELEASE</diamond.version>
 		<spring.version>4.2.0.RELEASE</spring.version>
 		<disconf.version>2.6.24</disconf.version>
 	</properties>
