@@ -68,7 +68,7 @@ public class PropertyConfigurer {
 			return (String)object;
 		}
 		else {
-			logger.warn("配置项为" + key + "的配置未在Diamond中添加或设置的内容为空");
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return null;
 		}
 	}
@@ -79,7 +79,7 @@ public class PropertyConfigurer {
 			return (String)object;
 		}
 		else {
-			logger.warn("配置项为" + key + "的配置未在Diamond中添加或设置的内容为空");
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return defaultValue;
 		}
 	}
@@ -90,7 +90,7 @@ public class PropertyConfigurer {
 			return (String)object;
 		}
 		else {
-			logger.warn("配置项为" + key + "的配置未在Diamond中添加或设置的内容为空");
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return null;
 		}
 	}
@@ -101,7 +101,7 @@ public class PropertyConfigurer {
 			return (String)object;
 		}
 		else {
-			logger.warn("配置项为" + key + "的配置未在Diamond中添加或设置的内容为空");
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return defaultString;
 		}
 	}
@@ -111,7 +111,7 @@ public class PropertyConfigurer {
 		if(null != object)
 			return Long.parseLong(object.toString());
 		else {
-			logger.warn("配置项为" + key + "的配置未在Diamond中添加或设置的内容为空");
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return null;
 		}
 	}
@@ -121,7 +121,7 @@ public class PropertyConfigurer {
 		if(null != object)
 			return Long.parseLong(object.toString());
 		else {
-			logger.warn("配置项为" + key + "的配置未在Diamond中添加或设置的内容为空");
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return defaultLong;
 		}
 	}
@@ -132,7 +132,7 @@ public class PropertyConfigurer {
 			return Integer.parseInt(object.toString());
 		}
 		else {
-			logger.warn("配置项为" + key + "的配置未在Diamond中添加或设置的内容为空");
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return null;
 		}
 	}
@@ -143,7 +143,7 @@ public class PropertyConfigurer {
 			return Integer.parseInt(object.toString());
 		}
 		else {
-			logger.warn("配置项为" + key + "的配置未在Diamond中添加或设置的内容为空");
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return defaultInt;
 		}
 	}
@@ -166,5 +166,26 @@ public class PropertyConfigurer {
 		else {
 			return null;
 		}
-	}	
+	}
+	
+	public static Boolean getBoolean(String key) {
+		Object object = getProperty(key);
+		if(null != object)
+			return Boolean.valueOf(object.toString());
+		else {
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
+			return null;
+		}
+	}
+	
+	public static Boolean getBoolean(String key, boolean defaultBoolean) {
+		Object object = getProperty(key);
+		if(null != object)
+			return Boolean.valueOf(object.toString());
+		else {
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
+			return defaultBoolean;
+		}
+	}
+	
 }
