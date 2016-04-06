@@ -188,4 +188,64 @@ public class PropertyConfigurer {
 		}
 	}
 	
+	public static Double getDouble(String key) {
+		Object object = getProperty(key);
+		if(null != object)
+			return Double.valueOf(object.toString());
+		else {
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
+			return null;
+		}
+	}
+	
+	public static Double getDouble(String key, double defaultDouble) {
+		Object object = getProperty(key);
+		if(null != object)
+			return Double.valueOf(object.toString());
+		else {
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
+			return defaultDouble;
+		}
+	}
+	
+	public static Short getShort(String key) {
+		Object object = getProperty(key);
+		if(null != object)
+			return Short.valueOf(object.toString());
+		else {
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
+			return null;
+		}
+	}
+	
+	public static Short getShort(String key, short defaultShort) {
+		Object object = getProperty(key);
+		if(null != object)
+			return Short.valueOf(object.toString());
+		else {
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
+			return defaultShort;
+		}
+	}
+	
+	public static Float getFloat(String key) {
+		Object object = getProperty(key);
+		if(null != object)
+			return Float.valueOf(object.toString());
+		else {
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
+			return null;
+		}
+	}
+	
+	public static Float getFloat(String key, float defaultFloat) {
+		Object object = getProperty(key);
+		if(null != object)
+			return Float.valueOf(object.toString());
+		else {
+			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
+			return defaultFloat;
+		}
+	}
+	
 }
