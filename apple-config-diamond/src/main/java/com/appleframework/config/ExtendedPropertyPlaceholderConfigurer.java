@@ -43,6 +43,7 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 
 	@Override
 	protected void processProperties(ConfigurableListableBeanFactory beanFactory, Properties props) throws BeansException {
+		Version.logVersion();
 		if(!isLoadRemote()) {
 			super.processProperties(beanFactory, props);
 			this.props = props;
