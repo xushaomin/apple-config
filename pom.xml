@@ -123,6 +123,19 @@
 					</systemProperties>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>  
+                     		<Bundle-Name>${project.artifactId}</Bundle-Name>
+                     		<Bundle-Version>${project.version}</Bundle-Version>
+                     	</manifestEntries>  
+					</archive>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
