@@ -6,14 +6,12 @@
 	<parent>
 		<artifactId>apple-config</artifactId>
 		<groupId>com.appleframework.config</groupId>
-		<version>0.1.7.RELEASE</version>
+		<version>0.1.8.RELEASE</version>
 	</parent>
 	<artifactId>apple-config-diamond</artifactId>
 	<name>apple-config-diamond</name>
 	<url>http://mvnrepo.appleframework.com</url>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+
 	<dependencies>
 	    
 	    <dependency>
