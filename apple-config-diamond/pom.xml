@@ -23,7 +23,13 @@
 	    <dependency>
 			<groupId>com.taobao.diamond</groupId>
 			<artifactId>diamond-client</artifactId>
-		</dependency>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+	    </dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
