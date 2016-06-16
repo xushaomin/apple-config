@@ -133,7 +133,8 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
             Object key = entry.getKey();
             Object value = entry.getValue();
             if(key.toString().startsWith("-D")) {
-            	System.setProperty(key.toString(), value.toString());
+            	String systemKey = key.toString().trim().substring(2);
+            	System.setProperty(systemKey, value.toString());
             	logger.warn(key.toString() + "=" + value.toString());
             }
         }
@@ -143,4 +144,5 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 	public Object getProperty(String key) {
 		return props.get(key);
 	}
+
 }
