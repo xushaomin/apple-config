@@ -3,7 +3,9 @@ package com.appleframework.config;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
@@ -123,6 +125,19 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 		}
 		super.processProperties(beanFactory, props);
 		this.props = props;
+		
+		//讲-D开头的的配置设置到系统变量
+		Iterator<Entry<Object, Object>> it = props.entrySet().iterator();  
+        while (it.hasNext()) {  
+            Entry<Object, Object> entry = it.next();  
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+            if(key.toString().startsWith("-D")) {
+            	System.setProperty(key.toString(), value.toString());
+            	logger.warn(key.toString() + "=" + value.toString());
+            }
+        }
+		 
 	}
 
 	public Object getProperty(String key) {

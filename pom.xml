@@ -4,7 +4,7 @@
 
 	<groupId>com.appleframework.config</groupId>
 	<artifactId>apple-config</artifactId>
-	<version>0.1.8.RELEASE</version>
+	<version>0.1.9.RELEASE</version>
 	<packaging>pom</packaging>
 
 	<name>apple-config</name>
