@@ -16,6 +16,7 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 import com.appleframework.config.core.EnvConfigurer;
 import com.appleframework.config.core.PropertyConfigurer;
+import com.appleframework.config.core.util.ObjectUtils;
 import com.appleframework.config.core.util.StringUtils;
 import com.taobao.diamond.manager.DiamondManager;
 import com.taobao.diamond.manager.ManagerListener;
@@ -29,6 +30,8 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 	
 	private String eventListenerClass;
 	
+	private ManagerListener eventListener;
+	
 	private boolean loadRemote = true;
 	
 	public boolean isLoadRemote() {
@@ -41,6 +44,10 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 
 	public void setEventListenerClass(String eventListenerClass) {
 		this.eventListenerClass = eventListenerClass;
+	}
+
+	public void setEventListener(ManagerListener eventListener) {
+		this.eventListener = eventListener;
 	}
 
 	@Override
@@ -99,6 +106,14 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 					Class<?> clazz = Class.forName(eventListenerClass);
 					ManagerListener managerListener = (ManagerListener)clazz.newInstance();
 					managerListeners.add(managerListener);
+				}
+			} catch (Exception e) {
+				logger.error(e);
+			}
+			
+			try {
+				if(!ObjectUtils.isNotEmpty(eventListener)) {
+					managerListeners.add(eventListener);
 				}
 			} catch (Exception e) {
 				logger.error(e);
