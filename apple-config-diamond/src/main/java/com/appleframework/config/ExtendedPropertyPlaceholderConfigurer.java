@@ -157,8 +157,8 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 		
 		//讲-D开头的的配置设置到系统变量
 		Iterator<Entry<Object, Object>> it = props.entrySet().iterator();  
-        while (it.hasNext()) {  
-            Entry<Object, Object> entry = it.next();  
+        while (it.hasNext()) {
+            Entry<Object, Object> entry = it.next();
             Object key = entry.getKey();
             Object value = entry.getValue();
             if(key.toString().startsWith("-D")) {
