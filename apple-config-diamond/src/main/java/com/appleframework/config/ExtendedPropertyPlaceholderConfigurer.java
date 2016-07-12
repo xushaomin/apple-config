@@ -3,6 +3,7 @@ package com.appleframework.config;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -14,6 +15,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
+import com.appleframework.config.core.Constants;
 import com.appleframework.config.core.EnvConfigurer;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.util.ObjectUtils;
@@ -53,6 +55,18 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 	@Override
 	protected void processProperties(ConfigurableListableBeanFactory beanFactory, Properties props) throws BeansException {
 		Version.logVersion();
+		
+		//获取启动启动-D参数
+		Properties systemProps = System.getProperties();
+    	Enumeration<?> systemEnum = systemProps.keys();
+        while(systemEnum.hasMoreElements()){  
+            String systemKey = systemEnum.nextElement().toString();
+            if(!Constants.SYSTEM_PROPERTIES_KEY.contains(systemKey)) {
+            	String systemValue = systemProps.getProperty(systemKey);
+            	props.setProperty(systemKey, systemValue);
+            }
+        }
+        
 		if(!isLoadRemote()) {
 			super.processProperties(beanFactory, props);
 			this.props = props;
