@@ -16,6 +16,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 import com.appleframework.config.core.Constants;
+import com.appleframework.config.core.EnvConfigurer;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.util.ObjectUtils;
 import com.appleframework.config.core.util.StringUtils;
@@ -83,16 +84,9 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 		logger.warn("配置项：dataId=" + dataId);
 		
 		if(!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
-			String env = System.getProperty(Constants.KEY_DEPLOY_ENV);
+			String env = this.getDeployEnv(props);			
 			if(!StringUtils.isEmpty(env)){
 				dataId += "-" + env;
-				logger.warn("配置项：env=" + env);
-			}
-			else {
-				env = props.getProperty(Constants.KEY_DEPLOY_ENV);
-				if(!StringUtils.isEmpty(env)){
-					dataId += "-" + env;
-				}
 				logger.warn("配置项：env=" + env);
 			}
 			
@@ -176,6 +170,21 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 
 	public Object getProperty(String key) {
 		return props.get(key);
+	}
+	
+	private String getDeployEnv(Properties props) {
+		String env = System.getProperty(Constants.KEY_DEPLOY_ENV);
+		if(StringUtils.isEmpty(env)){
+			env = System.getProperty(Constants.KEY_ENV);
+			if(StringUtils.isEmpty(env)){
+				env = EnvConfigurer.env;
+				if(StringUtils.isEmpty(env)){
+					env = props.getProperty(Constants.KEY_DEPLOY_ENV);
+				}
+			}
+		}
+		return env;
+		
 	}
 
 }
