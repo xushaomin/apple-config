@@ -123,7 +123,7 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 			}
 			
 			try {
-				if(!ObjectUtils.isNotEmpty(eventListener)) {
+				if(ObjectUtils.isNotEmpty(eventListener)) {
 					managerListeners.add(eventListener);
 				}
 			} catch (Exception e) {
