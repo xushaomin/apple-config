@@ -16,7 +16,6 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 import com.appleframework.config.core.Constants;
-import com.appleframework.config.core.EnvConfigurer;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.util.ObjectUtils;
 import com.appleframework.config.core.util.StringUtils;
@@ -27,6 +26,9 @@ import com.taobao.diamond.manager.impl.DefaultDiamondManager;
 public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 	
 	private static Logger logger = Logger.getLogger(ExtendedPropertyPlaceholderConfigurer.class);
+	
+	private String KEY_DEPLOY_GROUP = "deploy.group";
+	private String KEY_DEPLOY_DATAID = "deploy.dataId";
 	
 	private Properties props;
 	
@@ -61,7 +63,7 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
     	Enumeration<?> systemEnum = systemProps.keys();
         while(systemEnum.hasMoreElements()){  
             String systemKey = systemEnum.nextElement().toString();
-            if(!Constants.SYSTEM_PROPERTIES_KEY.contains(systemKey)) {
+            if(!Constants.SET_SYSTEM_PROPERTIES.contains(systemKey)) {
             	String systemValue = systemProps.getProperty(systemKey);
             	props.setProperty(systemKey, systemValue);
             }
@@ -74,19 +76,20 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 			return;
 		}
 		
-		String group = props.getProperty("deploy.group");
-		String dataId = props.getProperty("deploy.dataId");
+		String group = props.getProperty(KEY_DEPLOY_GROUP);
+		String dataId = props.getProperty(KEY_DEPLOY_DATAID);
 		
 		logger.warn("配置项：group=" + group);
 		logger.warn("配置项：dataId=" + dataId);
 		
 		if(!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
-			if(!StringUtils.isEmpty(EnvConfigurer.env)){
-				dataId += "-" + EnvConfigurer.env;
-				logger.warn("配置项：env=" + EnvConfigurer.env);
+			String env = System.getProperty(Constants.KEY_DEPLOY_ENV);
+			if(!StringUtils.isEmpty(env)){
+				dataId += "-" + env;
+				logger.warn("配置项：env=" + env);
 			}
 			else {
-				String env = props.getProperty("deploy.env");
+				env = props.getProperty(Constants.KEY_DEPLOY_ENV);
 				if(!StringUtils.isEmpty(env)){
 					dataId += "-" + env;
 				}
