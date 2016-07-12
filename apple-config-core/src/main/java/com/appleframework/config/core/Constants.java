@@ -7,6 +7,8 @@ public class Constants {
 	
 	public static String KEY_DEPLOY_ENV = "deploy.env";
 	
+	public static String KEY_ENV = "env";
+	
 	public static Set<String> SET_SYSTEM_PROPERTIES = new HashSet<String>();
 	
 	static {
