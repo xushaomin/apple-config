@@ -161,7 +161,7 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
             if(key.toString().startsWith("-D")) {
             	String systemKey = key.toString().trim().substring(2);
             	String systemValue = value.toString().trim();
-            	System.setProperty(systemKey, systemValue);
+            	setSystemProperty(systemKey, systemValue);
             	logger.warn(key.toString() + "=" + systemValue);
             }
         }
@@ -173,9 +173,9 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 	}
 	
 	private String getDeployEnv(Properties props) {
-		String env = System.getProperty(Constants.KEY_DEPLOY_ENV);
+		String env = getSystemProperty(Constants.KEY_DEPLOY_ENV);
 		if(StringUtils.isEmpty(env)){
-			env = System.getProperty(Constants.KEY_ENV);
+			env = getSystemProperty(Constants.KEY_ENV);
 			if(StringUtils.isEmpty(env)){
 				env = EnvConfigurer.env;
 				if(StringUtils.isEmpty(env)){
@@ -184,7 +184,23 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 			}
 		}
 		return env;
-		
+	}
+	
+	public void setSystemProperty(String key, String value) {
+		try {
+			System.setProperty(key, value);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+	}
+	
+	private String getSystemProperty(String key) {
+		try {
+			return System.getProperty(key);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return null;
+		}
 	}
 
 }
