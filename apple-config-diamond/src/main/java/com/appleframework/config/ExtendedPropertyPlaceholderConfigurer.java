@@ -84,7 +84,7 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 		logger.warn("配置项：dataId=" + dataId);
 		
 		if(!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
-			String env = this.getDeployEnv(props);			
+			String env = this.getDeployEnv(props);
 			if(!StringUtils.isEmpty(env)){
 				dataId += "-" + env;
 				logger.warn("配置项：env=" + env);
