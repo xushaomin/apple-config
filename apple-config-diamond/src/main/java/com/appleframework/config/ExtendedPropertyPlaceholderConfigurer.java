@@ -3,9 +3,9 @@ package com.appleframework.config;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.Executor;
@@ -18,6 +18,7 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import com.appleframework.config.core.Constants;
 import com.appleframework.config.core.EnvConfigurer;
 import com.appleframework.config.core.PropertyConfigurer;
+import com.appleframework.config.core.event.ConfigListener;
 import com.appleframework.config.core.util.ObjectUtils;
 import com.appleframework.config.core.util.StringUtils;
 import com.taobao.diamond.manager.DiamondManager;
@@ -32,10 +33,12 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 	private String KEY_DEPLOY_DATAID = "deploy.dataId";
 
 	private Properties props;
+	
+    private Collection<ConfigListener> eventListeners;
 
 	private String eventListenerClass;
 
-	private ManagerListener eventListener;
+	private ConfigListener eventListener;
 
 	private boolean loadRemote = true;
 
@@ -51,7 +54,7 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 		this.eventListenerClass = eventListenerClass;
 	}
 
-	public void setEventListener(ManagerListener eventListener) {
+	public void setEventListener(ConfigListener eventListener) {
 		this.eventListener = eventListener;
 	}
 
@@ -89,9 +92,31 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 				dataId += "-" + env;
 				logger.warn("配置项：env=" + env);
 			}
+			
+			if(null == eventListeners)
+				eventListeners = new ArrayList<>();
+			
+			// 定义事件源
+			try {
+				if (!StringUtils.isNullOrEmpty(eventListenerClass)) {
+					// 定义并向事件源中注册事件监听器
+					Class<?> clazz = Class.forName(eventListenerClass);
+					ConfigListener configListener = (ConfigListener) clazz.newInstance();
+					eventListeners.add(configListener);
+				}
+			} catch (Exception e) {
+				logger.error(e);
+			}
 
-			List<ManagerListener> managerListeners = new ArrayList<>();
-
+			try {
+				if (ObjectUtils.isNotEmpty(eventListener)) {
+					eventListeners.add(eventListener);
+				}
+			} catch (Exception e) {
+				logger.error(e);
+			}
+			
+			
 			ManagerListener springMamagerListener = new ManagerListener() {
 
 				public Executor getExecutor() {
@@ -107,31 +132,19 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 					} catch (IOException e) {
 						logger.error(e);
 					}
+					
+					//事件触发
+					if(eventListeners.size() > 0) {
+						Iterator<ConfigListener> iterator = eventListeners.iterator();
+				        while (iterator.hasNext()) {
+				        	ConfigListener listener = iterator.next();
+				            listener.receiveConfigInfo(PropertyConfigurer.props);
+				        }
+					}
 				}
 			};
-			managerListeners.add(springMamagerListener);
 
-			// 定义事件源
-			try {
-				if (!StringUtils.isNullOrEmpty(eventListenerClass)) {
-					// 定义并向事件源中注册事件监听器
-					Class<?> clazz = Class.forName(eventListenerClass);
-					ManagerListener managerListener = (ManagerListener) clazz.newInstance();
-					managerListeners.add(managerListener);
-				}
-			} catch (Exception e) {
-				logger.error(e);
-			}
-
-			try {
-				if (ObjectUtils.isNotEmpty(eventListener)) {
-					managerListeners.add(eventListener);
-				}
-			} catch (Exception e) {
-				logger.error(e);
-			}
-
-			DiamondManager manager = new DefaultDiamondManager(group, dataId, managerListeners);
+			DiamondManager manager = new DefaultDiamondManager(group, dataId, springMamagerListener);
 
 			try {
 				String configInfo = manager.getAvailableConfigureInfomation(30000);
@@ -184,6 +197,10 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 			}
 		}
 		return env;
+	}
+
+	public void setEventListeners(Collection<ConfigListener> eventListeners) {
+		this.eventListeners = eventListeners;
 	}
 
 }
