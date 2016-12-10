@@ -2,9 +2,9 @@ package com.appleframework.config;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -34,7 +34,11 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 
 	private Properties props;
 	
+	private Collection<ConfigListener> eventListenerSet;
+	
     private Collection<ConfigListener> eventListeners;
+    
+    private Collection<String> eventListenerClasss;
 
 	private String eventListenerClass;
 
@@ -93,29 +97,60 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 				logger.warn("配置项：env=" + env);
 			}
 			
-			if(null == eventListeners)
-				eventListeners = new ArrayList<>();
-			
+			if(null == eventListenerSet)
+				eventListenerSet = new HashSet<ConfigListener>();
+						
 			// 定义事件源
+			
+			//1. 处理eventListenerClass
 			try {
 				if (!StringUtils.isNullOrEmpty(eventListenerClass)) {
-					// 定义并向事件源中注册事件监听器
 					Class<?> clazz = Class.forName(eventListenerClass);
 					ConfigListener configListener = (ConfigListener) clazz.newInstance();
-					eventListeners.add(configListener);
+					eventListenerSet.add(configListener);
 				}
 			} catch (Exception e) {
 				logger.error(e);
 			}
 
+			//2. 处理eventListener
 			try {
 				if (ObjectUtils.isNotEmpty(eventListener)) {
-					eventListeners.add(eventListener);
+					eventListenerSet.add(eventListener);
 				}
 			} catch (Exception e) {
 				logger.error(e);
 			}
 			
+			//3. 处理eventListeners
+			try {
+				if(null != eventListeners) {
+					for (ConfigListener eventListenerBean : eventListeners) {
+						if (null != eventListenerBean) {
+							eventListenerSet.add(eventListenerBean);
+						}
+					}
+				}
+			} catch (Exception e) {
+				logger.error(e);
+			}
+			
+			//4. 处理eventListenerClasss
+			try {
+				for (String eventListenerClassStr : eventListenerClasss) {
+					try {
+						if (!StringUtils.isNullOrEmpty(eventListenerClassStr)) {
+							Class<?> clazz = Class.forName(eventListenerClassStr);
+							ConfigListener configListener = (ConfigListener) clazz.newInstance();
+							eventListenerSet.add(configListener);
+						}
+					} catch (Exception e) {
+						logger.error(e);
+					}
+				}
+			} catch (Exception e) {
+				logger.error(e);
+			}
 			
 			ManagerListener springMamagerListener = new ManagerListener() {
 
@@ -134,8 +169,8 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 					}
 					
 					//事件触发
-					if(eventListeners.size() > 0) {
-						Iterator<ConfigListener> iterator = eventListeners.iterator();
+					if(eventListenerSet.size() > 0) {
+						Iterator<ConfigListener> iterator = eventListenerSet.iterator();
 				        while (iterator.hasNext()) {
 				        	ConfigListener listener = iterator.next();
 				            listener.receiveConfigInfo(PropertyConfigurer.props);
@@ -201,6 +236,10 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 
 	public void setEventListeners(Collection<ConfigListener> eventListeners) {
 		this.eventListeners = eventListeners;
+	}
+
+	public void setEventListenerClasss(Collection<String> eventListenerClasss) {
+		this.eventListenerClasss = eventListenerClasss;
 	}
 
 }
