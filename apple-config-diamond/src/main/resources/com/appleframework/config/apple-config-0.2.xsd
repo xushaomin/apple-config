@@ -3,14 +3,14 @@
         xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
         targetNamespace="http://www.appleframework.com/schema/config">
 
-        <xsd:element name="annotation-driven" type="annotationDriven" />
+        <xsd:element name="property-placeholder" type="property-placeholder" />
         
-        <xsd:complexType name="annotationDriven">
+        <xsd:complexType name="property-placeholder">
    			<xsd:attribute name="id" type="xsd:ID" />
      		<xsd:attribute name="name" type="xsd:string" />
      		<xsd:attribute name="location" type="xsd:string" />
-     		<xsd:attribute name="loadRemote" type="xsd:boolean" />
-     		<xsd:attribute name="eventListenerClass" type="xsd:string" />
+     		<xsd:attribute name="load-remote" type="xsd:boolean" />
+     		<xsd:attribute name="event-listener-class" type="xsd:string" />
         </xsd:complexType>
 
 </xsd:schema>

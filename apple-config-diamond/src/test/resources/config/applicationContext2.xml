@@ -10,7 +10,7 @@
 
 	<context:component-scan base-package="com.appleframework.config.test" />
 
-	<config:annotation-driven id="propertyConfigurer" location="config.properties" loadRemote="false" eventListenerClass="" />
+	<config:property-placeholder id="propertyConfigurer" location="config.properties" load-remote="false" event-listener-class="" />
 
 	<bean id="demoXML" class="com.appleframework.config.test.Demo">
 		<property name="config3" value="${demo.config1}" />
