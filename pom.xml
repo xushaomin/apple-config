@@ -4,11 +4,11 @@
 
 	<groupId>com.appleframework.config</groupId>
 	<artifactId>apple-config</artifactId>
-	<version>0.2.2.RELEASE</version>
+	<version>0.2.3.RELEASE</version>
 	<packaging>pom</packaging>
 
 	<name>apple-config</name>
-	<url>http://mvnrepo.appleframework.com</url>
+	<url>https://github.com/xushaomin/apple-config</url>
 
 	<properties>
 		<java.version>1.7</java.version>
@@ -17,7 +17,11 @@
 		<spring.version>4.2.0.RELEASE</spring.version>
 		<disconf.version>2.6.32</disconf.version>
 	</properties>
-
+	
+	<scm>
+	    <url>scm:git:git@github.com:xushaomin/apple-config</url>
+	    <connection>scm:git:git@github.com:xushaomin/apple-config</connection>
+	</scm>
 
 	<dependencyManagement>
 
@@ -135,6 +139,12 @@
 					</archive>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.1</version>
+            </plugin>
 		</plugins>
 	</build>
 
