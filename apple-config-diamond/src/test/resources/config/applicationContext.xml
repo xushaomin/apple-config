@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-	<context:component-scan base-package="com.appleframework.config" />
+	<context:component-scan base-package="com.appleframework.config.test" />
 
 	<bean id="propertyConfigurer"
 		class="com.appleframework.config.ExtendedPropertyPlaceholderConfigurer">
@@ -17,7 +17,7 @@
 		<property name="loadRemote" value="false" />
 	</bean>
 
-	<bean id="demoXML" class="com.appleframework.config.Demo">
+	<bean id="demoXML" class="com.appleframework.config.test.Demo">
 		<property name="config3" value="${demo.config1}" />
 		<property name="config4" value="${config2}" />
 	</bean>
