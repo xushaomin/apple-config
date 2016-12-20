@@ -41,9 +41,9 @@ public class ConfigBeanDefinitionParser implements BeanDefinitionParser {
         	
         parserContext.getRegistry().registerBeanDefinition(id, beanDefinition);
         
-        RootBeanDefinition AnnDefinition = new RootBeanDefinition();
-        AnnDefinition.setBeanClass(ConfigAnnotationBeanPostProcessor.class);
-        parserContext.getRegistry().registerBeanDefinition("configAnnotationBeanPostProcessor", AnnDefinition);
+        RootBeanDefinition annDefinition = new RootBeanDefinition();
+        annDefinition.setBeanClass(ConfigAnnotationBeanPostProcessor.class);
+        parserContext.getRegistry().registerBeanDefinition("configAnnotationBeanPostProcessor", annDefinition);
   
         return beanDefinition;
     }  
