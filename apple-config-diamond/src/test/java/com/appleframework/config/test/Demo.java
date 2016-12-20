@@ -1,4 +1,4 @@
-package com.appleframework.config;
+package com.appleframework.config.test;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -36,7 +36,7 @@ public class Demo {
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
-		ApplicationContext appCtx = new ClassPathXmlApplicationContext("config/applicationContext.xml");
+		ApplicationContext appCtx = new ClassPathXmlApplicationContext("config/applicationContext2.xml");
 
 		Demo demoAnn = (Demo) appCtx.getBean("demoAnn");
 		demoAnn.printConfigAnn();
