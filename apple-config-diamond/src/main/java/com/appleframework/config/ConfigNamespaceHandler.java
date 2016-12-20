@@ -6,7 +6,7 @@ public class ConfigNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override
     public void init() {
-        registerBeanDefinitionParser("annotation-driven", new ConfigBeanDefinitionParser());
+        registerBeanDefinitionParser("property-placeholder", new ConfigBeanDefinitionParser());
     }
 }
 
