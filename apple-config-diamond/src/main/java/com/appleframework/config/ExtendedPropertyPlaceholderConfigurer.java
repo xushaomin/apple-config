@@ -103,53 +103,44 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 			// 定义事件源
 			
 			//1. 处理eventListenerClass
-			try {
-				if (!StringUtils.isNullOrEmpty(eventListenerClass)) {
+			if (!StringUtils.isNullOrEmpty(eventListenerClass)) {
+				try {
 					Class<?> clazz = Class.forName(eventListenerClass);
 					ConfigListener configListener = (ConfigListener) clazz.newInstance();
 					eventListenerSet.add(configListener);
+				} catch (Exception e) {
+					logger.error(e);
 				}
-			} catch (Exception e) {
-				logger.error(e);
 			}
 
 			//2. 处理eventListener
-			try {
-				if (ObjectUtils.isNotEmpty(eventListener)) {
-					eventListenerSet.add(eventListener);
-				}
-			} catch (Exception e) {
-				logger.error(e);
+			if (ObjectUtils.isNotEmpty(eventListener)) {
+				eventListenerSet.add(eventListener);
 			}
 			
+			
 			//3. 处理eventListeners
-			try {
-				if(null != eventListeners) {
-					for (ConfigListener eventListenerBean : eventListeners) {
-						if (null != eventListenerBean) {
-							eventListenerSet.add(eventListenerBean);
-						}
+			if(null != eventListeners) {
+				for (ConfigListener eventListenerBean : eventListeners) {
+					if (null != eventListenerBean) {
+						eventListenerSet.add(eventListenerBean);
 					}
 				}
-			} catch (Exception e) {
-				logger.error(e);
 			}
 			
 			//4. 处理eventListenerClasss
-			try {
+			if(null != eventListenerClasss) {
 				for (String eventListenerClassStr : eventListenerClasss) {
 					try {
 						if (!StringUtils.isNullOrEmpty(eventListenerClassStr)) {
 							Class<?> clazz = Class.forName(eventListenerClassStr);
 							ConfigListener configListener = (ConfigListener) clazz.newInstance();
-							eventListenerSet.add(configListener);
+							eventListenerSet.add(configListener);		
 						}
 					} catch (Exception e) {
 						logger.error(e);
 					}
 				}
-			} catch (Exception e) {
-				logger.error(e);
 			}
 			
 			ManagerListener springMamagerListener = new ManagerListener() {
@@ -180,7 +171,6 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 			};
 
 			DiamondManager manager = new DefaultDiamondManager(group, dataId, springMamagerListener);
-
 			try {
 				String configInfo = manager.getAvailableConfigureInfomation(30000);
 				logger.warn("配置项内容: \n" + configInfo);
