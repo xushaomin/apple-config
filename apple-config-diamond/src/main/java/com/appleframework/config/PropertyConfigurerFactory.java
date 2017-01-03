@@ -73,7 +73,6 @@ public class PropertyConfigurerFactory {
 				logger.error(e);
 			}
 		}
-		this.init(prop);	
 	}
 
 	public void init(Properties props) {
