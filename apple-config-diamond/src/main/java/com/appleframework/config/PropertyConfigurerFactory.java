@@ -43,6 +43,8 @@ public class PropertyConfigurerFactory {
 	private ConfigListener eventListener;
 
 	private boolean loadRemote = true;
+	
+	private String systemPropertyFile;
 
 	public boolean isLoadRemote() {
 		return loadRemote;
@@ -61,22 +63,24 @@ public class PropertyConfigurerFactory {
 	}
 	
 	public PropertyConfigurerFactory() {
-		this.init(new Properties());
+		
 	}
 	
 	public PropertyConfigurerFactory(String fileName) {
-		Properties prop = new Properties();
-		if(null != fileName) {
+		this.systemPropertyFile = fileName;
+	}
+
+	public void init() {
+		Version.logVersion();
+		
+		Properties props = new Properties();
+		if(null != systemPropertyFile) {
 			try {
-				prop.load(ResourceUtil.getAsStream(fileName));
+				props.load(ResourceUtil.getAsStream(systemPropertyFile));
 			} catch (IOException e) {
 				logger.error(e);
 			}
 		}
-	}
-
-	public void init(Properties props) {
-		Version.logVersion();
 
 		// 获取启动启动-D参数
 		Properties systemProps = System.getProperties();
@@ -242,4 +246,12 @@ public class PropertyConfigurerFactory {
 		this.eventListenerClasss = eventListenerClasss;
 	}
 
+	public String getSystemPropertyFile() {
+		return systemPropertyFile;
+	}
+
+	public void setSystemPropertyFile(String systemPropertyFile) {
+		this.systemPropertyFile = systemPropertyFile;
+	}
+	
 }
