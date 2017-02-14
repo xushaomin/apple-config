@@ -14,8 +14,12 @@ public class PropertyConfigurer {
 	
 	private static Logger logger = Logger.getLogger(PropertyConfigurer.class);
 	
-	public static Properties props = null;
+	private static Properties props = null;
 	
+	public static Properties getProps() {
+		return props;
+	}
+
 	public static void load(StringReader reader){
 		if(null == props)
 			props = new Properties();
@@ -29,11 +33,8 @@ public class PropertyConfigurer {
 	public static void load(Properties defaultProps){
 		if(null == props) {
 			props = new Properties();
-			convertProperties(defaultProps);
 		}
-		else {
-			convertProperties(defaultProps);
-		}
+		convertProperties(defaultProps);
 	}
 	
 	/**

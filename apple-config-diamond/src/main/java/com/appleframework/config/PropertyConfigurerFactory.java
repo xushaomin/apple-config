@@ -30,7 +30,9 @@ public class PropertyConfigurerFactory {
 	private String KEY_DEPLOY_GROUP = "deploy.group";
 	private String KEY_DEPLOY_DATAID = "deploy.dataId";
 
-	private Properties props;
+	private Properties localProps = new Properties();
+	
+	private Properties remoteProps = new Properties();
 	
 	private Collection<ConfigListener> eventListenerSet;
 	
@@ -66,23 +68,31 @@ public class PropertyConfigurerFactory {
 		
 	}
 	
-	public PropertyConfigurerFactory(Properties props) {
-		this.props = props;
+	public PropertyConfigurerFactory(Properties localProps) {
+		convertLocalProperties(this.localProps, localProps);
 	}
 	
 	public PropertyConfigurerFactory(String fileName) {
 		this.systemPropertyFile = fileName;
 	}
+	
+	public void convertLocalProperties(Properties sourceProps, Properties defaultProps) {
+		Enumeration<?> propertyNames = defaultProps.propertyNames();
+		while (propertyNames.hasMoreElements()) {
+			String propertyName = (String) propertyNames.nextElement();
+			String propertyValue = defaultProps.getProperty(propertyName);
+			if (ObjectUtils.isNotEmpty(propertyName)) {
+				sourceProps.setProperty(propertyName, propertyValue);
+			}
+		}
+	}
 
 	public void init() {
 		Version.logVersion();
-		
-		if(null == this.props)
-			props = new Properties();
-		
+				
 		if(null != systemPropertyFile) {
 			try {
-				props.load(ResourceUtil.getAsStream(systemPropertyFile));
+				localProps.load(ResourceUtil.getAsStream(systemPropertyFile));
 			} catch (IOException e) {
 				logger.error(e);
 			}
@@ -95,23 +105,24 @@ public class PropertyConfigurerFactory {
 			String systemKey = systemEnum.nextElement().toString();
 			if (!Constants.SET_SYSTEM_PROPERTIES.contains(systemKey)) {
 				String systemValue = systemProps.getProperty(systemKey);
-				props.setProperty(systemKey, systemValue);
+				localProps.setProperty(systemKey, systemValue);
 			}
 		}
 
+		PropertyConfigurer.load(localProps);
+
 		if (!isLoadRemote()) {
-			PropertyConfigurer.load(props);
 			return;
 		}
 
-		String group = props.getProperty(KEY_DEPLOY_GROUP);
-		String dataId = props.getProperty(KEY_DEPLOY_DATAID);
+		String group = localProps.getProperty(KEY_DEPLOY_GROUP);
+		String dataId = localProps.getProperty(KEY_DEPLOY_DATAID);
 
 		logger.warn("配置项：group=" + group);
 		logger.warn("配置项：dataId=" + dataId);
 
 		if (!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
-			String env = this.getDeployEnv(props);
+			String env = this.getDeployEnv(localProps);
 			if (!StringUtils.isEmpty(env)) {
 				dataId += "-" + env;
 				logger.warn("配置项：env=" + env);
@@ -174,17 +185,18 @@ public class PropertyConfigurerFactory {
 					logger.warn("已改动的配置：\n" + configInfo);
 					StringReader reader = new StringReader(configInfo);
 					try {
-						PropertyConfigurer.props.load(reader);
+						remoteProps.load(reader);
 					} catch (IOException e) {
 						logger.error(e);
 					}
+					PropertyConfigurer.load(remoteProps);
 					
 					//事件触发
 					if(eventListenerSet.size() > 0) {
 						Iterator<ConfigListener> iterator = eventListenerSet.iterator();
 				        while (iterator.hasNext()) {
 				        	ConfigListener listener = iterator.next();
-				            listener.receiveConfigInfo(PropertyConfigurer.props);
+				            listener.receiveConfigInfo(PropertyConfigurer.getProps());
 				        }
 					}
 				}
@@ -196,8 +208,8 @@ public class PropertyConfigurerFactory {
 				logger.warn("配置项内容: \n" + configInfo);
 				if (!StringUtils.isEmpty(configInfo)) {
 					StringReader reader = new StringReader(configInfo);
-					props.load(reader);
-					PropertyConfigurer.load(props);
+					remoteProps.load(reader);
+					PropertyConfigurer.load(remoteProps);
 				} else {
 					logger.error("在配置管理中心找不到配置信息");
 				}
@@ -205,11 +217,11 @@ public class PropertyConfigurerFactory {
 				logger.error(e);
 			}
 		} else {
-			PropertyConfigurer.load(props);
+			PropertyConfigurer.load(localProps);
 		}
 
 		// 讲-D开头的的配置设置到系统变量
-		Iterator<Entry<Object, Object>> it = props.entrySet().iterator();
+		Iterator<Entry<Object, Object>> it = remoteProps.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<Object, Object> entry = it.next();
 			Object key = entry.getKey();
@@ -223,11 +235,7 @@ public class PropertyConfigurerFactory {
 		}
 
 	}
-
-	public Object getProperty(String key) {
-		return props.get(key);
-	}
-
+	
 	private String getDeployEnv(Properties props) {
 		String env = System.getProperty(Constants.KEY_DEPLOY_ENV);
 		if (StringUtils.isEmpty(env)) {
@@ -259,11 +267,7 @@ public class PropertyConfigurerFactory {
 	}
 
 	public Properties getProps() {
-		return props;
-	}
-
-	public void setProps(Properties props) {
-		this.props = props;
+		return PropertyConfigurer.getProps();
 	}
 	
 }
