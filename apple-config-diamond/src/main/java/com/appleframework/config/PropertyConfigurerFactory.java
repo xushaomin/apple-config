@@ -66,6 +66,10 @@ public class PropertyConfigurerFactory {
 		
 	}
 	
+	public PropertyConfigurerFactory(Properties props) {
+		this.props = props;
+	}
+	
 	public PropertyConfigurerFactory(String fileName) {
 		this.systemPropertyFile = fileName;
 	}
@@ -73,7 +77,9 @@ public class PropertyConfigurerFactory {
 	public void init() {
 		Version.logVersion();
 		
-		Properties props = new Properties();
+		if(null == this.props)
+			props = new Properties();
+		
 		if(null != systemPropertyFile) {
 			try {
 				props.load(ResourceUtil.getAsStream(systemPropertyFile));
@@ -94,7 +100,6 @@ public class PropertyConfigurerFactory {
 		}
 
 		if (!isLoadRemote()) {
-			this.props = props;
 			PropertyConfigurer.load(props);
 			return;
 		}
@@ -202,7 +207,6 @@ public class PropertyConfigurerFactory {
 		} else {
 			PropertyConfigurer.load(props);
 		}
-		this.props = props;
 
 		// 讲-D开头的的配置设置到系统变量
 		Iterator<Entry<Object, Object>> it = props.entrySet().iterator();
@@ -252,6 +256,14 @@ public class PropertyConfigurerFactory {
 
 	public void setSystemPropertyFile(String systemPropertyFile) {
 		this.systemPropertyFile = systemPropertyFile;
+	}
+
+	public Properties getProps() {
+		return props;
+	}
+
+	public void setProps(Properties props) {
+		this.props = props;
 	}
 	
 }
