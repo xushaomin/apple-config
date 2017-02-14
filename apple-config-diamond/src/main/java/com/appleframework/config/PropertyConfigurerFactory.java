@@ -30,10 +30,8 @@ public class PropertyConfigurerFactory {
 	private String KEY_DEPLOY_GROUP = "deploy.group";
 	private String KEY_DEPLOY_DATAID = "deploy.dataId";
 
-	private Properties localProps = new Properties();
-	
-	private Properties remoteProps = new Properties();
-	
+	private Properties props = new Properties();
+		
 	private Collection<ConfigListener> eventListenerSet;
 	
     private Collection<ConfigListener> eventListeners;
@@ -68,21 +66,21 @@ public class PropertyConfigurerFactory {
 		
 	}
 	
-	public PropertyConfigurerFactory(Properties localProps) {
-		convertLocalProperties(this.localProps, localProps);
+	public PropertyConfigurerFactory(Properties props) {
+		convertLocalProperties(props);
 	}
 	
 	public PropertyConfigurerFactory(String fileName) {
 		this.systemPropertyFile = fileName;
 	}
 	
-	public void convertLocalProperties(Properties sourceProps, Properties defaultProps) {
+	public void convertLocalProperties(Properties defaultProps) {
 		Enumeration<?> propertyNames = defaultProps.propertyNames();
 		while (propertyNames.hasMoreElements()) {
 			String propertyName = (String) propertyNames.nextElement();
 			String propertyValue = defaultProps.getProperty(propertyName);
 			if (ObjectUtils.isNotEmpty(propertyName)) {
-				sourceProps.setProperty(propertyName, propertyValue);
+				props.setProperty(propertyName, propertyValue);
 			}
 		}
 	}
@@ -92,7 +90,7 @@ public class PropertyConfigurerFactory {
 				
 		if(null != systemPropertyFile) {
 			try {
-				localProps.load(ResourceUtil.getAsStream(systemPropertyFile));
+				props.load(ResourceUtil.getAsStream(systemPropertyFile));
 			} catch (IOException e) {
 				logger.error(e);
 			}
@@ -105,24 +103,24 @@ public class PropertyConfigurerFactory {
 			String systemKey = systemEnum.nextElement().toString();
 			if (!Constants.SET_SYSTEM_PROPERTIES.contains(systemKey)) {
 				String systemValue = systemProps.getProperty(systemKey);
-				localProps.setProperty(systemKey, systemValue);
+				props.setProperty(systemKey, systemValue);
 			}
 		}
 
-		PropertyConfigurer.load(localProps);
+		PropertyConfigurer.load(props);
 
 		if (!isLoadRemote()) {
 			return;
 		}
 
-		String group = localProps.getProperty(KEY_DEPLOY_GROUP);
-		String dataId = localProps.getProperty(KEY_DEPLOY_DATAID);
+		String group = props.getProperty(KEY_DEPLOY_GROUP);
+		String dataId = props.getProperty(KEY_DEPLOY_DATAID);
 
 		logger.warn("配置项：group=" + group);
 		logger.warn("配置项：dataId=" + dataId);
 
 		if (!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
-			String env = this.getDeployEnv(localProps);
+			String env = this.getDeployEnv(props);
 			if (!StringUtils.isEmpty(env)) {
 				dataId += "-" + env;
 				logger.warn("配置项：env=" + env);
@@ -185,11 +183,11 @@ public class PropertyConfigurerFactory {
 					logger.warn("已改动的配置：\n" + configInfo);
 					StringReader reader = new StringReader(configInfo);
 					try {
-						remoteProps.load(reader);
+						props.load(reader);
 					} catch (IOException e) {
 						logger.error(e);
 					}
-					PropertyConfigurer.load(remoteProps);
+					PropertyConfigurer.load(props);
 					
 					//事件触发
 					if(eventListenerSet.size() > 0) {
@@ -208,8 +206,8 @@ public class PropertyConfigurerFactory {
 				logger.warn("配置项内容: \n" + configInfo);
 				if (!StringUtils.isEmpty(configInfo)) {
 					StringReader reader = new StringReader(configInfo);
-					remoteProps.load(reader);
-					PropertyConfigurer.load(remoteProps);
+					props.load(reader);
+					PropertyConfigurer.load(props);
 				} else {
 					logger.error("在配置管理中心找不到配置信息");
 				}
@@ -217,11 +215,11 @@ public class PropertyConfigurerFactory {
 				logger.error(e);
 			}
 		} else {
-			PropertyConfigurer.load(localProps);
+			PropertyConfigurer.load(props);
 		}
 
 		// 讲-D开头的的配置设置到系统变量
-		Iterator<Entry<Object, Object>> it = remoteProps.entrySet().iterator();
+		Iterator<Entry<Object, Object>> it = props.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<Object, Object> entry = it.next();
 			Object key = entry.getKey();
