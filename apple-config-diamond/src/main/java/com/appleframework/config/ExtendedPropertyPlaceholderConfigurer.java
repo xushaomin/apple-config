@@ -8,6 +8,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 import com.appleframework.config.core.event.ConfigListener;
+import com.appleframework.config.core.factory.ConfigurerFactory;
 
 public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {	
 	
@@ -39,7 +40,7 @@ public class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderCo
 
 	@Override
 	protected void processProperties(ConfigurableListableBeanFactory beanFactory, Properties props) throws BeansException {
-		PropertyConfigurerFactory factory = new PropertyConfigurerFactory(props);
+		ConfigurerFactory factory = new PropertyConfigurerFactory(props);
 		factory.setLoadRemote(loadRemote);
 		factory.setEventListener(eventListener);
 		factory.setEventListenerClass(eventListenerClass);

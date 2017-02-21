@@ -16,6 +16,7 @@ import com.appleframework.config.core.Constants;
 import com.appleframework.config.core.EnvConfigurer;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.event.ConfigListener;
+import com.appleframework.config.core.factory.ConfigurerFactory;
 import com.appleframework.config.core.util.ObjectUtils;
 import com.appleframework.config.core.util.StringUtils;
 import com.appleframework.config.utils.ResourceUtil;
@@ -23,7 +24,7 @@ import com.taobao.diamond.manager.DiamondManager;
 import com.taobao.diamond.manager.ManagerListener;
 import com.taobao.diamond.manager.impl.DefaultDiamondManager;
 
-public class PropertyConfigurerFactory {
+public class PropertyConfigurerFactory implements ConfigurerFactory {
 
 	private static Logger logger = Logger.getLogger(PropertyConfigurerFactory.class);
 
