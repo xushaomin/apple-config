@@ -19,6 +19,8 @@ public interface ConfigurerFactory {
 
 	public void setEventListenerClasss(Collection<String> eventListenerClasss);
 	
+	public void setSystemPropertyFile(String systemPropertyFile);
+	
 	public void init();
 
 	public Properties getProps();
