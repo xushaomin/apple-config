@@ -189,6 +189,7 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
 						logger.error(e);
 					}
 					PropertyConfigurer.load(props);
+					setSystemProperty(props);
 					
 					//事件触发
 					if(eventListenerSet.size() > 0) {
@@ -209,6 +210,7 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
 					StringReader reader = new StringReader(configInfo);
 					props.load(reader);
 					PropertyConfigurer.load(props);
+					setSystemProperty(props);
 				} else {
 					logger.error("在配置管理中心找不到配置信息");
 				}
@@ -217,8 +219,12 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
 			}
 		} else {
 			PropertyConfigurer.load(props);
+			setSystemProperty(props);
 		}
 
+	}
+	
+	private void setSystemProperty(Properties props) {
 		// 讲-D开头的的配置设置到系统变量
 		Iterator<Entry<Object, Object>> it = props.entrySet().iterator();
 		while (it.hasNext()) {
@@ -232,7 +238,6 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
 				logger.warn(key.toString() + "=" + systemValue);
 			}
 		}
-
 	}
 	
 	private String getDeployEnv(Properties props) {
