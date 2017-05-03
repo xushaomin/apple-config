@@ -4,7 +4,7 @@
 
 	<groupId>com.appleframework.config</groupId>
 	<artifactId>apple-config</artifactId>
-	<version>0.2.5.RELEASE</version>
+	<version>0.2.5.SPECIAL</version>
 	<packaging>pom</packaging>
 
 	<name>apple-config</name>
@@ -13,7 +13,7 @@
 	<properties>
 		<java.version>1.7</java.version>
 		<log4j.version>1.2.16</log4j.version>
-		<diamond.version>2.1.1.APPLE</diamond.version>
+		<diamond.version>2.1.1.SPECIAL</diamond.version>
 		<spring.version>4.2.0.RELEASE</spring.version>
 		<disconf.version>2.6.32</disconf.version>
 	</properties>
