@@ -1,4 +1,4 @@
-package com.appleframework.config.utils;
+package com.appleframework.config.core.util;
 
 import java.io.File;
 import java.io.InputStream;
