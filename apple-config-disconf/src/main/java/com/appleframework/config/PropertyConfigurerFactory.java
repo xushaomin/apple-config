@@ -1,14 +1,12 @@
 package com.appleframework.config;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
 
@@ -20,9 +18,6 @@ import com.appleframework.config.core.factory.ConfigurerFactory;
 import com.appleframework.config.core.util.ObjectUtils;
 import com.appleframework.config.core.util.ResourceUtil;
 import com.appleframework.config.core.util.StringUtils;
-import com.taobao.diamond.manager.DiamondManager;
-import com.taobao.diamond.manager.ManagerListener;
-import com.taobao.diamond.manager.impl.DefaultDiamondManager;
 
 public class PropertyConfigurerFactory implements ConfigurerFactory {
 
@@ -33,7 +28,7 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
 	private String KEY_DEPLOY_CONF_HOST = "deploy.confHost";
 
 	private Properties props = new Properties();
-		
+	
 	private Collection<ConfigListener> eventListenerSet;
 	
     private Collection<ConfigListener> eventListeners;
@@ -119,13 +114,10 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
 		String dataId = props.getProperty(KEY_DEPLOY_DATAID);
 		
 		String confHost = props.getProperty(KEY_DEPLOY_CONF_HOST);
-		if (null != confHost) {
-			com.taobao.diamond.common.Constants.DEFAULT_DOMAINNAME = confHost;
-			com.taobao.diamond.common.Constants.DAILY_DOMAINNAME   = confHost;
-		}
 
 		logger.warn("配置项：group=" + group);
 		logger.warn("配置项：dataId=" + dataId);
+		logger.warn("配置项：confHost=" + confHost);
 
 		if (!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
 			String env = this.getDeployEnv(props);
@@ -178,51 +170,6 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
 						logger.error(e);
 					}
 				}
-			}
-			
-			ManagerListener springMamagerListener = new ManagerListener() {
-
-				public Executor getExecutor() {
-					return null;
-				}
-
-				public void receiveConfigInfo(String configInfo) {
-					// 客户端处理数据的逻辑
-					logger.warn("已改动的配置：\n" + configInfo);
-					StringReader reader = new StringReader(configInfo);
-					try {
-						props.load(reader);
-					} catch (IOException e) {
-						logger.error(e);
-					}
-					PropertyConfigurer.load(props);
-					setSystemProperty(props);
-					
-					//事件触发
-					if(eventListenerSet.size() > 0) {
-						Iterator<ConfigListener> iterator = eventListenerSet.iterator();
-				        while (iterator.hasNext()) {
-				        	ConfigListener listener = iterator.next();
-				            listener.receiveConfigInfo(PropertyConfigurer.getProps());
-				        }
-					}
-				}
-			};
-
-			DiamondManager manager = new DefaultDiamondManager(group, dataId, springMamagerListener);
-			try {
-				String configInfo = manager.getAvailableConfigureInfomation(30000);
-				logger.warn("配置项内容: \n" + configInfo);
-				if (!StringUtils.isEmpty(configInfo)) {
-					StringReader reader = new StringReader(configInfo);
-					props.load(reader);
-					PropertyConfigurer.load(props);
-					setSystemProperty(props);
-				} else {
-					logger.error("在配置管理中心找不到配置信息");
-				}
-			} catch (IOException e) {
-				logger.error(e);
 			}
 		} else {
 			PropertyConfigurer.load(props);
@@ -280,11 +227,12 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
 	public Properties getProps() {
 		return PropertyConfigurer.getProps();
 	}
-
+	
 	@Override
 	public void setProperties(Properties properties) {
 		PropertyConfigurer.load(props);
 		setSystemProperty(props);
+		notifyPropertiesChanged(properties);
 	}
 	
 	/**
@@ -292,15 +240,15 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
      *
      * @param oldProperties
      */
-    public void notifyPropertiesChanged(Properties oldProperties) {
-    	//事件触发
-		if(eventListenerSet.size() > 0) {
+	public void notifyPropertiesChanged(Properties oldProperties) {
+		// 事件触发
+		if (eventListenerSet.size() > 0) {
 			Iterator<ConfigListener> iterator = eventListenerSet.iterator();
-	        while (iterator.hasNext()) {
-	        	ConfigListener listener = iterator.next();
-	            listener.receiveConfigInfo(oldProperties);
-	        }
+			while (iterator.hasNext()) {
+				ConfigListener listener = iterator.next();
+				listener.receiveConfigInfo(oldProperties);
+			}
 		}
-    }
+	}
 	
 }

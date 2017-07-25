@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>apple-config</artifactId>
 		<groupId>com.appleframework.config</groupId>
-		<version>0.2.5.RELEASE</version>
+		<version>0.2.6-SNAPSHOT</version>
 	</parent>
 	<artifactId>apple-config-diamond</artifactId>
 	<name>apple-config-diamond</name>

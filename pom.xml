@@ -4,7 +4,7 @@
 
 	<groupId>com.appleframework.config</groupId>
 	<artifactId>apple-config</artifactId>
-	<version>0.2.5.RELEASE</version>
+	<version>0.2.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>apple-config</name>
@@ -13,9 +13,9 @@
 	<properties>
 		<java.version>1.7</java.version>
 		<log4j.version>1.2.16</log4j.version>
-		<diamond.version>2.1.1.APPLE</diamond.version>
+		<diamond.version>2.1.2.APPLE</diamond.version>
 		<spring.version>4.2.0.RELEASE</spring.version>
-		<disconf.version>2.6.32</disconf.version>
+		<disconf.version>2.6.36.APPLE</disconf.version>
 	</properties>
 	
 	<scm>
@@ -71,7 +71,8 @@
 	<modules>
 		<module>apple-config-core</module>
 		<module>apple-config-diamond</module>
-    	<!-- <module>apple-config-disconf</module> -->
+    	<module>apple-config-disconf</module>
+    	<module>apple-config-demo</module>
   	</modules>
 	
 	<build>
