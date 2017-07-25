@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.appleframework.config</groupId>
+		<artifactId>apple-config</artifactId>
+		<version>0.2.6-SNAPSHOT</version>
+	</parent>
+	<artifactId>apple-config-demo</artifactId>
+	<name>apple-config-demo</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<aspectj.version>1.8.5</aspectj.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.appleframework.config</groupId>
+			<artifactId>apple-config-diamond</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- aspectj -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+
+	</dependencies>
+</project>
