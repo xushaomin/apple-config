@@ -86,17 +86,27 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
 			}
 		}
 	}
-
-	public void init() {
-		Version.logVersion();
-				
-		if(null != systemPropertyFile) {
+	
+	public void loadSystemProperties(String fileName) {
+		if(null != fileName) {
 			try {
-				props.load(ResourceUtil.getAsStream(systemPropertyFile));
+				props.load(ResourceUtil.getAsStream(fileName));
 			} catch (IOException e) {
 				logger.error(e);
 			}
 		}
+	}
+	
+	public void loadSystemProperties() {
+		if(null != systemPropertyFile) {
+			loadSystemProperties(systemPropertyFile);
+		}
+	}
+
+	public void init() {
+		Version.logVersion();
+				
+		loadSystemProperties();
 
 		// 获取启动启动-D参数
 		Properties systemProps = System.getProperties();

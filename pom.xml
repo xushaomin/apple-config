@@ -16,6 +16,7 @@
 		<diamond.version>2.1.2.APPLE</diamond.version>
 		<spring.version>4.2.0.RELEASE</spring.version>
 		<disconf.version>2.6.36.APPLE</disconf.version>
+		<zookeeper.version>3.4.10</zookeeper.version>
 	</properties>
 	
 	<scm>
@@ -64,6 +65,12 @@
 			    <groupId>com.baidu.disconf</groupId>
 			    <artifactId>disconf-client</artifactId>
 			    <version>${disconf.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.zookeeper</groupId>
+				<artifactId>zookeeper</artifactId>
+	  			<version>${zookeeper.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

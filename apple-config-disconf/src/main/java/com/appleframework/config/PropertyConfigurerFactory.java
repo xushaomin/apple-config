@@ -11,7 +11,6 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import com.appleframework.config.core.Constants;
-import com.appleframework.config.core.EnvConfigurer;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.event.ConfigListener;
 import com.appleframework.config.core.factory.ConfigurerFactory;
@@ -22,10 +21,6 @@ import com.appleframework.config.core.util.StringUtils;
 public class PropertyConfigurerFactory implements ConfigurerFactory {
 
 	private static Logger logger = Logger.getLogger(PropertyConfigurerFactory.class);
-
-	private String KEY_DEPLOY_GROUP     = "deploy.group";
-	private String KEY_DEPLOY_DATAID    = "deploy.dataId";
-	private String KEY_DEPLOY_CONF_HOST = "deploy.confHost";
 
 	private Properties props = new Properties();
 	
@@ -81,17 +76,27 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
 			}
 		}
 	}
-
-	public void init() {
-		Version.logVersion();
-				
-		if(null != systemPropertyFile) {
+	
+	public void loadSystemProperties(String fileName) {
+		if(null != fileName) {
 			try {
-				props.load(ResourceUtil.getAsStream(systemPropertyFile));
+				props.load(ResourceUtil.getAsStream(fileName));
 			} catch (IOException e) {
 				logger.error(e);
 			}
 		}
+	}
+	
+	public void loadSystemProperties() {
+		if(null != systemPropertyFile) {
+			loadSystemProperties(systemPropertyFile);
+		}
+	}
+
+	public void init() {
+		Version.logVersion();
+				
+		loadSystemProperties();
 
 		// 获取启动启动-D参数
 		Properties systemProps = System.getProperties();
@@ -105,75 +110,52 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
 		}
 
 		PropertyConfigurer.load(props);
+		setSystemProperty(props);
 
-		if (!isLoadRemote()) {
-			return;
+		if(null == eventListenerSet)
+			eventListenerSet = new HashSet<ConfigListener>();
+					
+		// 定义事件源
+		
+		//1. 处理eventListenerClass
+		if (!StringUtils.isNullOrEmpty(eventListenerClass)) {
+			try {
+				Class<?> clazz = Class.forName(eventListenerClass);
+				ConfigListener configListener = (ConfigListener) clazz.newInstance();
+				eventListenerSet.add(configListener);
+			} catch (Exception e) {
+				logger.error(e);
+			}
 		}
 
-		String group = props.getProperty(KEY_DEPLOY_GROUP);
-		String dataId = props.getProperty(KEY_DEPLOY_DATAID);
+		//2. 处理eventListener
+		if (ObjectUtils.isNotEmpty(eventListener)) {
+			eventListenerSet.add(eventListener);
+		}
 		
-		String confHost = props.getProperty(KEY_DEPLOY_CONF_HOST);
-
-		logger.warn("配置项：group=" + group);
-		logger.warn("配置项：dataId=" + dataId);
-		logger.warn("配置项：confHost=" + confHost);
-
-		if (!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
-			String env = this.getDeployEnv(props);
-			if (!StringUtils.isEmpty(env)) {
-				dataId += "-" + env;
-				logger.warn("配置项：env=" + env);
+		
+		//3. 处理eventListeners
+		if(null != eventListeners) {
+			for (ConfigListener eventListenerBean : eventListeners) {
+				if (null != eventListenerBean) {
+					eventListenerSet.add(eventListenerBean);
+				}
 			}
-			
-			if(null == eventListenerSet)
-				eventListenerSet = new HashSet<ConfigListener>();
-						
-			// 定义事件源
-			
-			//1. 处理eventListenerClass
-			if (!StringUtils.isNullOrEmpty(eventListenerClass)) {
+		}
+		
+		//4. 处理eventListenerClasss
+		if(null != eventListenerClasss) {
+			for (String eventListenerClassStr : eventListenerClasss) {
 				try {
-					Class<?> clazz = Class.forName(eventListenerClass);
-					ConfigListener configListener = (ConfigListener) clazz.newInstance();
-					eventListenerSet.add(configListener);
+					if (!StringUtils.isNullOrEmpty(eventListenerClassStr)) {
+						Class<?> clazz = Class.forName(eventListenerClassStr);
+						ConfigListener configListener = (ConfigListener) clazz.newInstance();
+						eventListenerSet.add(configListener);		
+					}
 				} catch (Exception e) {
 					logger.error(e);
 				}
 			}
-
-			//2. 处理eventListener
-			if (ObjectUtils.isNotEmpty(eventListener)) {
-				eventListenerSet.add(eventListener);
-			}
-			
-			
-			//3. 处理eventListeners
-			if(null != eventListeners) {
-				for (ConfigListener eventListenerBean : eventListeners) {
-					if (null != eventListenerBean) {
-						eventListenerSet.add(eventListenerBean);
-					}
-				}
-			}
-			
-			//4. 处理eventListenerClasss
-			if(null != eventListenerClasss) {
-				for (String eventListenerClassStr : eventListenerClasss) {
-					try {
-						if (!StringUtils.isNullOrEmpty(eventListenerClassStr)) {
-							Class<?> clazz = Class.forName(eventListenerClassStr);
-							ConfigListener configListener = (ConfigListener) clazz.newInstance();
-							eventListenerSet.add(configListener);		
-						}
-					} catch (Exception e) {
-						logger.error(e);
-					}
-				}
-			}
-		} else {
-			PropertyConfigurer.load(props);
-			setSystemProperty(props);
 		}
 
 	}
@@ -192,20 +174,6 @@ public class PropertyConfigurerFactory implements ConfigurerFactory {
 				logger.warn(key.toString() + "=" + systemValue);
 			}
 		}
-	}
-	
-	private String getDeployEnv(Properties props) {
-		String env = System.getProperty(Constants.KEY_DEPLOY_ENV);
-		if (StringUtils.isEmpty(env)) {
-			env = System.getProperty(Constants.KEY_ENV);
-			if (StringUtils.isEmpty(env)) {
-				env = EnvConfigurer.env;
-				if (StringUtils.isEmpty(env)) {
-					env = props.getProperty(Constants.KEY_DEPLOY_ENV);
-				}
-			}
-		}
-		return env;
 	}
 
 	public void setEventListeners(Collection<ConfigListener> eventListeners) {

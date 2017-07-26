@@ -190,7 +190,7 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
 
         // add for monitor
         ReloadConfigurationMonitor.addReconfigurableBean((ReconfigurableBean) reloadableProperties);
-
+        
         return reloadableProperties;
     }
 
@@ -206,12 +206,10 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
      * @throws IOException
      */
     protected void reload(final boolean forceReload) throws IOException {
-
         boolean reload = forceReload;
         for (int i = 0; i < locations.length; i++) {
             Resource location = locations[i];
             File file;
-
             try {
                 file = location.getFile();
             } catch (IOException e) {
@@ -222,7 +220,6 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
             }
             try {
                 long l = file.lastModified();
-
                 if (l > lastModified[i]) {
                     lastModified[i] = l;
                     reload = true;
@@ -244,15 +241,21 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
      *
      * @throws IOException
      */
-    private void doReload() throws IOException {
-    	Properties mergeProperties = mergeProperties();
-    	System.out.println(mergeProperties);
-    	if(null == configurerFactory)
-    		configurerFactory = new PropertyConfigurerFactory(mergeProperties);
-    	else
-    		configurerFactory.setProperties(mergeProperties);
-    	reloadableProperties.setProperties(mergeProperties());
-    }
+	private void doReload() throws IOException {
+		Properties mergeProperties = mergeProperties();
+		reloadableProperties.setProperties(mergeProperties);
+		if (null == configurerFactory) {
+			configurerFactory = new PropertyConfigurerFactory(mergeProperties);
+			configurerFactory.setLoadRemote(loadRemote);
+			configurerFactory.setEventListener(eventListener);
+			configurerFactory.setEventListenerClass(eventListenerClass);
+			configurerFactory.setEventListenerClasss(eventListenerClasss);
+			configurerFactory.setEventListeners(eventListeners);
+			configurerFactory.init();
+		} else {
+			configurerFactory.setProperties(mergeProperties);
+		}
+	}
 
     /**
      * @return
