@@ -14,10 +14,15 @@
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 
-
+	<!-- 使用disconf必须添加以下配置 -->
+    <bean id="disconfMgrBean" class="com.baidu.disconf.client.DisconfMgrBean" destroy-method="destroy">
+        <property name="scanPackage" value="com.appleframework.config"/>
+    </bean>
+    <bean id="disconfMgrBean2" class="com.baidu.disconf.client.DisconfMgrBeanSecond" init-method="init" destroy-method="destroy" />
+    
     <!-- 使用托管方式的disconf配置(无代码侵入, 配置更改不会自动reload)-->
     <bean id="configproperties"
-          class="com.appleframework.config.ReloadablePropertiesFactoryBean2">
+          class="com.appleframework.config.ReloadablePropertiesFactoryBean">
         <property name="locations">
             <list>
                 <value>myserver.properties</value>

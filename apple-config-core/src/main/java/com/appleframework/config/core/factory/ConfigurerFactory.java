@@ -33,5 +33,9 @@ public interface ConfigurerFactory {
      * @param oldProperties
      */
     public void notifyPropertiesChanged(Properties oldProperties);
+    
+    public void loadSystemProperties(String fileName);
+	
+	public void loadSystemProperties();
 	
 }
