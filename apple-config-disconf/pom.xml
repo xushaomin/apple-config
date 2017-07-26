@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>apple-config</artifactId>
 		<groupId>com.appleframework.config</groupId>
-		<version>0.1.1.RELEASE</version>
+		<version>0.2.6-SNAPSHOT</version>
 	</parent>
 	<artifactId>apple-config-disconf</artifactId>
 	<name>apple-config-disconf</name>
@@ -41,5 +41,10 @@
 			<scope>test</scope>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+		</dependency>
+				
 	</dependencies>
 </project>

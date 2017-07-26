@@ -5,8 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.appleframework.config.core.PropertyConfigurer;
+
 /**
- * 演示分布式配置文件、分布式配置的更新Demo
  *
  * @author liaoqiqi
  * @version 2014-6-17
@@ -47,6 +48,7 @@ public class DisconfDemoTask2 {
 
                 LOGGER.info("autoservice2: {}", autoService2.getAuto2());
 
+                LOGGER.info("PropertyConfigurer: {}", PropertyConfigurer.getProperty("server"));
             }
 
         } catch (Exception e) {
