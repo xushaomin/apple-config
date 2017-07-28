@@ -178,13 +178,27 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
         if (!isSingleton()) {
             throw new RuntimeException("ReloadablePropertiesFactoryBean only works as singleton");
         }
+        
+        //init local property
+        if (null == configurerFactory) {
+			configurerFactory = new PropertyConfigurerFactory();
+			configurerFactory.setLoadRemote(loadRemote);
+			configurerFactory.setEventListener(eventListener);
+			configurerFactory.setEventListenerClass(eventListenerClass);
+			configurerFactory.setEventListenerClasss(eventListenerClasss);
+			configurerFactory.setEventListeners(eventListeners);
+			configurerFactory.init();
+			
+			for (Resource resource : locations) {
+				configurerFactory.loadFileProperties(resource.getFilename());
+			}
+		}
 
         // set listener
         reloadableProperties = new ReloadablePropertiesImpl();
         if (preListeners != null) {
             reloadableProperties.setListeners(preListeners);
         }
-
         // reload
         reload(true);
 
@@ -242,19 +256,14 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
      * @throws IOException
      */
 	private void doReload() throws IOException {
-		Properties mergeProperties = mergeProperties();
-		reloadableProperties.setProperties(mergeProperties);
-		if (null == configurerFactory) {
-			configurerFactory = new PropertyConfigurerFactory(mergeProperties);
-			configurerFactory.setLoadRemote(loadRemote);
-			configurerFactory.setEventListener(eventListener);
-			configurerFactory.setEventListenerClass(eventListenerClass);
-			configurerFactory.setEventListenerClasss(eventListenerClasss);
-			configurerFactory.setEventListeners(eventListeners);
-			configurerFactory.setSystemPropertyFile("system.properties");
-			configurerFactory.init();
-		} else {
+		try {
+			Properties mergeProperties = mergeProperties();
+			mergeProperties.putAll(configurerFactory.getProps());
+			reloadableProperties.setProperties(mergeProperties);
 			configurerFactory.setProperties(mergeProperties);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			reloadableProperties.setProperties(configurerFactory.getProps());
 		}
 	}
 
