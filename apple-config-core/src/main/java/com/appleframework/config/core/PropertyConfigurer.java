@@ -1,6 +1,7 @@
 package com.appleframework.config.core;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.Enumeration;
@@ -30,11 +31,41 @@ public class PropertyConfigurer {
 		}
 	}
 	
+	public static void load(InputStream inputStream){
+		if(null == props)
+			props = new Properties();
+		try {
+			props.load(inputStream);
+		} catch (IOException e) {			
+			logger.error(e);
+		}
+	}
+	
 	public static void load(Properties defaultProps){
 		if(null == props) {
 			props = new Properties();
 		}
 		convertProperties(defaultProps);
+	}
+	
+	public static void setProperty(String key, String value) {
+		if (null == props)
+			props = new Properties();
+		try {
+			props.setProperty(key, value);
+		} catch (Exception e) {
+			logger.error(e);
+		}
+	}
+
+	public static void put(Object key, Object value) {
+		if (null == props)
+			props = new Properties();
+		try {
+			props.put(key, value);
+		} catch (Exception e) {
+			logger.error(e);
+		}
 	}
 	
 	/**
