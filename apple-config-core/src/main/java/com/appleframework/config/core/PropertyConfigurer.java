@@ -18,6 +18,8 @@ public class PropertyConfigurer {
 	private static Properties props = null;
 	
 	public static Properties getProps() {
+		if(null == props)
+			props = new Properties();
 		return props;
 	}
 
