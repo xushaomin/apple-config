@@ -251,6 +251,7 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
 			configurerFactory.setEventListenerClass(eventListenerClass);
 			configurerFactory.setEventListenerClasss(eventListenerClasss);
 			configurerFactory.setEventListeners(eventListeners);
+			configurerFactory.setSystemPropertyFile("system.properties");
 			configurerFactory.init();
 		} else {
 			configurerFactory.setProperties(mergeProperties);
