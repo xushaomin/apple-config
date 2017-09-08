@@ -1,7 +1,6 @@
 package com.appleframework.config;
 
 import java.io.StringReader;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
@@ -10,7 +9,6 @@ import org.apache.log4j.Logger;
 import com.appleframework.config.core.Constants;
 import com.appleframework.config.core.EnvConfigurer;
 import com.appleframework.config.core.PropertyConfigurer;
-import com.appleframework.config.core.event.ConfigListener;
 import com.appleframework.config.core.factory.BaseConfigurerFactory;
 import com.appleframework.config.core.factory.ConfigurerFactory;
 import com.appleframework.config.core.util.StringUtils;
@@ -21,10 +19,12 @@ import com.taobao.diamond.manager.impl.DefaultDiamondManager;
 public class PropertyConfigurerFactory extends BaseConfigurerFactory implements ConfigurerFactory {
 
 	private static Logger logger = Logger.getLogger(PropertyConfigurerFactory.class);
-
+	
 	private String KEY_DEPLOY_GROUP     = "deploy.group";
 	private String KEY_DEPLOY_DATAID    = "deploy.dataId";
 	private String KEY_DEPLOY_CONF_HOST = "deploy.confHost";
+	
+	private DiamondManager manager;
 	
 	public PropertyConfigurerFactory() {
 		
@@ -32,10 +32,6 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	
 	public PropertyConfigurerFactory(Properties props) {
 		convertLocalProperties(props);
-	}
-	
-	public PropertyConfigurerFactory(String fileName) {
-		this.systemPropertyFile = fileName;
 	}
 	
 	public void init() {
@@ -46,10 +42,10 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 
 		initEventListener();
 		
-		if (!isLoadRemote()) {
-			return;
-		}
-
+		initDiamondManager();
+	}
+	
+	private void initDiamondManager() {
 		String group = PropertyConfigurer.getString(KEY_DEPLOY_GROUP);
 		String dataId = PropertyConfigurer.getString(KEY_DEPLOY_DATAID);
 		
@@ -78,40 +74,44 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 				public void receiveConfigInfo(String configInfo) {
 					// 客户端处理数据的逻辑
 					logger.warn("已改动的配置：\n" + configInfo);
-					StringReader reader = new StringReader(configInfo);
 					try {
-						PropertyConfigurer.load(reader);
+						PropertyConfigurer.load(new StringReader(configInfo));
 					} catch (Exception e) {
 						logger.error(e);
-					}
-					setSystemProperty(PropertyConfigurer.getProps());
-					
+						return;
+					}					
 					//事件触发
-					if(eventListenerSet.size() > 0) {
-						Iterator<ConfigListener> iterator = eventListenerSet.iterator();
-				        while (iterator.hasNext()) {
-				        	ConfigListener listener = iterator.next();
-				            listener.receiveConfigInfo(PropertyConfigurer.getProps());
-				        }
-					}
+					notifyPropertiesChanged(PropertyConfigurer.getProps());
 				}
 			};
-
-			DiamondManager manager = new DefaultDiamondManager(group, dataId, springMamagerListener);
-			try {
-				String configInfo = manager.getAvailableConfigureInfomation(30000);
-				logger.warn("配置项内容: \n" + configInfo);
-				if (!StringUtils.isEmpty(configInfo)) {
-					StringReader reader = new StringReader(configInfo);
-					PropertyConfigurer.load(reader);
-					setSystemProperty(PropertyConfigurer.getProps());
-				} else {
-					logger.error("在配置管理中心找不到配置信息");
-				}
-			} catch (Exception e) {
-				logger.error(e);
-			}
+			manager = new DefaultDiamondManager(group, dataId, springMamagerListener);
 		}
+	}
+	
+	public Properties getAllRemoteProperties() {
+		Properties properties = new Properties();
+		if (!isLoadRemote() || null == manager) {
+			return properties;
+		}
+
+		try {
+			String configInfo = manager.getAvailableConfigureInfomation(30000);
+			logger.warn("配置项内容: \n" + configInfo);
+			if (!StringUtils.isEmpty(configInfo)) {
+				properties.load(new StringReader(configInfo));
+			} else {
+				logger.error("在配置管理中心找不到配置信息");
+			}
+		} catch (Exception e) {
+			logger.error(e);
+		}
+
+		return properties;
+	}
+	
+	@Override
+	public void onLoadFinish(Properties properties) {
+		setSystemProperty(properties);
 	}
 
 	private String getDeployEnv() {
@@ -128,6 +128,10 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		return env;
 	}
 
-
+	@Override
+	public void close() {
+		if(null != manager)
+			manager.close();
+	}
 	
 }

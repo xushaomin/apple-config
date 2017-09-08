@@ -13,7 +13,6 @@ import com.appleframework.config.core.Constants;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.event.ConfigListener;
 import com.appleframework.config.core.util.ObjectUtils;
-import com.appleframework.config.core.util.ResourceUtil;
 import com.appleframework.config.core.util.StringUtils;
 
 public class BaseConfigurerFactory {
@@ -32,8 +31,10 @@ public class BaseConfigurerFactory {
 
 	protected boolean loadRemote = true;
 	
-	protected String systemPropertyFile;
-
+	protected boolean isSpringboot = false;
+	
+	protected boolean remoteFirst = false;
+	
 	public boolean isLoadRemote() {
 		return loadRemote;
 	}
@@ -50,6 +51,22 @@ public class BaseConfigurerFactory {
 		this.eventListener = eventListener;
 	}
 	
+	public boolean isSpringboot() {
+		return isSpringboot;
+	}
+
+	public void setSpringboot(boolean isSpringboot) {
+		this.isSpringboot = isSpringboot;
+	}
+
+	public boolean isRemoteFirst() {
+		return remoteFirst;
+	}
+
+	public void setRemoteFirst(boolean remoteFirst) {
+		this.remoteFirst = remoteFirst;
+	}
+
 	public void convertLocalProperties(Properties defaultProps) {
 		Enumeration<?> propertyNames = defaultProps.propertyNames();
 		while (propertyNames.hasMoreElements()) {
@@ -60,25 +77,8 @@ public class BaseConfigurerFactory {
 			}
 		}
 	}
-	
-	public void loadFileProperties(String fileName) {
-		if(null != fileName) {
-			try {
-				PropertyConfigurer.load(ResourceUtil.getAsStream(fileName));
-			} catch (Exception e) {
-				logger.error("The properties file " + fileName + " is not exist!");
-			}
-		}
-	}
-	
-	public void loadSystemProperties() {
-		if(null != systemPropertyFile) {
-			loadFileProperties(systemPropertyFile);
-		}
-	}
-	
+		
 	public void initSystemProperties() {
-		loadSystemProperties();
 		// 获取启动启动-D参数
 		Properties systemProps = System.getProperties();
 		Enumeration<?> systemEnum = systemProps.keys();
@@ -165,15 +165,7 @@ public class BaseConfigurerFactory {
 	public void setEventListenerClasss(Collection<String> eventListenerClasss) {
 		this.eventListenerClasss = eventListenerClasss;
 	}
-
-	public String getSystemPropertyFile() {
-		return systemPropertyFile;
-	}
-
-	public void setSystemPropertyFile(String systemPropertyFile) {
-		this.systemPropertyFile = systemPropertyFile;
-	}
-
+	
 	public Properties getProps() {
 		return PropertyConfigurer.getProps();
 	}
@@ -190,6 +182,7 @@ public class BaseConfigurerFactory {
      * @param oldProperties
      */
 	public void notifyPropertiesChanged(Properties oldProperties) {
+		setSystemProperty(oldProperties);
 		// 事件触发
 		if (eventListenerSet.size() > 0) {
 			Iterator<ConfigListener> iterator = eventListenerSet.iterator();
