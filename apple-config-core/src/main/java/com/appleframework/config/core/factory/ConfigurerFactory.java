@@ -10,6 +10,8 @@ public interface ConfigurerFactory {
 	public boolean isLoadRemote();
 
 	public void setLoadRemote(boolean loadRemote);
+	
+	public void setSpringboot(boolean springboot);
 
 	public void setEventListenerClass(String eventListenerClass);
 
@@ -18,14 +20,8 @@ public interface ConfigurerFactory {
 	public void setEventListeners(Collection<ConfigListener> eventListeners);
 
 	public void setEventListenerClasss(Collection<String> eventListenerClasss);
-	
-	public void setSystemPropertyFile(String systemPropertyFile);
-	
+		
 	public void init();
-
-	public Properties getProps();
-	
-	public void setProperties(Properties properties);
 	
 	/**
      * 通过listener去通知 reload
@@ -33,9 +29,13 @@ public interface ConfigurerFactory {
      * @param oldProperties
      */
     public void notifyPropertiesChanged(Properties oldProperties);
-    
-    public void loadFileProperties(String fileName);
+    	
+	public void close();
 	
-	public void loadSystemProperties();
+	public Properties getAllRemoteProperties();
+	
+	public void onLoadFinish(Properties properties);
+	
+	public boolean isRemoteFirst();
 	
 }

@@ -10,22 +10,19 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import com.appleframework.config.core.util.ObjectUtils;
+import com.appleframework.config.core.util.StringUtils;
 
 public class PropertyConfigurer {
 	
 	private static Logger logger = Logger.getLogger(PropertyConfigurer.class);
 	
-	private static Properties props = null;
+	private static Properties props = new Properties();
 	
 	public static Properties getProps() {
-		if(null == props)
-			props = new Properties();
 		return props;
 	}
 
 	public static void load(StringReader reader){
-		if(null == props)
-			props = new Properties();
 		try {
 			props.load(reader);
 		} catch (IOException e) {			
@@ -34,8 +31,6 @@ public class PropertyConfigurer {
 	}
 	
 	public static void load(InputStream inputStream){
-		if(null == props)
-			props = new Properties();
 		try {
 			props.load(inputStream);
 		} catch (IOException e) {			
@@ -44,15 +39,10 @@ public class PropertyConfigurer {
 	}
 	
 	public static void load(Properties defaultProps){
-		if(null == props) {
-			props = new Properties();
-		}
 		convertProperties(defaultProps);
 	}
 	
 	public static void setProperty(String key, String value) {
-		if (null == props)
-			props = new Properties();
 		try {
 			props.setProperty(key, value);
 		} catch (Exception e) {
@@ -61,8 +51,6 @@ public class PropertyConfigurer {
 	}
 
 	public static void put(Object key, Object value) {
-		if (null == props)
-			props = new Properties();
 		try {
 			props.put(key, value);
 		} catch (Exception e) {
@@ -90,10 +78,7 @@ public class PropertyConfigurer {
 	}
 
 	public static Object getProperty(String key) {
-		if(null == props)
-			return null;
-		else
-			return props.get(key);
+		return props.get(key);
 	}
 	
 	public static String getValue(String key) {
@@ -280,6 +265,26 @@ public class PropertyConfigurer {
 			logger.warn("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return defaultFloat;
 		}
+	}
+	
+	public synchronized static void merge(Properties properties){
+		if (properties == null || properties.isEmpty())
+			return;
+		props.putAll(properties);
+	}
+	
+	public synchronized static void add(String key, String value) {
+		if (StringUtils.isEmptyString(key) || StringUtils.isEmptyString(value))
+			return;
+		props.put(key, value);
+	}
+	
+	public static boolean containsProperty(String key) {
+		return props.containsKey(key);
+	}
+	
+	public static boolean containsKey(String key) {
+		return props.containsKey(key);
 	}
 	
 }
