@@ -14,12 +14,12 @@
 				<value>classpath:config.properties</value>
 			</list>
 		</property>
-		<property name="loadRemote" value="false" />
+		<property name="loadRemote" value="true" />
 	</bean>
 
 	<bean id="demoXML" class="com.appleframework.config.test.Demo">
-		<property name="config3" value="${demo.config1}" />
-		<property name="config4" value="${config2}" />
+		<property name="config3" value="${jdbc.url}" />
+		<property name="config4" value="${sns.save.flag}" />
 	</bean>
 
 </beans>

@@ -36,7 +36,7 @@ public class Demo {
 
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
-		ApplicationContext appCtx = new ClassPathXmlApplicationContext("config/applicationContext2.xml");
+		ApplicationContext appCtx = new ClassPathXmlApplicationContext("config/applicationContext.xml");
 
 		Demo demoAnn = (Demo) appCtx.getBean("demoAnn");
 		demoAnn.printConfigAnn();

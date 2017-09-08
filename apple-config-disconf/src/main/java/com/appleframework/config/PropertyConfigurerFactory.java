@@ -15,17 +15,29 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		convertLocalProperties(props);
 	}
 
-	public PropertyConfigurerFactory(String fileName) {
-		this.systemPropertyFile = fileName;
-	}
-
 	public void init() {
-		
+
 		Version.logVersion();
 
 		initSystemProperties();
 
 		initEventListener();
+
+	}
+
+	@Override
+	public void close() {
+	}
+
+	@Override
+	public Properties getAllRemoteProperties() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void onLoadFinish(Properties properties) {
+		// TODO Auto-generated method stub
 
 	}
 
