@@ -23,7 +23,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	
 	private ScheduledExecutorService scheduledExecutor;
 
-	private String apiBaseUrl;
+	private String apiBaseUrl = "http://configinfo.appleframework.com";
 	private String app;
 	private String env;
 	private String version;
@@ -72,6 +72,8 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		if (apiBaseUrl != null)
 			if (apiBaseUrl.endsWith("/"))
 				apiBaseUrl = apiBaseUrl.substring(0, apiBaseUrl.length() - 1);
+			if(!apiBaseUrl.startsWith("http://"))
+				apiBaseUrl = "http://" + apiBaseUrl;
 		this.apiBaseUrl = apiBaseUrl;
 	}
 
