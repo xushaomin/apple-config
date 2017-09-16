@@ -29,7 +29,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	private String version;
 	private String contentMd5;
 	
-	private PropertyConfigurerFactory() {}
+	public PropertyConfigurerFactory() {}
 
 	public void init() {
 		String defaultAppName = getValue("spring.application.name");

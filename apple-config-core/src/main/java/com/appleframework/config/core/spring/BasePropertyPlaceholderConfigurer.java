@@ -58,14 +58,24 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 		Properties properties = super.mergeProperties();
 		PropertyConfigurer.merge(properties);
 
-		// 读取system.properties文件配置
+		// read system.properties
 		URL resource = Thread.currentThread().getContextClassLoader().getResource("system.properties");
 		if (resource != null) {
 			Properties sysConfig = new Properties();
 			sysConfig.load(new FileReader(new File(resource.getPath())));
 			PropertyConfigurer.merge(sysConfig);
 		} else {
-			logger.warn("配置文件[system.properties]缺失");
+			logger.warn("[system.properties] is not exist !");
+		}
+		
+		// read application.properties
+		resource = Thread.currentThread().getContextClassLoader().getResource("application.properties");
+		if (resource != null) {
+			Properties sysConfig = new Properties();
+			sysConfig.load(new FileReader(new File(resource.getPath())));
+			PropertyConfigurer.merge(sysConfig);
+		} else {
+			logger.warn("[application.properties] is not exist !");
 		}
 		
 		Class<?> clazz;
