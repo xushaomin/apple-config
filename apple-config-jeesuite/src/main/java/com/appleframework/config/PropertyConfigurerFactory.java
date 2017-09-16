@@ -34,8 +34,6 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	public void init() {
 		String defaultAppName = getValue("spring.application.name");
 		app = getValue("application.name", defaultAppName);
-		/*if (loadRemote == null)
-			remoteEnabled = Boolean.parseBoolean(getValue("configcenter.enabled", "true"));*/
 		
 		String defaultConfigRemote = getValue("spring.config.remote");
 		String configRemote = getValue("config.remote", defaultConfigRemote);
