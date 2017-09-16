@@ -97,7 +97,7 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 		if (remoteProperties != null) {
 			Set<Entry<Object, Object>> entrySet = remoteProperties.entrySet();
 			for (Entry<Object, Object> entry : entrySet) {
-				// 本地配置优先
+				// local configurer first
 				if (configurerFactory.isRemoteFirst() == false && properties.containsKey(entry.getKey())) {
 					logger.info("config[" + entry.getKey() + "] exists in location,skip~");
 					continue;
