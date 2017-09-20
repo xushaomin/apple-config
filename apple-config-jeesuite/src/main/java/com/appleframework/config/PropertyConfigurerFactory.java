@@ -73,12 +73,13 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 
 	public void setApiBaseUrl(String apiBaseUrl) {
-		if (apiBaseUrl != null)
+		if (apiBaseUrl != null) {
 			if (apiBaseUrl.endsWith("/"))
 				apiBaseUrl = apiBaseUrl.substring(0, apiBaseUrl.length() - 1);
 			if(!apiBaseUrl.startsWith("http://"))
 				apiBaseUrl = "http://" + apiBaseUrl;
-		this.apiBaseUrl = apiBaseUrl;
+			this.apiBaseUrl = apiBaseUrl;
+		}
 	}
 
 	public String getApp() {
