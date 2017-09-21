@@ -60,7 +60,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 					notifyPropertiesChanged(remoteProperties);
 				}
 			}
-		}, 10, 20, TimeUnit.SECONDS);
+		}, 60, 60, TimeUnit.SECONDS);
 	}
 
 	public static PropertyConfigurerFactory getInstance() {
