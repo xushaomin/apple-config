@@ -13,13 +13,12 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
-import com.appleframework.config.PropertyConfigurerFactory;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.factory.ConfigurerFactory;
 
 public class ExtendPropertySourceLoader implements PropertySourceLoader, PriorityOrdered, DisposableBean {
 
-	private ConfigurerFactory configurerFactory = PropertyConfigurerFactory.getInstance();
+	private ConfigurerFactory configurerFactory = null;
 
 	@Override
 	public String[] getFileExtensions() {
@@ -28,9 +27,20 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 
 	@Override
 	public PropertySource<?> load(String name, Resource resource, String profile) throws IOException {
-		if (profile == null) {
+		if (null == profile) {
+			
 			Properties properties = PropertiesLoaderUtils.loadProperties(resource);
 			PropertyConfigurer.merge(properties);
+
+			if(null == configurerFactory) {
+				Class<?> clazz;
+				try {
+					clazz = Class.forName("com.appleframework.config.PropertyConfigurerFactory");
+					configurerFactory = (ConfigurerFactory) clazz.newInstance();
+				} catch (Exception e) {
+					return null;
+				}
+			}
 
 			configurerFactory.setSpringboot(true);
 			configurerFactory.init();
@@ -39,11 +49,10 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 			if (remoteProperties != null) {
 				Set<Entry<Object, Object>> entrySet = remoteProperties.entrySet();
 				for (Entry<Object, Object> entry : entrySet) {
-					// 本地配置优先
+					// local config first
 					if (configurerFactory.isRemoteFirst() == false && properties.containsKey(entry.getKey()))
 						continue;
 					properties.put(entry.getKey(), entry.getValue());
-					//
 					PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
 				}
 			}
