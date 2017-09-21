@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.appleframework.config</groupId>
+		<artifactId>apple-config</artifactId>
+		<version>0.2.7.RELEASE</version>
+	</parent>
+	<artifactId>apple-config-springboot</artifactId>
+	<name>apple-config-springboot</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>apple-config-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot</artifactId>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+</project>
