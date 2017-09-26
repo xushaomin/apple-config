@@ -43,7 +43,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
-			<version>${spring.version}</version>
 		</dependency>
 
 		<!-- aspectj -->
