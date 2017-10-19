@@ -2,7 +2,9 @@ package com.appleframework.config.springboot;
 
 import java.io.IOException;
 import java.util.Map.Entry;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.Set;
 
 import org.springframework.beans.factory.DisposableBean;
@@ -32,16 +34,23 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 			Properties properties = PropertiesLoaderUtils.loadProperties(resource);
 			PropertyConfigurer.merge(properties);
 
-			if(null == configurerFactory) {
-				Class<?> clazz;
+			//load by spi
+			try {
+				ServiceLoader<ConfigurerFactory> serviceLoader = ServiceLoader.load(ConfigurerFactory.class);
+		        Iterator<ConfigurerFactory> iterator = serviceLoader.iterator();
+		        if(iterator.hasNext()){
+		        	configurerFactory = iterator.next();
+		        }
+			} catch (Exception e) {
+				//load by class.forName
 				try {
-					clazz = Class.forName("com.appleframework.config.PropertyConfigurerFactory");
+					Class<?> clazz = Class.forName("com.appleframework.config.PropertyConfigurerFactory");
 					configurerFactory = (ConfigurerFactory) clazz.newInstance();
-				} catch (Exception e) {
+				} catch (Exception e1) {
 					return null;
 				}
 			}
-
+			
 			configurerFactory.setSpringboot(true);
 			configurerFactory.init();
 
