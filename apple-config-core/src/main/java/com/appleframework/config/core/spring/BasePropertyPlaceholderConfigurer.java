@@ -5,7 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -78,14 +80,24 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 			logger.warn("[application.properties] is not exist !");
 		}
 		
-		Class<?> clazz;
+		//load by spi
 		try {
-			clazz = Class.forName("com.appleframework.config.PropertyConfigurerFactory");
-			configurerFactory = (ConfigurerFactory) clazz.newInstance();
+			ServiceLoader<ConfigurerFactory> serviceLoader = ServiceLoader.load(ConfigurerFactory.class);
+	        Iterator<ConfigurerFactory> iterator = serviceLoader.iterator();
+	        if(iterator.hasNext()){
+	        	configurerFactory = iterator.next();
+	        }
 		} catch (Exception e) {
-			return properties;
+			logger.error(e.getMessage());
+			//load by class.forName
+			try {
+				Class<?> clazz = Class.forName("com.appleframework.config.PropertyConfigurerFactory");
+				configurerFactory = (ConfigurerFactory) clazz.newInstance();
+			} catch (Exception e1) {
+				return properties;
+			}
 		}
-
+		
 		configurerFactory.setLoadRemote(loadRemote);
 		configurerFactory.setEventListener(eventListener);
 		configurerFactory.setEventListenerClass(eventListenerClass);
