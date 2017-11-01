@@ -16,17 +16,17 @@ public class DateConvertDeserializer extends JsonDeserializer<Date> {
 
 //	private static LoggerAdapter log = LoggerAdapterFacory.getLogger(JsonToDateDeserializer.class);
 
-	private static final String pattern = "yyyy-MM-dd";
+	private static final String PATTERN = "yyyy-MM-dd";
 
 	@Override
 	public Date deserialize(JsonParser jsonParser, DeserializationContext dc) throws JsonProcessingException {
 		Date date = null;
 		try {
-			DateFormat dateFormat = new SimpleDateFormat(pattern);
+			DateFormat dateFormat = new SimpleDateFormat(PATTERN);
 			String val = jsonParser.getText();
 			date = dateFormat.parse(val);
 		} catch (ParseException | IOException pex) {
-			throw new RuntimeException("json转换Date异常，格式：" + pattern);
+			throw new RuntimeException("json转换Date异常，格式：" + PATTERN);
 		}
 		return date;
 	}

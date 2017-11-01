@@ -268,14 +268,16 @@ public class PropertyConfigurer {
 	}
 	
 	public synchronized static void merge(Properties properties){
-		if (properties == null || properties.isEmpty())
+		if (properties == null || properties.isEmpty()) {
 			return;
+		}
 		props.putAll(properties);
 	}
 	
 	public synchronized static void add(String key, String value) {
-		if (StringUtils.isEmptyString(key) || StringUtils.isEmptyString(value))
+		if (StringUtils.isEmptyString(key) || StringUtils.isEmptyString(value)) {
 			return;
+		}
 		props.put(key, value);
 	}
 	

@@ -26,7 +26,7 @@ public class Version {
 					break;
 				}
 			}
-		} catch (Exception E) {
+		} catch (Exception e) {
 			// skip it
 		}
 	}

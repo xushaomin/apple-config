@@ -30,9 +30,9 @@ public class ConfigAnnotationBeanPostProcessor extends InstantiationAwareBeanPos
 					Object value = PropertyConfigurer.getProperty(key);
 
 					if (value != null) {
-						Object _value = typeConverter.convertIfNecessary(value, field.getType());
+						Object object = typeConverter.convertIfNecessary(value, field.getType());
 						ReflectionUtils.makeAccessible(field);
-						field.set(bean, _value);
+						field.set(bean, object);
 					}
 				}
 			}
