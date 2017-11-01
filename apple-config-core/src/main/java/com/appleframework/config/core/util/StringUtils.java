@@ -67,7 +67,7 @@ public class StringUtils {
 	  * @param 
 	 * @return
 	 */
-	public String StringFilter(String str) {
+	public String stringFilter(String str) {
 		// 只允许字母和数字
 		// String regEx = "[^a-zA-Z0-9]";
 		// 清除掉所有特殊字符
@@ -128,14 +128,18 @@ public class StringUtils {
     
  // 判断一个字符串是否null或""
  	public static boolean isEmpty(String str) {
- 		if (str == null)
+ 		if (str == null) {
  			return true;
- 		else if (str.length() == 0)
+ 		}
+ 		else if (str.length() == 0) {
  			return true;
- 		else if ("null".equals(str))
+ 		}
+ 		else if ("null".equals(str)) {
  			return true;
- 		else if ("0".equals(str))
+ 		}
+ 		else if ("0".equals(str)) {
  			return true;
+ 		}
  		return false;
  	}
  	
@@ -151,8 +155,9 @@ public class StringUtils {
  		StringBuffer sb = new StringBuffer();
  		while (true) {
  			int idx = rlt.indexOf(oss);
- 			if (idx < 0)
+ 			if (idx < 0) {
  				break;
+ 			}
  			sb.delete(0, sb.length());
  			if (idx > 0) {
  				sb.append(rlt.substring(0, idx));
@@ -210,10 +215,12 @@ public class StringUtils {
  		for (int i = 0; i < params.length; i++) {
  			String[] param = params[i].split(valueSeparate);
  			if (param != null && param.length > 0 && param[0].equals(name)) {
- 				if (param.length > 1)
+ 				if (param.length > 1) {
  					return param[1];
- 				else
+ 				}
+ 				else {
  					return null;
+ 				}
  			}
  		}
  		return null;
@@ -235,7 +242,7 @@ public class StringUtils {
  	 * @return
  	 */
  	public static List<Integer> getListId(String id) {
- 		String str[] = id.split(",");
+ 		String[] str = id.split(",");
  		List<Integer> list = new ArrayList<Integer>();
  		for (int i = 0; i < str.length; i++) {
  			list.add(Integer.parseInt(str[i]));

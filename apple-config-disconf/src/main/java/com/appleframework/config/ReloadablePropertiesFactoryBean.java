@@ -96,7 +96,7 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
             DisconfMgr.getInstance().reloadableScan(realFileName);
             // only properties will reload
             String ext = FilenameUtils.getExtension(filename);
-			if (ext.equals("properties")) {
+			if ("properties".equals(ext)) {
 				PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver();
 				try {
 					Resource[] resourceList = pathMatchingResourcePatternResolver.getResources(filename);

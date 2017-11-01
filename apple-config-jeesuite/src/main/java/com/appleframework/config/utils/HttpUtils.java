@@ -43,10 +43,10 @@ public class HttpUtils {
 			String line = null;
 			StringBuilder result = new StringBuilder();
 			while (null != (line = br.readLine())) {
-				if (line.equals("not_found")) {
+				if ("not_found".equals(line)) {
 					throw new RuntimeException("文件不存在");
 				}
-				if (line.equals("download_error")) {
+				if ("download_error".equals(line)) {
 					throw new RuntimeException("下载错误");
 				}
 				result.append(line).append("\n");
@@ -59,10 +59,12 @@ public class HttpUtils {
 			throw new RuntimeException("下载错误");
 		} finally {
 			try {
-				if (br != null)
+				if (br != null) {
 					br.close();
-				if (out != null)
+				}
+				if (out != null) {
 					out.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

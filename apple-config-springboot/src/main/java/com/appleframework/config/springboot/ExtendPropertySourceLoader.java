@@ -59,8 +59,9 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 				Set<Entry<Object, Object>> entrySet = remoteProperties.entrySet();
 				for (Entry<Object, Object> entry : entrySet) {
 					// local config first
-					if (configurerFactory.isRemoteFirst() == false && properties.containsKey(entry.getKey()))
+					if (configurerFactory.isRemoteFirst() == false && properties.containsKey(entry.getKey())) {
 						continue;
+					}
 					properties.put(entry.getKey(), entry.getValue());
 					PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
 				}

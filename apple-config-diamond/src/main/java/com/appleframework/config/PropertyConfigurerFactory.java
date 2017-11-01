@@ -20,9 +20,9 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 
 	private static Logger logger = Logger.getLogger(PropertyConfigurerFactory.class);
 	
-	private String KEY_DEPLOY_GROUP     = "deploy.group";
-	private String KEY_DEPLOY_DATAID    = "deploy.dataId";
-	private String KEY_DEPLOY_CONF_HOST = "deploy.confHost";
+	private static String KEY_DEPLOY_GROUP     = "deploy.group";
+	private static String KEY_DEPLOY_DATAID    = "deploy.dataId";
+	private static String KEY_DEPLOY_CONF_HOST = "deploy.confHost";
 	
 	private DiamondManager manager;
 	
@@ -130,8 +130,9 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 
 	@Override
 	public void close() {
-		if(null != manager)
+		if(null != manager) {
 			manager.close();
+		}
 	}
 	
 }
