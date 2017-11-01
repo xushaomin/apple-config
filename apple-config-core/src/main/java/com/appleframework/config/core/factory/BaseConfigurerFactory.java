@@ -94,8 +94,9 @@ public class BaseConfigurerFactory {
 
 	public void initEventListener() {
 
-		if(null == eventListenerSet)
+		if(null == eventListenerSet) {
 			eventListenerSet = new HashSet<ConfigListener>();
+		}
 					
 		// 定义事件源
 		

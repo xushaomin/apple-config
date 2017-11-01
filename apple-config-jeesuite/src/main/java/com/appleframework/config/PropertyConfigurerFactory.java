@@ -5,8 +5,8 @@ import java.io.StringReader;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -48,8 +48,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 
 		version = getValue("deploy.version", "0.0.0");
 
-		scheduledExecutor = Executors.newScheduledThreadPool(1);
-
+		scheduledExecutor = new ScheduledThreadPoolExecutor(1);
 		scheduledExecutor.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
@@ -74,10 +73,12 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 
 	public void setApiBaseUrl(String apiBaseUrl) {
 		if (apiBaseUrl != null) {
-			if (apiBaseUrl.endsWith("/"))
+			if (apiBaseUrl.endsWith("/")) {
 				apiBaseUrl = apiBaseUrl.substring(0, apiBaseUrl.length() - 1);
-			if(!apiBaseUrl.startsWith("http://"))
+			}
+			if(!apiBaseUrl.startsWith("http://")) {
 				apiBaseUrl = "http://" + apiBaseUrl;
+			}
 			this.apiBaseUrl = apiBaseUrl;
 		}
 	}
@@ -138,10 +139,12 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 
 	@SuppressWarnings("unchecked")
 	public Properties getAllRemoteProperties() {
-		if (!loadRemote)
+		if (!loadRemote) {
 			return null;
-		if (StringUtils.isBlank(apiBaseUrl))
+		}
+		if (StringUtils.isBlank(apiBaseUrl)) {
 			return null;
+		}
 		Properties properties = new Properties();
 
 		String jsonString = getRemoteConfig(app, env, version);

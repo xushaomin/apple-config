@@ -23,22 +23,24 @@ public class ConfigBeanDefinitionParser implements BeanDefinitionParser {
         RootBeanDefinition beanDefinition = new RootBeanDefinition();
         beanDefinition.setBeanClass(ExtendedPropertyPlaceholderConfigurer.class);
         
-        if(!StringUtils.isNullOrEmpty(loadRemote))
+        if(!StringUtils.isNullOrEmpty(loadRemote)) {
         	beanDefinition.getPropertyValues().addPropertyValue("loadRemote", loadRemote);
-        
+        }
         List<String> list = new ArrayList<>();
-        if(!StringUtils.isNullOrEmpty(location))
+        if(!StringUtils.isNullOrEmpty(location)) {
         	list.add(location);
-        else
+        }
+        else {
         	list.add("system.properties");
+        }
         beanDefinition.getPropertyValues().addPropertyValue("locations", list);
         
-        if(!StringUtils.isNullOrEmpty(eventListenerClass))
+        if(!StringUtils.isNullOrEmpty(eventListenerClass)) {
         	beanDefinition.getPropertyValues().addPropertyValue("eventListenerClass", eventListenerClass);
-        
-        if(StringUtils.isNullOrEmpty(id))
+        }
+        if(StringUtils.isNullOrEmpty(id)) {
         	id = "extendedPropertyPlaceholderConfigurer";
-        	
+        }
         parserContext.getRegistry().registerBeanDefinition(id, beanDefinition);
         
         RootBeanDefinition annDefinition = new RootBeanDefinition();
