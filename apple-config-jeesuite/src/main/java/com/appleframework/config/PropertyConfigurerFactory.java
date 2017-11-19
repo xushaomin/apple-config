@@ -32,6 +32,18 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	public PropertyConfigurerFactory() {}
 
 	public void init() {
+		
+		Version.logVersion();
+				
+		initSystemProperties();
+
+		initEventListener();
+		
+		initRemotePropertieManager();
+	}
+	
+	private void initRemotePropertieManager() {
+		
 		String defaultAppName = getValue("spring.application.name");
 		app = getValue("application.name", defaultAppName);
 		
@@ -61,6 +73,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 			}
 		}, 60, 60, TimeUnit.SECONDS);
 	}
+	
 
 	public static PropertyConfigurerFactory getInstance() {
 		return instance;
