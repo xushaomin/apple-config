@@ -23,11 +23,6 @@ public interface ConfigurerFactory {
 		
 	public void init();
 	
-	/**
-     * 通过listener去通知 reload
-     *
-     * @param oldProperties
-     */
     public void notifyPropertiesChanged(Properties oldProperties);
     	
 	public void close();
