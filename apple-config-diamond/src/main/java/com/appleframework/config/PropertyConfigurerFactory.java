@@ -46,6 +46,11 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 	
 	private void initDiamondManager() {
+		
+		if (!isLoadRemote()) {
+			return;
+		}
+		
 		String group = PropertyConfigurer.getString(KEY_DEPLOY_GROUP);
 		String dataId = PropertyConfigurer.getString(KEY_DEPLOY_DATAID);
 		
