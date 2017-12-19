@@ -60,15 +60,17 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 			com.taobao.diamond.common.Constants.DAILY_DOMAINNAME   = confHost;
 		}
 
+		if(null == group) {
+			group = this.getDeployEnv();
+		}
+		if(null == dataId) {
+			dataId = this.getApplicationName();
+		}
+			
 		logger.warn("配置项：group=" + group);
 		logger.warn("配置项：dataId=" + dataId);
 
 		if (!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
-			String env = this.getDeployEnv();
-			if (!StringUtils.isEmpty(env)) {
-				dataId += "-" + env;
-				logger.warn("配置项：env=" + env);
-			}
 			
 			ManagerListener springMamagerListener = new ManagerListener() {
 
@@ -98,7 +100,6 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		if (!isLoadRemote() || null == manager) {
 			return properties;
 		}
-
 		try {
 			String configInfo = manager.getAvailableConfigureInfomation(30000);
 			logger.warn("配置项内容: \n" + configInfo);
@@ -110,7 +111,6 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		} catch (Exception e) {
 			logger.error(e);
 		}
-
 		return properties;
 	}
 	
@@ -138,6 +138,14 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		if(null != manager) {
 			manager.close();
 		}
+	}
+	
+	private String getApplicationName() {
+		String appName = PropertyConfigurer.getString("spring.application.name");
+		if(null == appName) {
+			appName = PropertyConfigurer.getString("application.name");
+		}
+		return appName;
 	}
 	
 }
