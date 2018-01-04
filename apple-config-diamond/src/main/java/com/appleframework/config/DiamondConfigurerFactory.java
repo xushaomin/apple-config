@@ -13,6 +13,13 @@ import org.apache.log4j.Logger;
 
 import com.appleframework.config.core.PropertyConfigurer;
 
+/**
+* 专门提供apple-boot-java以
+* -Dconfig-factory=com.appleframework.config.PropertyConfigurerFactory
+* 模式启动
+* 
+* @author xushaomin
+*/
 public class DiamondConfigurerFactory extends PropertyConfigurerFactory {
 
 	private static Logger logger = Logger.getLogger(DiamondConfigurerFactory.class);

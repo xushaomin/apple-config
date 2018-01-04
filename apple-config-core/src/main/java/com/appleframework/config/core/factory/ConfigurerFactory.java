@@ -3,6 +3,8 @@ package com.appleframework.config.core.factory;
 import java.util.Collection;
 import java.util.Properties;
 
+import org.springframework.core.io.Resource;
+
 import com.appleframework.config.core.event.ConfigListener;
 
 public interface ConfigurerFactory {
@@ -32,5 +34,7 @@ public interface ConfigurerFactory {
 	public void onLoadFinish(Properties properties);
 	
 	public boolean isRemoteFirst();
+	
+	public void setRemotes(Resource... locations);
 	
 }

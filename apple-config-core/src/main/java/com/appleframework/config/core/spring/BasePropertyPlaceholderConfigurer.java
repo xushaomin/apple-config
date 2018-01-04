@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.core.io.Resource;
 
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.event.ConfigListener;
@@ -32,6 +33,8 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 	protected ConfigurerFactory configurerFactory;
 
 	protected boolean loadRemote = true;
+	
+	protected Resource[] remotes;
 
 	public boolean isLoadRemote() {
 		return loadRemote;
@@ -55,6 +58,14 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 		super.processProperties(beanFactoryToProcess, props);
 	}
 	
+	public void setRemotes(Resource... remotes) {
+		this.remotes = remotes;
+	}
+	
+	public void setRemote(Resource remote) {
+		this.remotes = new Resource[] {remote};
+	}
+
 	@Override
 	protected Properties mergeProperties() throws IOException {
 		Properties properties = super.mergeProperties();
@@ -98,13 +109,14 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 			}
 		}
 		
+		configurerFactory.setRemotes(remotes);
 		configurerFactory.setLoadRemote(loadRemote);
 		configurerFactory.setEventListener(eventListener);
 		configurerFactory.setEventListenerClass(eventListenerClass);
 		configurerFactory.setEventListenerClasss(eventListenerClasss);
 		configurerFactory.setEventListeners(eventListeners);
 		configurerFactory.init();
-
+		
 		Properties remoteProperties = configurerFactory.getAllRemoteProperties();
 		if (remoteProperties != null) {
 			Set<Entry<Object, Object>> entrySet = remoteProperties.entrySet();

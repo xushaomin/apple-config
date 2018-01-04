@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
 
 import com.appleframework.config.core.Constants;
 import com.appleframework.config.core.PropertyConfigurer;
@@ -34,6 +35,8 @@ public class BaseConfigurerFactory {
 	protected boolean isSpringboot = false;
 	
 	protected boolean remoteFirst = false;
+	
+	protected Resource[] remotes;
 	
 	public boolean isLoadRemote() {
 		return loadRemote;
@@ -192,6 +195,10 @@ public class BaseConfigurerFactory {
 				listener.receiveConfigInfo(oldProperties);
 			}
 		}
+	}
+	
+	public void setRemotes(Resource... remotes) {
+		this.remotes = remotes;
 	}
 	
 }
