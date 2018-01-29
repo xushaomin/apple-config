@@ -181,6 +181,35 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		return properties;
 	}
 	
+	@Override
+	@SuppressWarnings("unchecked")
+	public String getAllRemoteConfigInfo() {
+		if (!loadRemote) {
+			return null;
+		}
+		if (StringUtils.isBlank(apiBaseUrl)) {
+			return null;
+		}
+		String retConfigInfo = "";
+
+		String jsonString = getRemoteConfig(app, env, version);
+		Map<String, String> map = JsonUtils.toObject(jsonString, Map.class);
+		if (map.containsKey("code")) {
+			throw new RuntimeException(map.get("msg"));
+		}
+
+		Set<String> keys = map.keySet();
+		for (String key : keys) {
+			String configInfo = map.get(key);
+			if (!StringUtils.isEmpty(configInfo)) {
+				retConfigInfo += "\n" + configInfo;
+			}
+			contentMd5 = key;
+		}
+
+		return retConfigInfo;
+	}
+
 	public void onLoadFinish(Properties properties){
 		setSystemProperty(properties);
 	}

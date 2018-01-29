@@ -115,6 +115,21 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 	
 	@Override
+	public String getAllRemoteConfigInfo() {
+		if (!isLoadRemote() || null == manager) {
+			return null;
+		}
+		try {
+			String configInfo = manager.getAvailableConfigureInfomation(30000);
+			logger.warn("配置项内容: \n" + configInfo);
+			return configInfo;
+		} catch (Exception e) {
+			logger.error(e);
+		}
+		return null;
+	}
+
+	@Override
 	public void onLoadFinish(Properties properties) {
 		setSystemProperty(properties);
 	}
