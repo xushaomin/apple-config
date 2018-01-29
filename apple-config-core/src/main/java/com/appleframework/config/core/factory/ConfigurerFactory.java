@@ -31,6 +31,8 @@ public interface ConfigurerFactory {
 	
 	public Properties getAllRemoteProperties();
 	
+	public String getAllRemoteConfigInfo();
+	
 	public void onLoadFinish(Properties properties);
 	
 	public boolean isRemoteFirst();
