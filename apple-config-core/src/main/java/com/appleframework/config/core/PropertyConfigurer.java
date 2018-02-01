@@ -18,10 +18,16 @@ public class PropertyConfigurer {
 	
 	private static Properties props = new Properties();
 	
+	private static String configInfo;
+	
 	public static Properties getProps() {
 		return props;
 	}
 
+	public static void load(String configInfo) {
+		PropertyConfigurer.configInfo = configInfo;
+		load(new StringReader(configInfo));
+	}
 	public static void load(StringReader reader){
 		try {
 			props.load(reader);
@@ -287,6 +293,18 @@ public class PropertyConfigurer {
 	
 	public static boolean containsKey(String key) {
 		return props.containsKey(key);
+	}
+
+	public static String getConfigInfo() {
+		return configInfo;
+	}
+
+	public static void setConfigInfo(String configInfo) {
+		PropertyConfigurer.configInfo = configInfo;
+	}
+
+	public static void setProps(Properties props) {
+		PropertyConfigurer.props = props;
 	}
 	
 }
