@@ -4,7 +4,7 @@
 
 	<groupId>com.appleframework.config</groupId>
 	<artifactId>apple-config</artifactId>
-	<version>0.3.2.RELEASE</version>
+	<version>0.3.3.RELEASE</version>
 	<packaging>pom</packaging>
 
 	<name>apple-config</name>
@@ -99,6 +99,7 @@
     	<module>apple-config-demo</module>
     	<module>apple-config-jeesuite</module>
     	<module>apple-config-springboot</module>
+    	<module>apple-config-typesafe</module>
 	</modules>
 	
 	<build>
