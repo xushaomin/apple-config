@@ -104,8 +104,6 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 
 	@Override
 	public void onLoadFinish(Properties properties) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

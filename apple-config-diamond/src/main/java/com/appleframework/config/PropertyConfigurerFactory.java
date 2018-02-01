@@ -82,7 +82,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 					// 客户端处理数据的逻辑
 					logger.warn("已改动的配置：\n" + configInfo);
 					try {
-						PropertyConfigurer.load(new StringReader(configInfo));
+						PropertyConfigurer.load(configInfo);
 					} catch (Exception e) {
 						logger.error(e);
 						return;
