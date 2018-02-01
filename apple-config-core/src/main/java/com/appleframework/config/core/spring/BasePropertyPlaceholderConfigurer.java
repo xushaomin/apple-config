@@ -3,6 +3,7 @@ package com.appleframework.config.core.spring;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,6 +20,7 @@ import org.springframework.core.io.Resource;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.event.ConfigListener;
 import com.appleframework.config.core.factory.ConfigurerFactory;
+import com.appleframework.config.core.util.StringUtils;
 
 public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 
@@ -33,7 +35,7 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 	protected ConfigurerFactory configurerFactory;
 
 	protected boolean loadRemote = true;
-	
+		
 	protected Resource[] remotes;
 
 	public boolean isLoadRemote() {
@@ -117,7 +119,10 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 		configurerFactory.setEventListeners(eventListeners);
 		configurerFactory.init();
 		
-		Properties remoteProperties = configurerFactory.getAllRemoteProperties();
+		String configInfo = configurerFactory.getAllRemoteConfigInfo();
+		PropertyConfigurer.setConfigInfo(configInfo);
+
+		Properties remoteProperties = this.changeToProperties(configInfo);
 		if (remoteProperties != null) {
 			Set<Entry<Object, Object>> entrySet = remoteProperties.entrySet();
 			for (Entry<Object, Object> entry : entrySet) {
@@ -132,7 +137,18 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 		}
 
 		configurerFactory.onLoadFinish(properties);
-
+		return properties;
+	}
+	
+	private Properties changeToProperties(String configInfo) {
+		Properties properties = new Properties();
+		try {
+			if (!StringUtils.isEmpty(configInfo)) {
+				properties.load(new StringReader(configInfo));
+			}
+		} catch (Exception e) {
+			logger.error(e);
+		}
 		return properties;
 	}
 
@@ -143,5 +159,5 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 	public void setEventListenerClasss(Collection<String> eventListenerClasss) {
 		this.eventListenerClasss = eventListenerClasss;
 	}
-
+	
 }
