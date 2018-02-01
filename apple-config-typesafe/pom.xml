@@ -8,54 +8,40 @@
 		<artifactId>apple-config</artifactId>
 		<version>0.3.3.RELEASE</version>
 	</parent>
-	<artifactId>apple-config-demo</artifactId>
-	<name>apple-config-demo</name>
+	<artifactId>apple-config-typesafe</artifactId>
+	<name>apple-config-typesafe</name>
 	<url>http://maven.apache.org</url>
-
+	
 	<properties>
-		<aspectj.version>1.8.5</aspectj.version>
+		<typesafe.version>1.3.2</typesafe.version>
 	</properties>
-
+	
 	<dependencies>
 		<dependency>
-			<groupId>com.appleframework.config</groupId>
-			<artifactId>apple-config-diamond</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>apple-config-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
+			<groupId>com.typesafe</groupId>
+			<artifactId>config</artifactId>
+			<version>${typesafe.version}</version>
 		</dependency>
-
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
+			<groupId>com.typesafe</groupId>
+			<artifactId>config</artifactId>
+			<version>${typesafe.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- aspectj -->
 		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>${aspectj.version}</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-			<version>${aspectj.version}</version>
-		</dependency>
-
 	</dependencies>
+	
 </project>
