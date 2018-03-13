@@ -32,7 +32,7 @@ import com.baidu.disconf.client.addons.properties.ReloadablePropertiesBase;
  * When the Properties' reloadConfiguration method is called, and the file has
  * changed, the properties are read again from the file.
  * <p/>
- * ÕæÕıµÄ reload bean ¶¨Òå£¬Ëü¿ÉÒÔ¶¨Òå¶à¸ö resource Îª reload config file
+ * çœŸæ­£çš„ reload bean å®šä¹‰ï¼Œå®ƒå¯ä»¥å®šä¹‰å¤šä¸ª resource ä¸º reload config file
  */
 @SuppressWarnings("unused")
 public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean implements DisposableBean, ApplicationContextAware {
@@ -74,7 +74,7 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
 	}
 
     /**
-     * ¶¨Òå×ÊÔ´ÎÄ¼ş
+     * å®šä¹‰èµ„æºæ–‡ä»¶
      *
      * @param fileNames
      */
@@ -144,7 +144,7 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
     }
 
     /**
-     * listener , ÓÃÓÚÍ¨Öª»Øµ÷
+     * listener , ç”¨äºé€šçŸ¥å›è°ƒ
      *
      * @param listeners
      */
@@ -169,7 +169,7 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
     }
 
     /**
-     * createInstance ·ÏÆúÁË
+     * createInstance åºŸå¼ƒäº†
      *
      * @throws IOException
      */
@@ -199,7 +199,7 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
     }
 
     /**
-     * ¸ù¾İĞŞ¸ÄÊ±¼äÀ´ÅĞ¶¨ÊÇ·ñreload
+     * æ ¹æ®ä¿®æ”¹æ—¶é—´æ¥åˆ¤å®šæ˜¯å¦reload
      *
      * @param forceReload
      *
@@ -237,7 +237,7 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
     }
 
     /**
-     * ÉèÖÃĞÂµÄÖµ
+     * è®¾ç½®æ–°çš„å€¼
      *
      * @throws IOException
      */
@@ -279,7 +279,7 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
 		this.eventListenerClasss = eventListenerClasss;
 	}
     /**
-     * »Øµ÷×Ô¼º
+     * å›è°ƒè‡ªå·±
      */
     @SuppressWarnings("unchecked")
 	class ReloadablePropertiesImpl extends ReloadablePropertiesBase implements ReconfigurableBean {
@@ -293,4 +293,3 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
     }
 
 }
-
