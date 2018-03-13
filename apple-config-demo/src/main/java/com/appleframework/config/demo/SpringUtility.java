@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
- * 工具�? - Spring
+ * Spring工具类
  */
 
 public class SpringUtility implements ApplicationContextAware, DisposableBean {
