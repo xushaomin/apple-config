@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.appleframework.config</groupId>
 		<artifactId>apple-config</artifactId>
-		<version>0.3.3.RELEASE</version>
+		<version>0.3.4.RELEASE</version>
 	</parent>
 
 	<artifactId>apple-config-jeesuite</artifactId>
@@ -53,6 +53,11 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
 			<version>2.7.4</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
 		</dependency>
 		
 		<dependency>

@@ -5,11 +5,12 @@ import java.util.Enumeration;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Version {
 
-	private static Logger logger = Logger.getLogger(Version.class);
+	private static Logger logger = LoggerFactory.getLogger(Version.class);
 
 	public static void logVersion() {
 		try {

@@ -7,7 +7,8 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import com.appleframework.config.core.Constants;
@@ -18,7 +19,7 @@ import com.appleframework.config.core.util.StringUtils;
 
 public class BaseConfigurerFactory {
 
-	private static Logger logger = Logger.getLogger(BaseConfigurerFactory.class);
+	private static Logger logger = LoggerFactory.getLogger(BaseConfigurerFactory.class);
 	
 	protected Collection<ConfigListener> eventListenerSet;
 	
@@ -82,7 +83,6 @@ public class BaseConfigurerFactory {
 	}
 		
 	public void initSystemProperties() {
-		// 获取启动启动-D参数
 		Properties systemProps = System.getProperties();
 		Enumeration<?> systemEnum = systemProps.keys();
 		while (systemEnum.hasMoreElements()) {
@@ -101,26 +101,21 @@ public class BaseConfigurerFactory {
 			eventListenerSet = new HashSet<ConfigListener>();
 		}
 					
-		// 定义事件源
-		
-		//1. 处理eventListenerClass
 		if (!StringUtils.isNullOrEmpty(eventListenerClass)) {
 			try {
 				Class<?> clazz = Class.forName(eventListenerClass);
 				ConfigListener configListener = (ConfigListener) clazz.newInstance();
 				eventListenerSet.add(configListener);
 			} catch (Exception e) {
-				logger.error(e);
+				logger.error(e.getMessage());
 			}
 		}
 
-		//2. 处理eventListener
 		if (ObjectUtils.isNotEmpty(eventListener)) {
 			eventListenerSet.add(eventListener);
 		}
 		
 		
-		//3. 处理eventListeners
 		if(null != eventListeners) {
 			for (ConfigListener eventListenerBean : eventListeners) {
 				if (null != eventListenerBean) {
@@ -129,7 +124,6 @@ public class BaseConfigurerFactory {
 			}
 		}
 		
-		//4. 处理eventListenerClasss
 		if(null != eventListenerClasss) {
 			for (String eventListenerClassStr : eventListenerClasss) {
 				try {
@@ -139,7 +133,7 @@ public class BaseConfigurerFactory {
 						eventListenerSet.add(configListener);		
 					}
 				} catch (Exception e) {
-					logger.error(e);
+					logger.error(e.getMessage());
 				}
 			}
 		}
@@ -147,7 +141,6 @@ public class BaseConfigurerFactory {
 	}
 	
 	public void setSystemProperty(Properties props) {
-		// 讲-D开头的的配置设置到系统变量
 		Iterator<Entry<Object, Object>> it = props.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<Object, Object> entry = it.next();
@@ -181,13 +174,12 @@ public class BaseConfigurerFactory {
 	}
 	
 	/**
-     * 通过listener去通知 reload
+     * notify properties reload
      *
      * @param oldProperties
      */
 	public void notifyPropertiesChanged(Properties oldProperties) {
 		setSystemProperty(oldProperties);
-		// 事件触发
 		if (eventListenerSet.size() > 0) {
 			Iterator<ConfigListener> iterator = eventListenerSet.iterator();
 			while (iterator.hasNext()) {
