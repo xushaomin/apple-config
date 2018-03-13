@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>apple-config</artifactId>
 		<groupId>com.appleframework.config</groupId>
-		<version>0.3.3.RELEASE</version>
+		<version>0.3.4.RELEASE</version>
 	</parent>
 	<artifactId>apple-config-disconf</artifactId>
 	<name>apple-config-disconf</name>

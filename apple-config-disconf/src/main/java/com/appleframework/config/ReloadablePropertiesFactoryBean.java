@@ -37,9 +37,9 @@ import com.baidu.disconf.client.addons.properties.ReloadablePropertiesBase;
 @SuppressWarnings("unused")
 public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean implements DisposableBean, ApplicationContextAware {
 
-	private static ApplicationContext applicationContext;
+	private static Logger logger = LoggerFactory.getLogger(ReloadablePropertiesFactoryBean.class);
 
-    protected static final Logger log = LoggerFactory.getLogger(ReloadablePropertiesFactoryBean.class);
+	private static ApplicationContext applicationContext;
 
     private Resource[] locations;
     private long[] lastModified;
@@ -215,7 +215,7 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
             } catch (IOException e) {
                 // not a file resource
                 // may be spring boot
-                log.warn(e.toString());
+            	logger.warn(e.toString());
                 continue;
             }
             try {
@@ -226,8 +226,8 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
                 }
             } catch (Exception e) {
                 // cannot access file. assume unchanged.
-                if (log.isDebugEnabled()) {
-                    log.debug("can't determine modification time of " + file + " for " + location, e);
+                if (logger.isDebugEnabled()) {
+                	logger.debug("can't determine modification time of " + file + " for " + location, e);
                 }
             }
         }
