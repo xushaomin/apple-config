@@ -7,14 +7,15 @@ import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.appleframework.config.core.util.ObjectUtils;
 import com.appleframework.config.core.util.StringUtils;
 
 public class PropertyConfigurer {
 	
-	private static Logger logger = Logger.getLogger(PropertyConfigurer.class);
+	private static Logger logger = LoggerFactory.getLogger(PropertyConfigurer.class);
 	
 	private static Properties props = new Properties();
 	
@@ -32,7 +33,7 @@ public class PropertyConfigurer {
 		try {
 			props.load(reader);
 		} catch (IOException e) {			
-			logger.error(e);
+			logger.error(e.getMessage());
 		}
 	}
 	
@@ -40,7 +41,7 @@ public class PropertyConfigurer {
 		try {
 			props.load(inputStream);
 		} catch (IOException e) {			
-			logger.error(e);
+			logger.error(e.getMessage());
 		}
 	}
 	
@@ -52,7 +53,7 @@ public class PropertyConfigurer {
 		try {
 			props.setProperty(key, value);
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -60,7 +61,7 @@ public class PropertyConfigurer {
 		try {
 			props.put(key, value);
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error(e.getMessage());
 		}
 	}
 	

@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import com.appleframework.config.core.factory.BaseConfigurerFactory;
@@ -13,7 +14,7 @@ import com.baidu.disconf.client.support.utils.ConfigLoaderUtils;
 
 public class PropertyConfigurerFactory extends BaseConfigurerFactory implements ConfigurerFactory {
 
-	private static Logger logger = Logger.getLogger(PropertyConfigurerFactory.class);
+	private static Logger logger = LoggerFactory.getLogger(PropertyConfigurerFactory.class);
 
 	public PropertyConfigurerFactory() {
 
