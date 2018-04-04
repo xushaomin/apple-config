@@ -48,7 +48,7 @@ public class DisconfDemoTask2 {
 
                 LOGGER.info("autoservice2: {}", autoService2.getAuto2());
 
-                LOGGER.info("PropertyConfigurer: {}", PropertyConfigurer.getProperty("server"));
+                LOGGER.info("PropertyConfigurer: {}", PropertyConfigurer.getProperty("fastdfs.http.url"));
             }
 
         } catch (Exception e) {
