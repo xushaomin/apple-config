@@ -10,7 +10,8 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.util.StringUtils;
@@ -24,7 +25,7 @@ import com.appleframework.config.core.util.StringUtils;
 */
 public class DiamondConfigurerFactory extends PropertyConfigurerFactory {
 
-	private static Logger logger = Logger.getLogger(DiamondConfigurerFactory.class);
+	private static Logger logger = LoggerFactory.getLogger(DiamondConfigurerFactory.class);
 	
 	public DiamondConfigurerFactory() {
 		
@@ -91,7 +92,7 @@ public class DiamondConfigurerFactory extends PropertyConfigurerFactory {
 				properties.load(new StringReader(configInfo));
 			}
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error(e.getMessage());
 		}
 		return properties;
 	}

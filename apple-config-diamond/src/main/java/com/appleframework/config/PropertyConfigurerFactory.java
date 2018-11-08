@@ -4,7 +4,8 @@ import java.io.StringReader;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.appleframework.config.core.Constants;
 import com.appleframework.config.core.EnvConfigurer;
@@ -18,7 +19,7 @@ import com.taobao.diamond.manager.impl.DefaultDiamondManager;
 
 public class PropertyConfigurerFactory extends BaseConfigurerFactory implements ConfigurerFactory {
 
-	private static Logger logger = Logger.getLogger(PropertyConfigurerFactory.class);
+	private static Logger logger = LoggerFactory.getLogger(PropertyConfigurerFactory.class);
 	
 	private static String KEY_DEPLOY_GROUP     = "deploy.group";
 	private static String KEY_DEPLOY_DATAID    = "deploy.dataId";
@@ -84,7 +85,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 					try {
 						PropertyConfigurer.load(configInfo);
 					} catch (Exception e) {
-						logger.error(e);
+						logger.error(e.getMessage());
 						return;
 					}					
 					//事件触发
@@ -109,7 +110,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 				logger.error("在配置管理中心找不到配置信息");
 			}
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error(e.getMessage());
 		}
 		return properties;
 	}
@@ -124,7 +125,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 			logger.warn("配置项内容: \n" + configInfo);
 			return configInfo;
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
