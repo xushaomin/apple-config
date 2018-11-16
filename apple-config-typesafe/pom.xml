@@ -13,7 +13,7 @@
 	<url>http://maven.apache.org</url>
 	
 	<properties>
-		<typesafe.version>1.3.2</typesafe.version>
+		<typesafe.version>1.3.3</typesafe.version>
 	</properties>
 	
 	<dependencies>
