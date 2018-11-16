@@ -116,11 +116,11 @@ public class JsonMapper {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public <T> List<T> toList(String jsonString, Class<T> elementType) {
 		if (StringUtils.isEmpty(jsonString)) {
 			return null;
 		}
-
 		JavaType javaType = mapper.getTypeFactory().constructParametrizedType(ArrayList.class,ArrayList.class, elementType);
 		return toObject(jsonString, javaType);
 	}

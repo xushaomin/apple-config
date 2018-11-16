@@ -281,6 +281,7 @@ public class ReloadablePropertiesFactoryBean extends PropertiesFactoryBean imple
     /**
      * 回调自己
      */
+	@SuppressWarnings("unchecked")
 	class ReloadablePropertiesImpl extends ReloadablePropertiesBase implements ReconfigurableBean {
 
 		private static final long serialVersionUID = 1L;
