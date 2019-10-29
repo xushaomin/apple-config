@@ -119,10 +119,17 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 		configurerFactory.setEventListeners(eventListeners);
 		configurerFactory.init();
 		
+		Properties remoteProperties = null;
+		
 		String configInfo = configurerFactory.getAllRemoteConfigInfo();
-		PropertyConfigurer.setConfigInfo(configInfo);
+		if(null == configInfo) {
+			remoteProperties = configurerFactory.getAllRemoteProperties();
+		}
+		else {
+			PropertyConfigurer.setConfigInfo(configInfo);
+			remoteProperties = this.changeToProperties(configInfo);
+		}
 
-		Properties remoteProperties = this.changeToProperties(configInfo);
 		if (remoteProperties != null) {
 			Set<Entry<Object, Object>> entrySet = remoteProperties.entrySet();
 			for (Entry<Object, Object> entry : entrySet) {

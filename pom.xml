@@ -106,6 +106,7 @@
 		<module>apple-config-core</module>
 		<module>apple-config-diamond</module>
     	<module>apple-config-disconf</module>
+    	<module>apple-config-apollo</module>
     	<module>apple-config-demo</module>
     	<module>apple-config-jeesuite</module>
     	<module>apple-config-springboot</module>
