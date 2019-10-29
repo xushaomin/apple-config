@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>apple-config</artifactId>
+		<groupId>com.appleframework.config</groupId>
+		<version>0.3.4.RELEASE</version>
+	</parent>
+	<artifactId>apple-config-apollo</artifactId>
+	<name>apple-config-apollo</name>
+	<url>http://mvnrepo.appleframework.com</url>
+
+	<dependencies>
+	    
+	    <dependency>
+	        <groupId>com.appleframework.config</groupId>
+	   		<artifactId>apple-config-core</artifactId>
+			<version>${project.version}</version>
+	    </dependency>
+	    
+	    <dependency>
+			<groupId>com.ctrip.framework.apollo</groupId>
+			<artifactId>apollo-client</artifactId>
+			<version>1.5.0</version>
+	    </dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+	</dependencies>
+</project>
