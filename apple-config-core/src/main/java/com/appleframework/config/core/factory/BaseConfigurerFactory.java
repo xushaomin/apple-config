@@ -2,6 +2,7 @@ package com.appleframework.config.core.factory;
 
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -185,20 +186,20 @@ public class BaseConfigurerFactory {
      *
      * @param oldProperties
      */
-	public void notifyPropertiesChanged(Properties oldProperties) {
-		setSystemProperty(oldProperties);
+	public void notifyPropertiesChanged(Properties props) {
+		Map<String, Properties> propsMap = new HashMap<String, Properties>();
+		propsMap.put(Constants.KEY_NAMESPACE, props);
+		this.notifyPropertiesChanged(propsMap);
+	}
+	
+	public void notifyPropertiesChanged(Map<String, Properties> propsMap) {		
+		setSystemProperty(propsMap);
 		if (eventListenerSet.size() > 0) {
 			Iterator<ConfigListener> iterator = eventListenerSet.iterator();
 			while (iterator.hasNext()) {
 				ConfigListener listener = iterator.next();
-				listener.receiveConfigInfo(oldProperties);
+				listener.receiveConfigInfo(propsMap);
 			}
-		}
-	}
-	
-	public void notifyPropertiesChanged(Map<String, Properties> propMap) {
-		for(Properties value : propMap.values()){
-		    notifyPropertiesChanged(value);
 		}
 	}
 
