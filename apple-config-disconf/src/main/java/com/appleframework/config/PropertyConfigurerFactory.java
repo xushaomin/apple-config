@@ -2,6 +2,7 @@ package com.appleframework.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
+import com.appleframework.config.core.Constants;
 import com.appleframework.config.core.factory.BaseConfigurerFactory;
 import com.appleframework.config.core.factory.ConfigurerFactory;
 import com.baidu.disconf.client.support.utils.ConfigLoaderUtils;
@@ -36,7 +38,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 
 	@Override
-	public Properties getAllRemoteProperties() {
+	public Properties getRemoteProperties(String namespace) {
 		Properties properties = new Properties();
 		if (!isLoadRemote()) {
 			return properties;
@@ -66,7 +68,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 	
 	@Override
-	public String getAllRemoteConfigInfo() {
+	public String getRemoteConfigInfo(String namespace) {
 		String retConfigInfo = null;
 		if (!isLoadRemote()) {
 			return retConfigInfo;
@@ -103,14 +105,13 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		}
 		return out.toString();
 	}
-
-	@Override
-	public void onLoadFinish(Properties properties) {
-	}
 	
 	@Override
-	public Map<String, Properties> getAllRemotePropertiesMap() {
-		return null;
+	public Map<String, Properties> getAllRemoteProperties() {
+		Properties props = this.getRemoteProperties(null);
+		Map<String, Properties> propsMap = new HashMap<String, Properties>();
+		propsMap.put(Constants.KEY_NAMESPACE, props);
+		return propsMap;
 	}
 
 }

@@ -53,19 +53,7 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 		
 		configurerFactory.setSpringboot(true);
 		configurerFactory.init();
-
-		Properties remoteProperties = configurerFactory.getAllRemoteProperties();
-		if (remoteProperties != null) {
-			Set<Entry<Object, Object>> entrySet = remoteProperties.entrySet();
-			for (Entry<Object, Object> entry : entrySet) {
-				// local config first
-				if (configurerFactory.isRemoteFirst() == false && properties.containsKey(entry.getKey())) {
-					continue;
-				}
-				properties.put(entry.getKey(), entry.getValue());
-				PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
-			}
-		}
+		
 	}
 
 	public PropertySource<?> load(String name, Resource resource, String profile) throws IOException {
@@ -73,7 +61,7 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 			Properties properties = PropertiesLoaderUtils.loadProperties(resource);
 			init(resource, properties);
 			
-			Map<String, Properties> remotePropsMap = configurerFactory.getAllRemotePropertiesMap();
+			Map<String, Properties> remotePropsMap = configurerFactory.getAllRemoteProperties();
 			if(null != remotePropsMap && remotePropsMap.size() > 0) {
 				for (Map.Entry<String, Properties> prop : remotePropsMap.entrySet()) {
 					Set<Entry<Object, Object>> entrySet = prop.getValue().entrySet();
@@ -110,7 +98,7 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 		
 		List<PropertySource<?>> list = new ArrayList<PropertySource<?>>();
 		
-		Map<String, Properties> remotePropsMap = configurerFactory.getAllRemotePropertiesMap();
+		Map<String, Properties> remotePropsMap = configurerFactory.getAllRemoteProperties();
 		if(null != remotePropsMap && remotePropsMap.size() > 0) {
 			for (Map.Entry<String, Properties> prop : remotePropsMap.entrySet()) {
 				Set<Entry<Object, Object>> entrySet = prop.getValue().entrySet();

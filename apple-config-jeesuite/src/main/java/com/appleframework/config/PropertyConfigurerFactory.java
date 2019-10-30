@@ -2,6 +2,7 @@ package com.appleframework.config;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -11,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.appleframework.config.core.Constants;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.factory.BaseConfigurerFactory;
 import com.appleframework.config.core.factory.ConfigurerFactory;
@@ -66,7 +68,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 			public void run() {
 				String md5 = getRemoteMd5(app, env, version);
 				if (null != md5 && !contentMd5.equals(md5)) {
-					Properties remoteProperties = getAllRemoteProperties();
+					Properties remoteProperties = getRemoteProperties(null);
 					PropertyConfigurer.merge(remoteProperties);
 					notifyPropertiesChanged(remoteProperties);
 				}
@@ -151,7 +153,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 
 	@SuppressWarnings("unchecked")
-	public Properties getAllRemoteProperties() {
+	public Properties getRemoteProperties(String namespace) {
 		if (!loadRemote) {
 			return null;
 		}
@@ -183,7 +185,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public String getAllRemoteConfigInfo() {
+	public String getRemoteConfigInfo(String namespace) {
 		if (!loadRemote) {
 			return null;
 		}
@@ -234,7 +236,10 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 	
 	@Override
-	public Map<String, Properties> getAllRemotePropertiesMap() {
-		return null;
+	public Map<String, Properties> getAllRemoteProperties() {
+		Properties props = this.getRemoteProperties(null);
+		Map<String, Properties> propsMap = new HashMap<String, Properties>();
+		propsMap.put(Constants.KEY_NAMESPACE, props);
+		return propsMap;
 	}
 }

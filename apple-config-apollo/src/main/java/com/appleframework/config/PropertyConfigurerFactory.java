@@ -97,7 +97,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 						return;
 					}					
 					//事件触发
-					notifyPropertiesChanged(PropertyConfigurer.getProps());
+					notifyPropertiesChanged(PropertyConfigurer.getPropsMap());
 		        }
 			}
 		};
@@ -117,12 +117,20 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		}
 	}
 	
-	public Properties getAllRemoteProperties() {
-		return null;
+	public Properties getRemoteProperties(String namespace) {
+		Properties properties = new Properties();
+		Config config = ConfigService.getConfig(namespace);
+		for (String key : config.getPropertyNames()) {
+			String value = config.getProperty(key, null);
+			if(null != value) {
+				properties.put(key, value);
+			}
+		}
+		return properties;
 	}
 	
 	@Override
-	public Map<String, Properties> getAllRemotePropertiesMap() {
+	public Map<String, Properties> getAllRemoteProperties() {
 		Map<String, Properties> propsMap = new HashMap<String, Properties>();
 		if (!isLoadRemote() || configMap.size() == 0) {
 			return propsMap;
@@ -151,13 +159,8 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 	
 	@Override
-	public String getAllRemoteConfigInfo() {
+	public String getRemoteConfigInfo(String namespace) {
 		return null;
-	}
-
-	@Override
-	public void onLoadFinish(Properties properties) {
-		setSystemProperty(properties);
 	}
 
 	private String getDeployEnv() {
@@ -199,8 +202,6 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		}
 		return refreshInterval;
 	}
-	
-	
 
 	@Override
 	public void close() {
