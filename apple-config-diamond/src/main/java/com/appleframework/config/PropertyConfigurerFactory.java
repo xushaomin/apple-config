@@ -1,6 +1,7 @@
 package com.appleframework.config;
 
 import java.io.StringReader;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
@@ -127,6 +128,11 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
+		return null;
+	}	
+
+	@Override
+	public Map<String, Properties> getAllRemotePropertiesMap() {
 		return null;
 	}
 

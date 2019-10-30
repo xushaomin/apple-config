@@ -1,6 +1,7 @@
 package com.appleframework.config.core.factory;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Properties;
 
 import org.springframework.core.io.Resource;
@@ -33,6 +34,8 @@ public interface ConfigurerFactory {
 	
 	public String getAllRemoteConfigInfo();
 	
+	public Map<String, Properties> getAllRemotePropertiesMap();
+
 	public void onLoadFinish(Properties properties);
 	
 	public boolean isRemoteFirst();

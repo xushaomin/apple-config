@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -141,6 +142,27 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 				properties.put(entry.getKey(), entry.getValue());
 				PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
 			}
+		}
+		
+		Map<String, Properties> remotePropsMap = configurerFactory.getAllRemotePropertiesMap();
+		if(null != remotePropsMap && remotePropsMap.size() > 0) {
+			for (Map.Entry<String, Properties> prop : remotePropsMap.entrySet()) {
+				Set<Entry<Object, Object>> entrySet = prop.getValue().entrySet();
+				String namespace = prop.getKey();
+				for (Entry<Object, Object> entry : entrySet) {
+					// local configurer first
+					if (configurerFactory.isRemoteFirst() == false ) {
+						if(properties.containsKey(entry.getKey()) || properties.containsKey(namespace + "." + entry.getKey())) {
+							logger.info("config[" + entry.getKey() + "] exists in location,skip~");
+							continue;
+						}
+					}
+					properties.put(entry.getKey(), entry.getValue());
+					properties.put(namespace + "." + entry.getKey(), entry.getValue());
+					PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
+					PropertyConfigurer.add(namespace, entry.getKey().toString(), entry.getValue().toString());
+				}				
+		    }
 		}
 
 		configurerFactory.onLoadFinish(properties);
