@@ -2,7 +2,9 @@ package com.appleframework.config.springboot;
 
 import java.io.IOException;
 import java.util.Map.Entry;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
@@ -27,46 +29,49 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 	public String[] getFileExtensions() {
 		return new String[] { "properties" };
 	}
+	
+	private void init(Resource resource, Properties properties) throws IOException {
+		
+		PropertyConfigurer.merge(properties);
 
-	@Override
+		//load by spi
+		try {
+			ServiceLoader<ConfigurerFactory> serviceLoader = ServiceLoader.load(ConfigurerFactory.class);
+	        Iterator<ConfigurerFactory> iterator = serviceLoader.iterator();
+	        if(iterator.hasNext()){
+	        	configurerFactory = iterator.next();
+	        }
+		} catch (Exception e) {
+			//load by class.forName
+			try {
+				Class<?> clazz = Class.forName("com.appleframework.config.PropertyConfigurerFactory");
+				configurerFactory = (ConfigurerFactory) clazz.newInstance();
+			} catch (Exception e1) {
+				//return null;
+			}
+		}
+		
+		configurerFactory.setSpringboot(true);
+		configurerFactory.init();
+
+		Properties remoteProperties = configurerFactory.getAllRemoteProperties();
+		if (remoteProperties != null) {
+			Set<Entry<Object, Object>> entrySet = remoteProperties.entrySet();
+			for (Entry<Object, Object> entry : entrySet) {
+				// local config first
+				if (configurerFactory.isRemoteFirst() == false && properties.containsKey(entry.getKey())) {
+					continue;
+				}
+				properties.put(entry.getKey(), entry.getValue());
+				PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
+			}
+		}
+	}
+
 	public PropertySource<?> load(String name, Resource resource, String profile) throws IOException {
 		if (null == profile) {
-			
 			Properties properties = PropertiesLoaderUtils.loadProperties(resource);
-			PropertyConfigurer.merge(properties);
-
-			//load by spi
-			try {
-				ServiceLoader<ConfigurerFactory> serviceLoader = ServiceLoader.load(ConfigurerFactory.class);
-		        Iterator<ConfigurerFactory> iterator = serviceLoader.iterator();
-		        if(iterator.hasNext()){
-		        	configurerFactory = iterator.next();
-		        }
-			} catch (Exception e) {
-				//load by class.forName
-				try {
-					Class<?> clazz = Class.forName("com.appleframework.config.PropertyConfigurerFactory");
-					configurerFactory = (ConfigurerFactory) clazz.newInstance();
-				} catch (Exception e1) {
-					return null;
-				}
-			}
-			
-			configurerFactory.setSpringboot(true);
-			configurerFactory.init();
-
-			Properties remoteProperties = configurerFactory.getAllRemoteProperties();
-			if (remoteProperties != null) {
-				Set<Entry<Object, Object>> entrySet = remoteProperties.entrySet();
-				for (Entry<Object, Object> entry : entrySet) {
-					// local config first
-					if (configurerFactory.isRemoteFirst() == false && properties.containsKey(entry.getKey())) {
-						continue;
-					}
-					properties.put(entry.getKey(), entry.getValue());
-					PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
-				}
-			}
+			init(resource, properties);
 			
 			Map<String, Properties> remotePropsMap = configurerFactory.getAllRemotePropertiesMap();
 			if(null != remotePropsMap && remotePropsMap.size() > 0) {
@@ -95,6 +100,43 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 			}
 		}
 		return null;
+	}
+	
+	public List<PropertySource<?>> load(String name, Resource resource) throws IOException {
+		
+		Properties properties = PropertiesLoaderUtils.loadProperties(resource);
+		
+		init(resource, properties);
+		
+		List<PropertySource<?>> list = new ArrayList<PropertySource<?>>();
+		
+		Map<String, Properties> remotePropsMap = configurerFactory.getAllRemotePropertiesMap();
+		if(null != remotePropsMap && remotePropsMap.size() > 0) {
+			for (Map.Entry<String, Properties> prop : remotePropsMap.entrySet()) {
+				Set<Entry<Object, Object>> entrySet = prop.getValue().entrySet();
+				String namespace = prop.getKey();
+				for (Entry<Object, Object> entry : entrySet) {
+					// local configurer first
+					if (configurerFactory.isRemoteFirst() == false ) {
+						if(properties.containsKey(entry.getKey()) || properties.containsKey(namespace + "." + entry.getKey())) {
+							continue;
+						}
+					}
+					properties.put(entry.getKey(), entry.getValue());
+					properties.put(namespace + "." + entry.getKey(), entry.getValue());
+					PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
+					PropertyConfigurer.add(namespace, entry.getKey().toString(), entry.getValue().toString());
+				}
+		    }
+		}
+
+		configurerFactory.onLoadFinish(properties);
+
+		if (!properties.isEmpty()) {
+			list.add(new PropertiesPropertySource(name, properties));
+		}
+		return list;
+	
 	}
 
 	@Override
