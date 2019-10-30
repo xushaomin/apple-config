@@ -67,7 +67,7 @@ public class DiamondConfigurerFactory extends PropertyConfigurerFactory {
 		
 		super.init();
 		
-		String configInfo = getAllRemoteConfigInfo();
+		String configInfo = getRemoteConfigInfo(null);
 		PropertyConfigurer.setConfigInfo(configInfo);
 		
 		Properties remoteProperties = this.changeToProperties(configInfo);

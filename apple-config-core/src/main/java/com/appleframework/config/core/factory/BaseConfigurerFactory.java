@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
@@ -154,6 +155,12 @@ public class BaseConfigurerFactory {
 			}
 		}
 	}
+	
+	public void setSystemProperty(Map<String, Properties> propsMap) {
+		for(Properties props : propsMap.values()){
+		    setSystemProperty(props);
+		}		
+	}
 
 	public void setEventListeners(Collection<ConfigListener> eventListeners) {
 		this.eventListeners = eventListeners;
@@ -189,8 +196,24 @@ public class BaseConfigurerFactory {
 		}
 	}
 	
+	public void notifyPropertiesChanged(Map<String, Properties> propMap) {
+		for(Properties value : propMap.values()){
+		    notifyPropertiesChanged(value);
+		}
+	}
+
+	
 	public void setRemotes(Resource... remotes) {
 		this.remotes = remotes;
 	}
+	
+	public void onLoadFinish(Map<String, Properties> propsMap) {
+		setSystemProperty(propsMap);
+	}
+	
+	public void onLoadFinish(Properties props) {
+		setSystemProperty(props);
+	}
+	
 	
 }

@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.URL;
 import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.appleframework.config.core.PropertyConfigurer;
-import com.appleframework.config.core.util.StringUtils;
 
 /**
 * 专门提供apple-boot-java以
@@ -80,41 +79,28 @@ public class ApolloConfigurerFactory extends PropertyConfigurerFactory {
 		
 		super.init();
 				
-		Properties remoteProperties = null;
-		
-		String configInfo = getAllRemoteConfigInfo();
-		if(null == configInfo) {
-			remoteProperties = getAllRemoteProperties();
+		Properties properties = PropertyConfigurer.getProps();		
+		Map<String, Properties> remotePropsMap = getAllRemoteProperties();
+		if(null != remotePropsMap && remotePropsMap.size() > 0) {
+			for (Map.Entry<String, Properties> prop : remotePropsMap.entrySet()) {
+				Set<Entry<Object, Object>> entrySet = prop.getValue().entrySet();
+				String namespace = prop.getKey();
+				for (Entry<Object, Object> entry : entrySet) {
+					// local configurer first
+					if (super.isRemoteFirst() == false ) {
+						if(properties.containsKey(entry.getKey()) || properties.containsKey(namespace + "." + entry.getKey())) {
+							logger.info("config[" + entry.getKey() + "] exists in location,skip~");
+							continue;
+						}
+					}
+					properties.put(entry.getKey(), entry.getValue());
+					properties.put(namespace + "." + entry.getKey(), entry.getValue());
+					PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
+					PropertyConfigurer.add(namespace, entry.getKey().toString(), entry.getValue().toString());
+				}				
+		    }
 		}
-		else {
-			PropertyConfigurer.setConfigInfo(configInfo);
-			remoteProperties = this.changeToProperties(configInfo);
-		}
-		
-		if (remoteProperties != null) {
-			Set<Entry<Object, Object>> entrySet = remoteProperties.entrySet();
-			for (Entry<Object, Object> entry : entrySet) {
-				// local configurer first
-				if (super.isRemoteFirst() == false && PropertyConfigurer.containsKey(entry.getKey().toString())) {
-					logger.info("config[" + entry.getKey() + "] exists in location,skip~");
-					continue;
-				}
-				PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
-			}
-		}
-		super.onLoadFinish(remoteProperties);
+		super.onLoadFinish(properties);
 	}
-	
-	private Properties changeToProperties(String configInfo) {
-		Properties properties = new Properties();
-		try {
-			if (!StringUtils.isEmpty(configInfo)) {
-				properties.load(new StringReader(configInfo));
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		return properties;
-	}
-	
+		
 }

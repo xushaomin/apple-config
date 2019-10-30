@@ -23,7 +23,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 	public static Properties getProps() {
 		return getProps(DEFAULT_KEY);
 	}
-	
+		
 	public static void setProps(String key, String value) {
 		setProperty(DEFAULT_KEY, key, value);
 	}

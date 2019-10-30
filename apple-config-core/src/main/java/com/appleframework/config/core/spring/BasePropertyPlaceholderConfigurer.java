@@ -3,7 +3,6 @@ package com.appleframework.config.core.spring;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,11 +17,12 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.io.Resource;
 
+import com.appleframework.config.core.Constants;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.event.ConfigListener;
 import com.appleframework.config.core.factory.ConfigurerFactory;
-import com.appleframework.config.core.util.StringUtils;
 
+@SuppressWarnings("deprecation")
 public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 
 	protected Collection<ConfigListener> eventListeners;
@@ -120,31 +120,7 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 		configurerFactory.setEventListeners(eventListeners);
 		configurerFactory.init();
 		
-		Properties remoteProperties = null;
-		
-		String configInfo = configurerFactory.getAllRemoteConfigInfo();
-		if(null == configInfo) {
-			remoteProperties = configurerFactory.getAllRemoteProperties();
-		}
-		else {
-			PropertyConfigurer.setConfigInfo(configInfo);
-			remoteProperties = this.changeToProperties(configInfo);
-		}
-
-		if (remoteProperties != null) {
-			Set<Entry<Object, Object>> entrySet = remoteProperties.entrySet();
-			for (Entry<Object, Object> entry : entrySet) {
-				// local configurer first
-				if (configurerFactory.isRemoteFirst() == false && properties.containsKey(entry.getKey())) {
-					logger.info("config[" + entry.getKey() + "] exists in location,skip~");
-					continue;
-				}
-				properties.put(entry.getKey(), entry.getValue());
-				PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
-			}
-		}
-		
-		Map<String, Properties> remotePropsMap = configurerFactory.getAllRemotePropertiesMap();
+		Map<String, Properties> remotePropsMap = configurerFactory.getAllRemoteProperties();
 		if(null != remotePropsMap && remotePropsMap.size() > 0) {
 			for (Map.Entry<String, Properties> prop : remotePropsMap.entrySet()) {
 				Set<Entry<Object, Object>> entrySet = prop.getValue().entrySet();
@@ -158,9 +134,12 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 						}
 					}
 					properties.put(entry.getKey(), entry.getValue());
-					properties.put(namespace + "." + entry.getKey(), entry.getValue());
 					PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
-					PropertyConfigurer.add(namespace, entry.getKey().toString(), entry.getValue().toString());
+					
+					if(!namespace.equals(Constants.KEY_NAMESPACE)) {
+						properties.put(namespace + "." + entry.getKey(), entry.getValue());
+						PropertyConfigurer.add(namespace, entry.getKey().toString(), entry.getValue().toString());
+					}
 				}				
 		    }
 		}
@@ -169,17 +148,17 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 		return properties;
 	}
 	
-	private Properties changeToProperties(String configInfo) {
-		Properties properties = new Properties();
-		try {
-			if (!StringUtils.isEmpty(configInfo)) {
-				properties.load(new StringReader(configInfo));
-			}
-		} catch (Exception e) {
-			logger.error(e);
-		}
-		return properties;
-	}
+	//private Properties changeToProperties(String configInfo) {
+	//	Properties properties = new Properties();
+	//	try {
+	//		if (!StringUtils.isEmpty(configInfo)) {
+	//			properties.load(new StringReader(configInfo));
+	//		}
+	//	} catch (Exception e) {
+	//		logger.error(e);
+	//	}
+	//	return properties;
+	//}
 
 	public void setEventListeners(Collection<ConfigListener> eventListeners) {
 		this.eventListeners = eventListeners;
