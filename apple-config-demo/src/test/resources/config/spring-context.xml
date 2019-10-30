@@ -30,7 +30,7 @@
 	<bean class="com.appleframework.config.demo.SpringUtility" lazy-init="false" />
 	 
 	<bean id="appService" class="com.appleframework.config.demo.AppService">
-		<property name="name" value="${test}" />
+		<property name="name" value="${driverClassName}" />
 	</bean>
 	 
 	 
