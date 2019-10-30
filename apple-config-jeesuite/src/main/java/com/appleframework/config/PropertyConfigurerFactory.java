@@ -232,4 +232,9 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		}
 		return value;
 	}
+	
+	@Override
+	public Map<String, Properties> getAllRemotePropertiesMap() {
+		return null;
+	}
 }
