@@ -194,7 +194,7 @@
 			</activation>
 			<distributionManagement>
 				<repository>
-					<id>nexus-releases</id>
+					<id>apple-releases</id>
 					<url>http://nexus.appleframework.com:8081/nexus/content/repositories/releases/</url>
 				</repository>
 				<snapshotRepository>
