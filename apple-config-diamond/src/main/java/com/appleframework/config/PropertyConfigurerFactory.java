@@ -1,6 +1,7 @@
 package com.appleframework.config;
 
 import java.io.StringReader;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
@@ -97,7 +98,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		}
 	}
 	
-	public Properties getAllRemoteProperties() {
+	public Properties getRemoteProperties() {
 		Properties properties = new Properties();
 		if (!isLoadRemote() || null == manager) {
 			return properties;
@@ -117,7 +118,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 	
 	@Override
-	public String getAllRemoteConfigInfo() {
+	public String getRemoteConfigInfo(String namespace) {
 		if (!isLoadRemote() || null == manager) {
 			return null;
 		}
@@ -129,18 +130,20 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 			logger.error(e.getMessage());
 		}
 		return null;
-	}	
-
-	@Override
-	public Map<String, Properties> getAllRemotePropertiesMap() {
-		return null;
+	}
+	
+	public Properties getRemoteProperties(String namespace) {
+		return this.getRemoteProperties();
 	}
 
 	@Override
-	public void onLoadFinish(Properties properties) {
-		setSystemProperty(properties);
+	public Map<String, Properties> getAllRemoteProperties() {
+		Properties props = this.getRemoteProperties(null);
+		Map<String, Properties> propsMap = new HashMap<String, Properties>();
+		propsMap.put(Constants.KEY_NAMESPACE, props);
+		return propsMap;
 	}
-
+	
 	private String getDeployEnv() {
 		String env = System.getProperty(Constants.KEY_DEPLOY_ENV);
 		if (StringUtils.isEmpty(env)) {
@@ -169,5 +172,8 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		}
 		return appName;
 	}
+
+	
+
 	
 }

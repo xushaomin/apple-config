@@ -26,17 +26,21 @@ public interface ConfigurerFactory {
 		
 	public void init();
 	
-    public void notifyPropertiesChanged(Properties oldProperties);
+    public void notifyPropertiesChanged(Map<String, Properties> oldProperties);
+    
+    public void notifyPropertiesChanged(Properties props);
     	
 	public void close();
 	
-	public Properties getAllRemoteProperties();
+	public Properties getRemoteProperties(String namespace);
 	
-	public String getAllRemoteConfigInfo();
+	public String getRemoteConfigInfo(String namespace);
 	
-	public Map<String, Properties> getAllRemotePropertiesMap();
+	public Map<String, Properties> getAllRemoteProperties();
 
-	public void onLoadFinish(Properties properties);
+	public void onLoadFinish(Map<String, Properties> properties);
+	
+	public void onLoadFinish(Properties props);
 	
 	public boolean isRemoteFirst();
 	

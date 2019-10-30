@@ -30,6 +30,10 @@ public abstract class AbstractPropertyConfigurer {
 		return props;
 	}
 	
+	public static Map<String, Properties> getPropsMap() {
+		return propsMap;
+	}
+	
 	public static void setProps(String namespace, Properties props) {
 		propsMap.put(namespace, props);
 	}
