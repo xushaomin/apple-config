@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.appleframework.config</groupId>
 		<artifactId>apple-config</artifactId>
-		<version>0.3.4.RELEASE</version>
+		<version>0.3.5.RELEASE</version>
 	</parent>
 	<artifactId>apple-config-demo</artifactId>
 	<name>apple-config-demo</name>
@@ -19,7 +19,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.appleframework.config</groupId>
-			<artifactId>apple-config-diamond</artifactId>
+			<artifactId>apple-config-apollo</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -57,5 +57,18 @@
 			<version>${aspectj.version}</version>
 		</dependency>
 
+		<!-- log4j -->
+		<dependency>
+			<groupId>log4j</groupId>
+  			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+		
+		<dependency>  
+		    <groupId>org.slf4j</groupId>  
+		    <artifactId>slf4j-log4j12</artifactId>  
+		    <version>1.7.2</version>  
+		</dependency> 
+		
 	</dependencies>
 </project>

@@ -20,8 +20,8 @@ public class AppTest {
 			for (int i = 0; i < 10000; i++) {
 				//System.out.println(appService.getName());
 				
-				System.out.println(System.getProperty("dtest"));
-				Thread.sleep(1000);
+				System.out.println(com.appleframework.config.core.PropertyConfigurer.getProperty("test"));
+				Thread.sleep(5000);
 			}
 			System.in.read();
 		} catch (Exception e) {
