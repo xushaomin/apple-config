@@ -7,7 +7,5 @@ import java.util.Properties;
 public interface ConfigListener extends EventListener {
 	
 	public void receiveConfigInfo(Map<String, Properties> propsMap);
-	
-	public void receiveConfigInfo(Properties props);
 		
 }
