@@ -2,6 +2,7 @@ package com.appleframework.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -105,6 +106,11 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 
 	@Override
 	public void onLoadFinish(Properties properties) {
+	}
+	
+	@Override
+	public Map<String, Properties> getAllRemotePropertiesMap() {
+		return null;
 	}
 
 }

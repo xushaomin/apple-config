@@ -69,6 +69,11 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		String meta = getDeployMeta();
 		logger.warn("配置项：meta=" + meta);
 		
+		String refreshInterval = this.getRefreshInterval();
+		if(null == refreshInterval) {
+			System.setProperty("apollo.refreshInterval", "1");
+		}
+		
 		String namespaces = this.getDeployNamespaces();
 		
 		ConfigChangeListener changeListener = new ConfigChangeListener() {
@@ -85,6 +90,8 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 					System.out.println(change.getPropertyName() + "=" + change.getNewValue());
 					try {
 						PropertyConfigurer.setProperty(change.getPropertyName(), change.getNewValue());
+						PropertyConfigurer.setProperty(change.getNamespace() + "." + change.getPropertyName(), change.getNewValue());
+						PropertyConfigurer.setProperty(change.getNamespace(), change.getPropertyName(), change.getNewValue());
 					} catch (Exception e) {
 						logger.error(e.getMessage());
 						return;
@@ -106,15 +113,19 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 					namespaceConfig.addChangeListener(changeListener);
 					configMap.put(namespace, namespaceConfig);
 				}
-				
 			}
 		}
 	}
 	
 	public Properties getAllRemoteProperties() {
-		Properties properties = new Properties();
+		return null;
+	}
+	
+	@Override
+	public Map<String, Properties> getAllRemotePropertiesMap() {
+		Map<String, Properties> propsMap = new HashMap<String, Properties>();
 		if (!isLoadRemote() || configMap.size() == 0) {
-			return properties;
+			return propsMap;
 		}
 		try {
 			for (Map.Entry<String, Config> map : configMap.entrySet()) {
@@ -122,6 +133,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		        logger.warn("命名空间" + namespace + "配置项内容: ");
 		        Config config = map.getValue();
 		        Set<String> propertyNames = config.getPropertyNames();
+		        Properties properties = new Properties();
 				for (String key : propertyNames) {
 					String value = config.getProperty(key, null);
 					if(null != value) {
@@ -129,12 +141,13 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 						System.out.println(key + "=" + value);
 					}
 				}
+				propsMap.put(namespace, properties);
 				System.out.println();
 		    }
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
-		return properties;
+		return propsMap;
 	}
 	
 	@Override
@@ -178,6 +191,16 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		}
 		return namespaces;
 	}
+	private String getRefreshInterval() {
+		String key = "apollo.refreshInterval";
+		String refreshInterval = System.getProperty(key);
+		if (StringUtils.isEmpty(refreshInterval)) {
+			refreshInterval = PropertyConfigurer.getString(key);
+		}
+		return refreshInterval;
+	}
+	
+	
 
 	@Override
 	public void close() {
