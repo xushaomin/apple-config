@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.appleframework.config.core.Constants;
-import com.appleframework.config.core.EnvConfigurer;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.factory.BaseConfigurerFactory;
 import com.appleframework.config.core.factory.ConfigurerFactory;
@@ -24,8 +23,10 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 
 	private static Logger logger = LoggerFactory.getLogger(PropertyConfigurerFactory.class);
 	
-	private static String KEY_DEPLOY_APP_ID    = "app.id";
-	private static String KEY_DEPLOY_META_URL  = "apollo.meta";
+	private static String KEY_DEPLOY_APP_ID      = "app.id";
+	private static String KEY_DEPLOY_META_URL    = "apollo.meta";
+	private static String KEY_DEPLOY_NAMESPACES  = "apollo.bootstrap.namespaces";
+	private static String KEY_DEPLOY_REFRESH_INT = "apollo.refreshInterval";
 	
 	private Map<String, Config> configMap = new HashMap<String, Config>();
 		
@@ -53,27 +54,59 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		if (!isLoadRemote()) {
 			return;
 		}
-		logger.warn("配置项：appName=" + this.getApplicationName());
+		
+		//app.id
 		String appId = this.getDeployAppId();
 		if(null == appId) {
-			appId = System.getProperty(KEY_DEPLOY_APP_ID);
+			appId = PropertyConfigurer.getString(KEY_DEPLOY_APP_ID);
+			if(null != appId) {
+				this.setDeployAppId(appId);
+			}
+			else {
+				logger.warn("app.id is not set on this project");
+			}
 		}
-		else {
-			System.setProperty("app.id", appId);
-		}
-		logger.warn("配置项：appId=" + appId);
-		
+		logger.warn("配置项：app.id=" + this.getDeployAppId());
+
+		//env
 		String env = this.getDeployEnv();
-		logger.warn("配置项：env=" + env);
+		if(null == env) {
+			env = PropertyConfigurer.getString(Constants.KEY_ENV);
+			if(null != env) {
+				this.setDeployEnv(env);
+			}
+			else {
+				logger.warn("env is not set on this project");
+			}
+		}
+		logger.warn("配置项：env=" + this.getDeployEnv());
 		
-		String meta = getDeployMeta();
-		logger.warn("配置项：meta=" + meta);
+		//apollo.meta
+		String meta = this.getDeployMeta();
+		if(null == meta) {
+			meta = PropertyConfigurer.getString(KEY_DEPLOY_META_URL);
+			if(null != meta) {
+				this.setDeployMeta(meta);
+			}
+			else {
+				logger.warn("apollo.meta is not set on this project");
+			}
+		}
+		logger.warn("配置项：apollo.meta=" + this.getDeployMeta());
 		
+		//apollo.refreshInterval
 		String refreshInterval = this.getRefreshInterval();
 		if(null == refreshInterval) {
-			System.setProperty("apollo.refreshInterval", "1");
+			refreshInterval = PropertyConfigurer.getString(KEY_DEPLOY_REFRESH_INT);
+			if(null != refreshInterval) {
+				this.setRefreshInterval(refreshInterval);
+			}
+			else {
+				this.setRefreshInterval("1");
+			}
 		}
-		
+		logger.warn("配置项：apollo.refreshInterval=" + this.getRefreshInterval());
+				
 		String namespaces = this.getDeployNamespaces();
 		
 		ConfigChangeListener changeListener = new ConfigChangeListener() {
@@ -164,55 +197,55 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 
 	private String getDeployEnv() {
-		String env = System.getProperty(Constants.KEY_ENV);
-		if (StringUtils.isEmpty(env)) {
-			env = EnvConfigurer.env;
-			if (StringUtils.isEmpty(env)) {
-				env = PropertyConfigurer.getString(Constants.KEY_ENV);
-			}
-		}
-		return env;
+		return System.getProperty(Constants.KEY_ENV);
 	}
-	
-	private String getDeployAppId() {
-		return PropertyConfigurer.getString(KEY_DEPLOY_APP_ID);
-	}
-	
+		
 	private String getDeployMeta() {
-		String meta = System.getProperty(KEY_DEPLOY_META_URL);
-		if (StringUtils.isEmpty(meta)) {
-			meta = PropertyConfigurer.getString(KEY_DEPLOY_META_URL);
-		}
-		return meta;
+		return System.getProperty(KEY_DEPLOY_META_URL);		
 	}
 	
 	private String getDeployNamespaces() {
-		String key = "apollo.bootstrap.namespaces";
-		String namespaces = System.getProperty(key);
-		if (StringUtils.isEmpty(namespaces)) {
-			namespaces = PropertyConfigurer.getString(key);
+		String namespaces = System.getProperty(KEY_DEPLOY_NAMESPACES);
+		if(null == namespaces) {
+			namespaces = PropertyConfigurer.getString(KEY_DEPLOY_NAMESPACES);
 		}
 		return namespaces;
 	}
+	
 	private String getRefreshInterval() {
-		String key = "apollo.refreshInterval";
-		String refreshInterval = System.getProperty(key);
-		if (StringUtils.isEmpty(refreshInterval)) {
-			refreshInterval = PropertyConfigurer.getString(key);
-		}
-		return refreshInterval;
+		return System.getProperty(KEY_DEPLOY_REFRESH_INT);
+	}
+	
+	//set
+	private String setDeployEnv(String env) {
+		return System.setProperty(Constants.KEY_ENV, env);
+	}
+	
+	private String setDeployAppId(String appId) {
+		return System.setProperty(KEY_DEPLOY_APP_ID, appId);
+	}
+	
+	private String setDeployMeta(String meta) {
+		return System.setProperty(KEY_DEPLOY_META_URL, meta);		
+	}
+		
+	private String setRefreshInterval(String rRefreshInterval) {
+		return System.setProperty(KEY_DEPLOY_REFRESH_INT, rRefreshInterval);
 	}
 
 	@Override
 	public void close() {
 	}
 	
-	private String getApplicationName() {
-		String appName = PropertyConfigurer.getString("spring.application.name");
-		if(null == appName) {
-			appName = PropertyConfigurer.getString("application.name");
+	private String getDeployAppId() {
+		String appId = System.getProperty(KEY_DEPLOY_APP_ID);
+		if(null == appId) {
+			appId = System.getProperty("application.name");
+			if(null == appId) {
+				appId = System.getProperty("spring.application.name");
+			}
 		}
-		return appName;
+		return appId;
 	}
 	
 }
