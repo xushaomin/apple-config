@@ -195,11 +195,11 @@
 			<distributionManagement>
 				<repository>
 					<id>apple-releases</id>
-					<url>http://nexus.appleframework.com:8081/nexus/content/repositories/releases/</url>
+					<url>http://maven.huolala.cn/repository/apple-releases/</url>
 				</repository>
 				<snapshotRepository>
 					<id>apple-snapshots</id>
-					<url>http://nexus.appleframework.com:8081/nexus/content/repositories/snapshots/</url>
+					<url>http://maven.huolala.cn/repository/apple-snapshots/</url>
 				</snapshotRepository>
 			</distributionManagement>
 		</profile>
