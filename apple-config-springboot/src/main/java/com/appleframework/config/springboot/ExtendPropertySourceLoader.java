@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.env.PropertySourceLoader;
+import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.PropertySource;
@@ -20,18 +21,18 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.factory.ConfigurerFactory;
+import com.appleframework.config.springboot.utils.YamlLoaderUtils;
 
-public class ExtendPropertySourceLoader implements PropertySourceLoader, PriorityOrdered, DisposableBean {
+public class ExtendPropertySourceLoader implements PropertySourceLoader, PriorityOrdered, DisposableBean  {
 
 	private ConfigurerFactory configurerFactory = null;
 
 	@Override
 	public String[] getFileExtensions() {
-		return new String[] { "properties" };
+		return new String[] { "properties", "yml", "yaml" };
 	}
 	
 	private void init(Resource resource, Properties properties) throws IOException {
-		
 		PropertyConfigurer.merge(properties);
 
 		//load by spi
@@ -53,12 +54,26 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 		
 		configurerFactory.setSpringboot(true);
 		configurerFactory.init();
-		
+	}
+	
+	private boolean isPropertiesResource(String name) {
+		if(name.indexOf("properties") > -1) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public PropertySource<?> load(String name, Resource resource, String profile) throws IOException {
 		if (null == profile) {
-			Properties properties = PropertiesLoaderUtils.loadProperties(resource);
+			Properties properties = new Properties();
+			if(this.isPropertiesResource(name)) {
+				properties = PropertiesLoaderUtils.loadProperties(resource);
+			}
+			else {
+				properties = YamlLoaderUtils.loadProperties(resource);
+			}
 			init(resource, properties);
 			
 			Map<String, Properties> remotePropsMap = configurerFactory.getAllRemoteProperties();
@@ -84,15 +99,26 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 			configurerFactory.onLoadFinish(properties);
 
 			if (!properties.isEmpty()) {
-				return new PropertiesPropertySource(name, properties);
+				if(this.isPropertiesResource(name)) {
+					return new PropertiesPropertySource(name, properties);
+				}
+				else {
+			        return new YamlPropertySourceLoader().load(resource.getFilename(), resource).get(0);
+
+				}
 			}
 		}
 		return null;
 	}
 	
 	public List<PropertySource<?>> load(String name, Resource resource) throws IOException {
-		
-		Properties properties = PropertiesLoaderUtils.loadProperties(resource);
+		Properties properties = new Properties();
+		if(this.isPropertiesResource(name)) {
+			properties = PropertiesLoaderUtils.loadProperties(resource);
+		}
+		else {
+			properties = YamlLoaderUtils.loadProperties(resource);
+		}
 		
 		init(resource, properties);
 		
@@ -121,7 +147,12 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 		configurerFactory.onLoadFinish(properties);
 
 		if (!properties.isEmpty()) {
-			list.add(new PropertiesPropertySource(name, properties));
+			if(this.isPropertiesResource(name)) {
+				list.add(new PropertiesPropertySource(name, properties));
+			}
+			else {
+				list.addAll(new YamlPropertySourceLoader().load(resource.getFilename(), resource));
+			}
 		}
 		return list;
 	
