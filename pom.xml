@@ -195,11 +195,11 @@
 			<distributionManagement>
 				<repository>
 					<id>apple-releases</id>
-					<url>http://maven.huolala.cn/repository/apple-releases/</url>
+					<url>http://mvnrepo.appleframework.com/repository/apple-releases/</url>
 				</repository>
 				<snapshotRepository>
 					<id>apple-snapshots</id>
-					<url>http://maven.huolala.cn/repository/apple-snapshots/</url>
+					<url>http://mvnrepo.appleframework.com/repository/apple-snapshots/</url>
 				</snapshotRepository>
 			</distributionManagement>
 		</profile>
