@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>apple-config</artifactId>
 		<groupId>com.appleframework.config</groupId>
-		<version>0.3.5.RELEASE</version>
+		<version>0.3.6.RELEASE</version>
 	</parent>
 	<artifactId>apple-config-apollo</artifactId>
 	<name>apple-config-apollo</name>
@@ -23,7 +23,7 @@
 	    <dependency>
 			<groupId>com.ctrip.framework.apollo</groupId>
 			<artifactId>apollo-client</artifactId>
-			<version>1.5.0</version>
+			<version>1.5.1</version>
 	    </dependency>
 
 		<dependency>
