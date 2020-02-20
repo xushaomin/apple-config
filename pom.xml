@@ -16,7 +16,7 @@
 		<diamond.version>2.1.2.APPLE</diamond.version>
 		<spring.version>5.2.0.RELEASE</spring.version>
 		<disconf.version>2.6.36.APPLE</disconf.version>
-		<zookeeper.version>3.4.10</zookeeper.version>
+		<zookeeper.version>3.4.14</zookeeper.version>
 		<spring.boot.version>2.2.0.RELEASE</spring.boot.version>
 	</properties>
 	
