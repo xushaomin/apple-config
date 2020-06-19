@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.appleframework.config</groupId>
 		<artifactId>apple-config</artifactId>
-		<version>0.3.6.RELEASE</version>
+		<version>0.3.7.RELEASE</version>
 	</parent>
 
 	<artifactId>apple-config-jeesuite</artifactId>

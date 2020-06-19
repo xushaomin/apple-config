@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>apple-config</artifactId>
 		<groupId>com.appleframework.config</groupId>
-		<version>0.3.6.RELEASE</version>
+		<version>0.3.7.RELEASE</version>
 	</parent>
 	<artifactId>apple-config-apollo</artifactId>
 	<name>apple-config-apollo</name>

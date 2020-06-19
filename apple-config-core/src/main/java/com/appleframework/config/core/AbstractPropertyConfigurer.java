@@ -104,7 +104,7 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 
-	public static Object getProperty(String namespace, String key) {
+	public static Object getNSProperty(String namespace, String key) {
 		Properties props = getProps(namespace);
 		if(null != props) {
 			return props.get(key);
@@ -115,8 +115,8 @@ public abstract class AbstractPropertyConfigurer {
 		
 	}
 	
-	public static String getValue(String namespace, String key) {
-		Object object = getProperty(namespace, key);
+	public static String getNSValue(String namespace, String key) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object) {
 			return (String)object;
 		}
@@ -126,8 +126,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static String getValue(String namespace, String key, String defaultValue) {
-		Object object = getProperty(namespace, key);
+	public static String getNSValue(String namespace, String key, String defaultValue) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object) {
 			return (String)object;
 		}
@@ -137,8 +137,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static String getString(String namespace, String key) {
-		Object object = getProperty(namespace, key);
+	public static String getNSString(String namespace, String key) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object) {
 			return (String)object;
 		}
@@ -148,8 +148,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static String getString(String namespace, String key, String defaultString) {
-		Object object = getProperty(namespace, key);
+	public static String getNSString(String namespace, String key, String defaultString) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object) {
 			return (String)object;
 		}
@@ -159,8 +159,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static Long getLong(String namespace, String key) {
-		Object object = getProperty(namespace, key);
+	public static Long getNSLong(String namespace, String key) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object)
 			return Long.parseLong(object.toString());
 		else {
@@ -169,8 +169,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static Long getLong(String namespace, String key, long defaultLong) {
-		Object object = getProperty(namespace, key);
+	public static Long getNSLong(String namespace, String key, long defaultLong) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object)
 			return Long.parseLong(object.toString());
 		else {
@@ -179,8 +179,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static Integer getInteger(String namespace, String key) {
-		Object object = getProperty(namespace, key);
+	public static Integer getNSInteger(String namespace, String key) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object) {
 			return Integer.parseInt(object.toString());
 		}
@@ -190,8 +190,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static Integer getInteger(String namespace, String key, int defaultInt) {
-		Object object = getProperty(namespace, key);
+	public static Integer getNSInteger(String namespace, String key, int defaultInt) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object) {
 			return Integer.parseInt(object.toString());
 		}
@@ -201,8 +201,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static String getString(String namespace, String key, Object[] array) {
-		String message = getValue(namespace, key);
+	public static String getNSString(String namespace, String key, Object[] array) {
+		String message = getNSValue(namespace, key);
 		if(null != message) {
 			return MessageFormat.format(message, array);  
 		}
@@ -211,8 +211,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static String getValue(String namespace, String key, Object... array) {
-		String message = getValue(namespace, key);
+	public static String getNSValue(String namespace, String key, Object... array) {
+		String message = getNSValue(namespace, key);
 		if(null != message) {
 			return MessageFormat.format(message, array);  
 		}
@@ -221,8 +221,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static Boolean getBoolean(String namespace, String key) {
-		Object object = getProperty(namespace, key);
+	public static Boolean getNSBoolean(String namespace, String key) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object)
 			return Boolean.valueOf(object.toString());
 		else {
@@ -231,8 +231,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static Boolean getBoolean(String namespace, String key, boolean defaultBoolean) {
-		Object object = getProperty(namespace, key);
+	public static Boolean getNSBoolean(String namespace, String key, boolean defaultBoolean) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object)
 			return Boolean.valueOf(object.toString());
 		else {
@@ -241,8 +241,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static Double getDouble(String namespace, String key) {
-		Object object = getProperty(namespace, key);
+	public static Double getNSDouble(String namespace, String key) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object)
 			return Double.valueOf(object.toString());
 		else {
@@ -251,8 +251,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static Double getDouble(String namespace, String key, double defaultDouble) {
-		Object object = getProperty(namespace, key);
+	public static Double getNSDouble(String namespace, String key, double defaultDouble) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object)
 			return Double.valueOf(object.toString());
 		else {
@@ -261,8 +261,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static Short getShort(String namespace, String key) {
-		Object object = getProperty(namespace, key);
+	public static Short getNSShort(String namespace, String key) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object)
 			return Short.valueOf(object.toString());
 		else {
@@ -271,8 +271,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static Short getShort(String namespace, String key, short defaultShort) {
-		Object object = getProperty(namespace, key);
+	public static Short getNSShort(String namespace, String key, short defaultShort) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object)
 			return Short.valueOf(object.toString());
 		else {
@@ -281,8 +281,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static Float getFloat(String namespace, String key) {
-		Object object = getProperty(namespace, key);
+	public static Float getNSFloat(String namespace, String key) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object)
 			return Float.valueOf(object.toString());
 		else {
@@ -291,8 +291,8 @@ public abstract class AbstractPropertyConfigurer {
 		}
 	}
 	
-	public static Float getFloat(String namespace, String key, float defaultFloat) {
-		Object object = getProperty(namespace, key);
+	public static Float getNSFloat(String namespace, String key, float defaultFloat) {
+		Object object = getNSProperty(namespace, key);
 		if(null != object)
 			return Float.valueOf(object.toString());
 		else {
