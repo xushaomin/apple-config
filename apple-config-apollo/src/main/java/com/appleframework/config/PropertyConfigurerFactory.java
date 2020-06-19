@@ -120,7 +120,6 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		        			change.getPropertyName(), change.getOldValue(), change.getNewValue(),
 		        			change.getChangeType());
 		        	// 客户端处理数据的逻辑
-					System.out.println(change.getPropertyName() + "=" + change.getNewValue());
 					try {
 						PropertyConfigurer.setProperty(change.getPropertyName(), change.getNewValue());
 						PropertyConfigurer.setProperty(change.getNamespace() + "." + change.getPropertyName(), change.getNewValue());
@@ -183,7 +182,6 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 					}
 				}
 				propsMap.put(namespace, properties);
-				System.out.println();
 		    }
 		} catch (Exception e) {
 			logger.error(e.getMessage());
