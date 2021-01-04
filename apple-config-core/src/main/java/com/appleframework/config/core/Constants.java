@@ -4,10 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Constants {
+		
+	public static String KEY_SPA             = "spring.profiles.active";
 	
-	public static String KEY_DEPLOY_ENV = "deploy.env";
+	public static String KEY_APP_ID          = "app.id";
+		
+	public static String KEY_APP_ENV         = "app.env";
 	
-	public static String KEY_ENV = "env";
+	public static String KEY_APOLLO_ENV      = "env";
 	
 	public static String KEY_NAMESPACE = "APPLE-CONFIG";
 	

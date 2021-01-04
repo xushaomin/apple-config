@@ -18,6 +18,10 @@ import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.event.ConfigListener;
 import com.appleframework.config.core.util.ObjectUtils;
 import com.appleframework.config.core.util.StringUtils;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multiset;
 
 public class BaseConfigurerFactory {
 
@@ -34,12 +38,29 @@ public class BaseConfigurerFactory {
 	protected ConfigListener eventListener;
 
 	protected boolean loadRemote = true;
-	
-	protected boolean isSpringboot = false;
-	
-	protected boolean remoteFirst = false;
+		
+	protected boolean remoteFirst = true;
 	
 	protected Resource[] remotes;
+	
+	protected static final Multimap<Integer, String> NAMESPACE_NAMES = LinkedHashMultimap.create();
+	
+	private static final Multiset<String> NAMESPACE_SETS = HashMultiset.create();
+	
+	public static void addNamespaces(Collection<String> namespaces, int order) {
+		for (String namespace : namespaces) {
+			addNamespace(namespace, order);
+		}
+	}
+	
+	public static void addNamespace(String namespace, int order) {
+		if(!NAMESPACE_SETS.contains(namespace)) {
+			NAMESPACE_NAMES.put(order, namespace);
+			NAMESPACE_SETS.add(namespace);
+		} else {
+			logger.warn("the namespace " + namespace + "is exist!");
+		}
+	}
 	
 	public boolean isLoadRemote() {
 		return loadRemote;
@@ -55,14 +76,6 @@ public class BaseConfigurerFactory {
 
 	public void setEventListener(ConfigListener eventListener) {
 		this.eventListener = eventListener;
-	}
-	
-	public boolean isSpringboot() {
-		return isSpringboot;
-	}
-
-	public void setSpringboot(boolean isSpringboot) {
-		this.isSpringboot = isSpringboot;
 	}
 
 	public boolean isRemoteFirst() {
@@ -208,13 +221,14 @@ public class BaseConfigurerFactory {
 		this.remotes = remotes;
 	}
 	
-	public void onLoadFinish(Map<String, Properties> propsMap) {
+	public Properties onLoadFinish(Map<String, Properties> propsMap) {
 		setSystemProperty(propsMap);
+		return null;
 	}
 	
-	public void onLoadFinish(Properties props) {
+	public Properties onLoadFinish(Properties props) {
 		setSystemProperty(props);
+		return null;
 	}
-	
 	
 }

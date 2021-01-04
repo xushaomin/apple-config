@@ -11,11 +11,11 @@ import com.appleframework.config.core.event.ConfigListener;
 public interface ConfigurerFactory {
 
 	public boolean isLoadRemote();
+	
+	public void setRemoteFirst(boolean remoteFirst);
 
 	public void setLoadRemote(boolean loadRemote);
 	
-	public void setSpringboot(boolean springboot);
-
 	public void setEventListenerClass(String eventListenerClass);
 
 	public void setEventListener(ConfigListener eventListener);
@@ -38,12 +38,12 @@ public interface ConfigurerFactory {
 	
 	public Map<String, Properties> getAllRemoteProperties();
 
-	public void onLoadFinish(Map<String, Properties> properties);
+	public Properties onLoadFinish(Map<String, Properties> properties);
 	
-	public void onLoadFinish(Properties props);
+	public Properties onLoadFinish(Properties props);
 	
 	public boolean isRemoteFirst();
-	
+		
 	public void setRemotes(Resource... locations);
 	
 }

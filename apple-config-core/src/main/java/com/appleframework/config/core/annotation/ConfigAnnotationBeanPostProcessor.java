@@ -27,7 +27,7 @@ public class ConfigAnnotationBeanPostProcessor extends InstantiationAwareBeanPos
 					}
 
 					String key = cfg.value().length() <= 0 ? field.getName() : cfg.value();
-					Object value = PropertyConfigurer.getProperty(key);
+					String value = PropertyConfigurer.getString(key);
 
 					if (value != null) {
 						Object object = typeConverter.convertIfNecessary(value, field.getType());

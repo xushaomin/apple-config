@@ -20,7 +20,7 @@ public class AppTest {
 			for (int i = 0; i < 10000; i++) {
 				//System.out.println(appService.getName());
 				
-				System.out.println(com.appleframework.config.core.PropertyConfigurer.getProperty("test"));
+				System.out.println(com.appleframework.config.core.PropertyConfigurer.getValue("test"));
 				Thread.sleep(5000);
 			}
 			System.in.read();

@@ -23,7 +23,6 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 
 	private static Logger logger = LoggerFactory.getLogger(PropertyConfigurerFactory.class);
 	
-	private static String KEY_DEPLOY_APP_ID      = "app.id";
 	private static String KEY_DEPLOY_META_URL    = "apollo.meta";
 	private static String KEY_DEPLOY_NAMESPACES  = "apollo.bootstrap.namespaces";
 	private static String KEY_DEPLOY_REFRESH_INT = "apollo.refreshInterval";
@@ -58,7 +57,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		//app.id
 		String appId = this.getDeployAppId();
 		if(null == appId) {
-			appId = PropertyConfigurer.getString(KEY_DEPLOY_APP_ID);
+			appId = PropertyConfigurer.getString(Constants.KEY_APP_ID);
 			if(null != appId) {
 				this.setDeployAppId(appId);
 			}
@@ -71,7 +70,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		//env
 		String env = this.getDeployEnv();
 		if(null == env) {
-			env = PropertyConfigurer.getString(Constants.KEY_ENV);
+			env = PropertyConfigurer.getString(Constants.KEY_APP_ENV);
 			if(null != env) {
 				this.setDeployEnv(env);
 			}
@@ -195,7 +194,11 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 
 	private String getDeployEnv() {
-		return System.getProperty(Constants.KEY_ENV);
+		String env = System.getProperty(Constants.KEY_APP_ENV);
+		if(null == env) {
+			env = System.getProperty(Constants.KEY_APOLLO_ENV);
+		}
+		return env;
 	}
 		
 	private String getDeployMeta() {
@@ -215,20 +218,21 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 	
 	//set
-	private String setDeployEnv(String env) {
-		return System.setProperty(Constants.KEY_ENV, env);
+	private void setDeployEnv(String env) {
+		System.setProperty(Constants.KEY_APOLLO_ENV, env);
+		System.setProperty(Constants.KEY_APP_ENV, env);
 	}
 	
-	private String setDeployAppId(String appId) {
-		return System.setProperty(KEY_DEPLOY_APP_ID, appId);
+	private void setDeployAppId(String appId) {
+		System.setProperty(Constants.KEY_APP_ID, appId);
 	}
 	
-	private String setDeployMeta(String meta) {
-		return System.setProperty(KEY_DEPLOY_META_URL, meta);		
+	private void setDeployMeta(String meta) {
+		System.setProperty(KEY_DEPLOY_META_URL, meta);		
 	}
 		
-	private String setRefreshInterval(String rRefreshInterval) {
-		return System.setProperty(KEY_DEPLOY_REFRESH_INT, rRefreshInterval);
+	private void setRefreshInterval(String rRefreshInterval) {
+		System.setProperty(KEY_DEPLOY_REFRESH_INT, rRefreshInterval);
 	}
 
 	@Override
@@ -236,14 +240,16 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 	
 	private String getDeployAppId() {
-		String appId = System.getProperty(KEY_DEPLOY_APP_ID);
+		String appId = System.getProperty(Constants.KEY_APP_ID);
 		if(null == appId) {
-			appId = System.getProperty("application.name");
-			if(null == appId) {
-				appId = System.getProperty("spring.application.name");
-			}
+			appId = System.getProperty("spring.application.name");
 		}
 		return appId;
 	}
+
+	@Override
+	public Properties onLoadFinish(Map<String, Properties> properties) {
+		return null;
+	}	
 	
 }

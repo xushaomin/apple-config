@@ -58,7 +58,6 @@ public class ExtendPropertySourceLoader implements PropertySourceLoader, Priorit
 			}
 		}
 		
-		configurerFactory.setSpringboot(true);
 		configurerFactory.init();
 	}
 	
