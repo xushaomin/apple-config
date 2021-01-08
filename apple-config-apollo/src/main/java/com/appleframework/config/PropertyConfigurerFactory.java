@@ -15,7 +15,9 @@ import com.appleframework.config.core.factory.ConfigurerFactory;
 import com.appleframework.config.core.util.StringUtils;
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigChangeListener;
+import com.ctrip.framework.apollo.ConfigFile;
 import com.ctrip.framework.apollo.ConfigService;
+import com.ctrip.framework.apollo.core.enums.ConfigFileFormat;
 import com.ctrip.framework.apollo.model.ConfigChange;
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;
 
@@ -190,7 +192,8 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	
 	@Override
 	public String getRemoteConfigInfo(String namespace) {
-		return null;
+		ConfigFile configFile = ConfigService.getConfigFile(namespace, ConfigFileFormat.TXT);
+		return configFile.getContent();
 	}
 
 	private String getDeployEnv() {
