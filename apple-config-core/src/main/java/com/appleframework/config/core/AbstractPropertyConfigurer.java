@@ -4,16 +4,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.text.MessageFormat;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.PropertyResolver;
 
+import com.appleframework.config.core.exception.ConfigException;
 import com.appleframework.config.core.util.ClassUtil;
 import com.appleframework.config.core.util.ObjectUtils;
 import com.appleframework.config.core.util.StringUtils;
@@ -180,7 +183,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return (String) object;
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -190,7 +193,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return (String) object;
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultValue;
 		}
 	}
@@ -200,7 +203,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return (String) object;
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -210,7 +213,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return (String) object;
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultString;
 		}
 	}
@@ -220,7 +223,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Long.parseLong(object.toString());
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -230,7 +233,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Long.parseLong(object.toString());
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultLong;
 		}
 	}
@@ -240,7 +243,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Integer.parseInt(object.toString());
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -250,7 +253,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Integer.parseInt(object.toString());
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultInt;
 		}
 	}
@@ -278,7 +281,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Boolean.valueOf(object.toString());
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -288,7 +291,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Boolean.valueOf(object.toString());
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultBoolean;
 		}
 	}
@@ -298,7 +301,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Double.valueOf(object.toString());
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -308,7 +311,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Double.valueOf(object.toString());
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultDouble;
 		}
 	}
@@ -318,7 +321,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Short.valueOf(object.toString());
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -328,7 +331,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Short.valueOf(object.toString());
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultShort;
 		}
 	}
@@ -338,7 +341,7 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Float.valueOf(object.toString());
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -348,8 +351,54 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Float.valueOf(object.toString());
 		} else {
-			logger.warn("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.warn("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultFloat;
+		}
+	}
+	
+	public long getNSDuration(String namespace, String key, TimeUnit unit) {
+    	String object = getProperty(namespace, key);
+		if (ObjectUtils.isNotEmpty(object)) {
+			return unit.convert(
+                    parseDuration(object),
+                    TimeUnit.NANOSECONDS);
+		} else {
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
+			throw new ConfigException("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
+		}
+    }
+
+	public Duration getDuration(String namespace, String key) {
+		String object = getProperty(namespace, key);
+		if (ObjectUtils.isNotEmpty(object)) {
+			long nanos = parseDuration(object);
+			return Duration.ofNanos(nanos);
+		} else {
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
+			throw new ConfigException("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
+		}
+	}
+	
+	public long getNSDuration(String namespace, String key, TimeUnit unit, long defaultLong) {
+    	String object = getProperty(namespace, key);
+		if (ObjectUtils.isNotEmpty(object)) {
+			return unit.convert(
+                    parseDuration(object),
+                    TimeUnit.NANOSECONDS);
+		} else {
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
+			return defaultLong;
+		}
+    }
+
+	public Duration getDuration(String namespace, String key, Duration defaultUnit) {
+		String object = getProperty(namespace, key);
+		if (ObjectUtils.isNotEmpty(object)) {
+			long nanos = parseDuration(object);
+			return Duration.ofNanos(nanos);
+		} else {
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
+			return defaultUnit;
 		}
 	}
 
@@ -471,4 +520,82 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		return null;
 	}
 	
+	/**
+     * Parses a duration string. If no units are specified in the string, it is
+     * assumed to be in milliseconds. The returned duration is in nanoseconds.
+     * The purpose of this function is to implement the duration-related methods
+     * in the ConfigObject interface.
+     *
+     * @param key
+     *            the string to parse
+     * @param originForException
+     *            origin of the value being parsed
+     * @param pathForException
+     *            path to include in exceptions
+     * @return duration in nanoseconds
+     * @throws ConfigException
+     *             if string is invalid
+     */
+    public static long parseDuration(String value) {
+        String s = StringUtils.unicodeTrim(value);
+        String originalUnitString = getUnits(s);
+        String unitString = originalUnitString;
+        String numberString = StringUtils.unicodeTrim(s.substring(0, s.length() - unitString.length()));
+        TimeUnit units = null;
+
+        // this would be caught later anyway, but the error message
+        // is more helpful if we check it here.
+        if (numberString.length() == 0)
+            throw new ConfigException("No number in duration value '" + value + "'");
+
+        if (unitString.length() > 2 && !unitString.endsWith("s"))
+            unitString = unitString + "s";
+
+        // note that this is deliberately case-sensitive
+        if (unitString.equals("") || unitString.equals("ms") || unitString.equals("millis")
+                || unitString.equals("milliseconds")) {
+            units = TimeUnit.MILLISECONDS;
+        } else if (unitString.equals("us") || unitString.equals("micros") || unitString.equals("microseconds")) {
+            units = TimeUnit.MICROSECONDS;
+        } else if (unitString.equals("ns") || unitString.equals("nanos") || unitString.equals("nanoseconds")) {
+            units = TimeUnit.NANOSECONDS;
+        } else if (unitString.equals("d") || unitString.equals("days")) {
+            units = TimeUnit.DAYS;
+        } else if (unitString.equals("h") || unitString.equals("hours")) {
+            units = TimeUnit.HOURS;
+        } else if (unitString.equals("s") || unitString.equals("seconds")) {
+            units = TimeUnit.SECONDS;
+        } else if (unitString.equals("m") || unitString.equals("minutes")) {
+            units = TimeUnit.MINUTES;
+        } else {
+            throw new ConfigException("Could not parse time unit '"
+                            + originalUnitString
+                            + "' (try ns, us, ms, s, m, h, d)");
+        }
+
+        try {
+            // if the string is purely digits, parse as an integer to avoid
+            // possible precision loss;
+            // otherwise as a double.
+            if (numberString.matches("[+-]?[0-9]+")) {
+                return units.toNanos(Long.parseLong(numberString));
+            } else {
+                long nanosInUnit = units.toNanos(1);
+                return (long) (Double.parseDouble(numberString) * nanosInUnit);
+            }
+        } catch (NumberFormatException e) {
+            throw new ConfigException("Could not parse duration number '" + numberString + "'");
+        }
+    }
+    
+    private static String getUnits(String s) {
+        int i = s.length() - 1;
+        while (i >= 0) {
+            char c = s.charAt(i);
+            if (!Character.isLetter(c))
+                break;
+            i -= 1;
+        }
+        return s.substring(i + 1);
+    }
 }

@@ -3,16 +3,18 @@ package com.appleframework.config.core;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.text.MessageFormat;
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.appleframework.config.core.exception.ConfigException;
 import com.appleframework.config.core.util.ObjectUtils;
 import com.appleframework.config.core.util.StringUtils;
-
 
 public class PropertyConfigurer extends AbstractPropertyConfigurer {
 
@@ -96,7 +98,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return (String) object;
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -106,7 +108,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return (String) object;
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultValue;
 		}
 	}
@@ -116,7 +118,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return String.valueOf(object);
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -126,7 +128,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return String.valueOf(object);
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultString;
 		}
 	}
@@ -136,7 +138,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Long.parseLong(object.toString());
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -146,7 +148,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Long.parseLong(object.toString());
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultLong;
 		}
 	}
@@ -156,7 +158,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Integer.parseInt(object.toString());
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -166,7 +168,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Integer.parseInt(object.toString());
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultInt;
 		}
 	}
@@ -194,7 +196,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Boolean.valueOf(object.toString());
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -204,7 +206,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Boolean.valueOf(object.toString());
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultBoolean;
 		}
 	}
@@ -214,7 +216,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Double.valueOf(object.toString());
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -224,7 +226,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Double.valueOf(object.toString());
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultDouble;
 		}
 	}
@@ -234,7 +236,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Short.valueOf(object.toString());
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -244,7 +246,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Short.valueOf(object.toString());
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultShort;
 		}
 	}
@@ -254,7 +256,7 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Float.valueOf(object.toString());
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return null;
 		}
 	}
@@ -264,8 +266,54 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		if (ObjectUtils.isNotEmpty(object)) {
 			return Float.valueOf(object.toString());
 		} else {
-			logger.debug("ÅäÖÃÏîÎª" + key + "µÄÅäÖÃÎ´ÔÚÅäÖÃÖĞĞÄ»òÏîÄ¿ÖĞÌí¼Ó»òÉèÖÃµÄÄÚÈİÎª¿Õ");
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
 			return defaultFloat;
+		}
+	}
+	
+    public long getDuration(String key, TimeUnit unit) {
+    	String object = getProperty(key);
+		if (ObjectUtils.isNotEmpty(object)) {
+			return unit.convert(
+                    parseDuration(object),
+                    TimeUnit.NANOSECONDS);
+		} else {
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
+			throw new ConfigException("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
+		}
+    }
+
+	public Duration getDuration(String key) {
+		String object = getProperty(key);
+		if (ObjectUtils.isNotEmpty(object)) {
+			long nanos = parseDuration(object);
+			return Duration.ofNanos(nanos);
+		} else {
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
+			throw new ConfigException("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
+		}
+	}
+	
+	public long getDuration(String key, TimeUnit unit, long defaultLong) {
+    	String object = getProperty(key);
+		if (ObjectUtils.isNotEmpty(object)) {
+			return unit.convert(
+                    parseDuration(object),
+                    TimeUnit.NANOSECONDS);
+		} else {
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
+			return defaultLong;
+		}
+    }
+
+	public Duration getDuration(String key, TimeUnit unit, Duration defaultUnit) {
+		String object = getProperty(key);
+		if (ObjectUtils.isNotEmpty(object)) {
+			long nanos = parseDuration(object);
+			return Duration.ofNanos(nanos);
+		} else {
+			logger.debug("é…ç½®é¡¹ä¸º" + key + "çš„é…ç½®æœªåœ¨é…ç½®ä¸­å¿ƒæˆ–é¡¹ç›®ä¸­æ·»åŠ æˆ–è®¾ç½®çš„å†…å®¹ä¸ºç©º");
+			return defaultUnit;
 		}
 	}
 
@@ -302,5 +350,5 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 	public static void setProps(Properties props) {
 		setProps(DEFAULT_KEY, props);
 	}
-
+	
 }
