@@ -271,48 +271,44 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 		}
 	}
 	
-    public long getDuration(String key, TimeUnit unit) {
-    	String object = getProperty(key);
+    public static long getDuration(String key, TimeUnit unit) {
+    	String object = getValue(key);
 		if (ObjectUtils.isNotEmpty(object)) {
 			return unit.convert(
                     parseDuration(object),
                     TimeUnit.NANOSECONDS);
 		} else {
-			logger.debug("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			throw new ConfigException("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 		}
     }
 
-	public Duration getDuration(String key) {
-		String object = getProperty(key);
+	public static Duration getDuration(String key) {
+		String object = getValue(key);
 		if (ObjectUtils.isNotEmpty(object)) {
 			long nanos = parseDuration(object);
 			return Duration.ofNanos(nanos);
 		} else {
-			logger.debug("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			throw new ConfigException("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 		}
 	}
 	
-	public long getDuration(String key, TimeUnit unit, long defaultLong) {
-    	String object = getProperty(key);
+	public static long getDuration(String key, TimeUnit unit, long defaultLong) {
+    	String object = getValue(key);
 		if (ObjectUtils.isNotEmpty(object)) {
 			return unit.convert(
                     parseDuration(object),
                     TimeUnit.NANOSECONDS);
 		} else {
-			logger.debug("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return defaultLong;
 		}
     }
 
-	public Duration getDuration(String key, TimeUnit unit, Duration defaultUnit) {
-		String object = getProperty(key);
+	public static Duration getDuration(String key, TimeUnit unit, Duration defaultUnit) {
+		String object = getValue(key);
 		if (ObjectUtils.isNotEmpty(object)) {
 			long nanos = parseDuration(object);
 			return Duration.ofNanos(nanos);
 		} else {
-			logger.debug("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return defaultUnit;
 		}
 	}

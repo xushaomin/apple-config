@@ -356,48 +356,42 @@ public abstract class AbstractPropertyConfigurer implements PropertyResolver {
 		}
 	}
 	
-	public long getNSDuration(String namespace, String key, TimeUnit unit) {
-    	String object = getProperty(namespace, key);
+	public static long getNSDuration(String namespace, String key, TimeUnit unit) {
+    	String object = getNSValue(namespace, key);
 		if (ObjectUtils.isNotEmpty(object)) {
 			return unit.convert(
                     parseDuration(object),
                     TimeUnit.NANOSECONDS);
 		} else {
-			logger.debug("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			throw new ConfigException("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 		}
     }
 
-	public Duration getDuration(String namespace, String key) {
-		String object = getProperty(namespace, key);
+	public static Duration getNSDuration(String namespace, String key) {
+		String object = getNSValue(namespace, key);
 		if (ObjectUtils.isNotEmpty(object)) {
 			long nanos = parseDuration(object);
 			return Duration.ofNanos(nanos);
 		} else {
-			logger.debug("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			throw new ConfigException("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 		}
 	}
 	
-	public long getNSDuration(String namespace, String key, TimeUnit unit, long defaultLong) {
-    	String object = getProperty(namespace, key);
+	public static long getNSDuration(String namespace, String key, TimeUnit unit, long defaultLong) {
+    	String object = getNSValue(namespace, key);
 		if (ObjectUtils.isNotEmpty(object)) {
-			return unit.convert(
-                    parseDuration(object),
-                    TimeUnit.NANOSECONDS);
+			return unit.convert(parseDuration(object), TimeUnit.NANOSECONDS);
 		} else {
-			logger.debug("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return defaultLong;
 		}
     }
 
-	public Duration getDuration(String namespace, String key, Duration defaultUnit) {
-		String object = getProperty(namespace, key);
+	public static Duration getNSDuration(String namespace, String key, Duration defaultUnit) {
+		String object = getNSValue(namespace, key);
 		if (ObjectUtils.isNotEmpty(object)) {
 			long nanos = parseDuration(object);
 			return Duration.ofNanos(nanos);
 		} else {
-			logger.debug("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
 			return defaultUnit;
 		}
 	}
