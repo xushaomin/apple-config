@@ -312,6 +312,40 @@ public class PropertyConfigurer extends AbstractPropertyConfigurer {
 			return defaultUnit;
 		}
 	}
+		
+	public static long getNumber(String key) {
+    	String object = getValue(key);
+		if (ObjectUtils.isNotEmpty(object)) {
+			if(object.toUpperCase().endsWith("K")) {
+				String num = object.substring(0, object.length() - 1);
+				return Long.parseLong(num) * 1000;
+			} else if(object.toUpperCase().endsWith("M")) {
+				String num = object.substring(0, object.length() - 1);
+				return Long.parseLong(num) * 1000000;
+			} else {
+				return Long.parseLong(object);
+			}
+		} else {
+			throw new ConfigException("配置项为" + key + "的配置未在配置中心或项目中添加或设置的内容为空");
+		}
+    }
+
+	public static long getNumber(String key, long defaultLong) {
+    	String object = getValue(key);
+		if (ObjectUtils.isNotEmpty(object)) {
+			if(object.toUpperCase().endsWith("K")) {
+				String num = object.substring(0, object.length() - 1);
+				return Long.parseLong(num) * 1000;
+			} else if(object.toUpperCase().endsWith("M")) {
+				String num = object.substring(0, object.length() - 1);
+				return Long.parseLong(num) * 1000000;
+			} else {
+				return Long.parseLong(object);
+			}
+		} else {
+			return defaultLong;
+		}
+    }
 
 	public synchronized static void merge(Properties properties) {
 		if (properties == null || properties.isEmpty()) {
