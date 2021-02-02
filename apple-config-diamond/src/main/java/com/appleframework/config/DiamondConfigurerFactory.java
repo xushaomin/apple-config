@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -65,9 +66,9 @@ public class DiamondConfigurerFactory extends PropertyConfigurerFactory {
 		
 		super.init();
 		
-		Properties remoteProperties = super.getAllRemoteProperties();
+		Map<String, Properties> remoteProperties = super.getAllRemoteProperties();
 		if (remoteProperties != null) {
-			Set<Entry<Object, Object>> entrySet = remoteProperties.entrySet();
+			Set<Entry<Object, Object>> entrySet = remoteProperties.get(KEY_DEFAULT_NAMESPACE).entrySet();
 			for (Entry<Object, Object> entry : entrySet) {
 				// local configurer first
 				if (super.isRemoteFirst() == false && PropertyConfigurer.containsKey(entry.getKey().toString())) {

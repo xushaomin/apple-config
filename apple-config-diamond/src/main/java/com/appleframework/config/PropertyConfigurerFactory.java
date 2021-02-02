@@ -1,12 +1,13 @@
 package com.appleframework.config;
 
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
 
-import com.appleframework.config.core.Constants;
 import com.appleframework.config.core.EnvConfigurer;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.factory.BaseConfigurerFactory;
@@ -23,6 +24,11 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	private static String KEY_DEPLOY_GROUP     = "deploy.group";
 	private static String KEY_DEPLOY_DATAID    = "deploy.dataId";
 	private static String KEY_DEPLOY_CONF_HOST = "deploy.confHost";
+	
+	public static String KEY_DEPLOY_ENV = "deploy.env";
+	public static String KEY_ENV = "env";
+	public static String KEY_DEFAULT_NAMESPACE = "default";
+	
 	
 	private DiamondManager manager;
 	
@@ -95,11 +101,11 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		}
 	}
 	
-	public Properties getAllRemoteProperties() {
-		Properties properties = new Properties();
+	public Map<String, Properties> getAllRemoteProperties() {
 		if (!isLoadRemote() || null == manager) {
-			return properties;
+			return null;
 		}
+		Properties properties = new Properties();
 		try {
 			String configInfo = manager.getAvailableConfigureInfomation(30000);
 			logger.warn("配置项内容: \n" + configInfo);
@@ -111,22 +117,25 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		} catch (Exception e) {
 			logger.error(e);
 		}
-		return properties;
+		Map<String, Properties> map = new HashMap<>();
+		map.put(KEY_DEFAULT_NAMESPACE, properties);
+		return map;
 	}
-	
+		
 	@Override
-	public void onLoadFinish(Properties properties) {
+	public Properties onLoadFinish(Properties properties) {
 		setSystemProperty(properties);
+		return properties;
 	}
 
 	private String getDeployEnv() {
-		String env = System.getProperty(Constants.KEY_DEPLOY_ENV);
+		String env = System.getProperty(KEY_DEPLOY_ENV);
 		if (StringUtils.isEmpty(env)) {
-			env = System.getProperty(Constants.KEY_ENV);
+			env = System.getProperty(KEY_ENV);
 			if (StringUtils.isEmpty(env)) {
 				env = EnvConfigurer.env;
 				if (StringUtils.isEmpty(env)) {
-					env = PropertyConfigurer.getString(Constants.KEY_DEPLOY_ENV);
+					env = PropertyConfigurer.getString(KEY_DEPLOY_ENV);
 				}
 			}
 		}
@@ -147,5 +156,16 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		}
 		return appName;
 	}
+
+	@Override
+	public Properties getRemoteProperties(String namespace) {
+		Map<String, Properties> map = this.getAllRemoteProperties();
+		return map.get(namespace);
+	}
+
+	@Override
+	public String getRemoteConfigInfo(String namespace) {
+		return manager.getAvailableConfigureInfomation(30000);
+	}	
 	
 }
