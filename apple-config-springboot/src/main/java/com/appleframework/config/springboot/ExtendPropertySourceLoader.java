@@ -1,197 +1,81 @@
 package com.appleframework.config.springboot;
 
-import java.io.IOException;
-import java.util.Map.Entry;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.springframework.beans.factory.DisposableBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.env.PropertySourceLoader;
-import org.springframework.boot.env.YamlPropertySourceLoader;
-import org.springframework.core.PriorityOrdered;
-import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.io.support.SpringFactoriesLoader;
+import org.springframework.util.ResourceUtils;
 
-import com.appleframework.config.core.PropertyConfigurer;
-import com.appleframework.config.core.factory.ConfigurerFactory;
-import com.appleframework.config.springboot.utils.YamlLoaderUtils;
-
-public class ExtendPropertySourceLoader implements PropertySourceLoader, PriorityOrdered, DisposableBean  {
-
-	private ConfigurerFactory configurerFactory = null;
+public class ExtendPropertySourceLoader implements EnvironmentPostProcessor {
 	
-	private Map<String, Properties> propertiesMap = new HashMap<String, Properties>();
-	
-	private PropertySource<?> propertySource = null;
-	
-	private List<PropertySource<?>> propertySourceList = null;
+	private static Logger log = LoggerFactory.getLogger(ExtendPropertySourceLoader.class);
 
-	@Override
-	public String[] getFileExtensions() {
-		return new String[] { "properties", "yml", "yaml" };
-	}
+	private final ResourcePatternResolver resourceLoader = new PathMatchingResourcePatternResolver();
 	
-	private void init(Resource resource, Properties properties) throws IOException {
+	private static ConfigurableEnvironment env;
 
-		//load by spi
+	private final List<PropertySourceLoader> propertySourceLoaders;
+	
+	private final static Set<String> resourceSet = new HashSet<>();
+	    
+    public ExtendPropertySourceLoader() {
+    	super();
+    	this.propertySourceLoaders = SpringFactoriesLoader.loadFactories(PropertySourceLoader.class, getClass().getClassLoader());
+    }
+        
+	public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+		env = environment;
+		for (PropertySourceLoader loader : this.propertySourceLoaders) {
+			for (String fileExtension : loader.getFileExtensions()) {
+				if(fileExtension.equalsIgnoreCase("xml")) {
+					continue;
+				}
+				String location = ResourceUtils.CLASSPATH_URL_PREFIX + "application." + fileExtension;
+				try {
+					if(resourceSet.contains(location)) {
+						continue;
+					}
+					Resource[] resources = this.resourceLoader.getResources(location);
+					for (Resource resource : resources) {
+						List<PropertySource<?>> propertySources = ExtendPropertyLocalLoader.load(resource.getFilename(), resource);
+						if(null != propertySources && !propertySources.isEmpty()) {
+							propertySources.stream().forEach(environment.getPropertySources()::addLast);
+						}
+					}
+				} catch (Exception e) {
+					log.error(e.getMessage());
+				} finally {
+					resourceSet.add(location);
+				}
+			}
+		}
+		
+		
 		try {
-			ServiceLoader<ConfigurerFactory> serviceLoader = ServiceLoader.load(ConfigurerFactory.class);
-	        Iterator<ConfigurerFactory> iterator = serviceLoader.iterator();
-	        if(iterator.hasNext()){
-	        	configurerFactory = iterator.next();
-	        }
+			List<PropertySource<?>> propertySources = ExtendPropertyDiamondLoader.load();
+			if(null != propertySources && !propertySources.isEmpty()) {
+				propertySources.stream().forEach(environment.getPropertySources()::addLast);
+			}
 		} catch (Exception e) {
-			//load by class.forName
-			try {
-				Class<?> clazz = Class.forName("com.appleframework.config.PropertyConfigurerFactory");
-				configurerFactory = (ConfigurerFactory) clazz.newInstance();
-			} catch (Exception e1) {
-				//return null;
-			}
+			log.error(e.getMessage());
 		}
 		
-		configurerFactory.init();
+	}
+
+	public static ConfigurableEnvironment getEnv() {
+    	return env;
 	}
 	
-	private boolean isPropertiesResource(String name) {
-		if(name.indexOf("properties") > -1) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
-	public PropertySource<?> load(String name, Resource resource, String profile) throws IOException {
-		if (null == profile) {
-			Properties properties = propertiesMap.get(name);
-			if(null == properties) {
-				if(this.isPropertiesResource(name)) {
-					properties = PropertiesLoaderUtils.loadProperties(resource);
-				}
-				else {
-					properties = YamlLoaderUtils.loadProperties(resource);
-				}
-				propertiesMap.put(name, properties);
-				PropertyConfigurer.merge(properties);
-			}
-			
-			if(null == propertySource) {
-				init(resource, properties);
-				
-				Map<String, Properties> remotePropsMap = configurerFactory.getAllRemoteProperties();
-				if(null != remotePropsMap && remotePropsMap.size() > 0) {
-					for (Map.Entry<String, Properties> prop : remotePropsMap.entrySet()) {
-						Set<Entry<Object, Object>> entrySet = prop.getValue().entrySet();
-						String namespace = prop.getKey();
-						for (Entry<Object, Object> entry : entrySet) {
-							// local configurer first
-							if (configurerFactory.isRemoteFirst() == false ) {
-								if(properties.containsKey(entry.getKey()) || properties.containsKey(namespace + "." + entry.getKey())) {
-									continue;
-								}
-							}
-							properties.put(entry.getKey(), entry.getValue());
-							properties.put(namespace + "." + entry.getKey(), entry.getValue());
-							PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
-							PropertyConfigurer.add(namespace, entry.getKey().toString(), entry.getValue().toString());
-						}
-				    }
-				}
-
-				configurerFactory.onLoadFinish(properties);
-
-				if (!properties.isEmpty()) {
-					if(this.isPropertiesResource(name)) {
-						propertySource = new PropertiesPropertySource(name, properties);
-					}
-					else {
-						propertySource = new YamlPropertySourceLoader().load(resource.getFilename(), resource).get(0);
-
-					}
-				}
-				return propertySource;
-			}
-			else {
-				PropertyConfigurer.merge(properties);
-			}
-		}
-		return null;
-	}
 	
-	public List<PropertySource<?>> load(String name, Resource resource) throws IOException {
-				
-		Properties properties = propertiesMap.get(name);
-		if(null == properties) {
-			if(this.isPropertiesResource(name)) {
-				properties = PropertiesLoaderUtils.loadProperties(resource);
-			}
-			else {
-				properties = YamlLoaderUtils.loadProperties(resource);
-			}
-			propertiesMap.put(name, properties);
-			PropertyConfigurer.merge(properties);
-		}
-		
-		if(null == propertySourceList) {
-			
-			init(resource, properties);
-			
-			propertySourceList = new ArrayList<PropertySource<?>>();
-			
-			Map<String, Properties> remotePropsMap = configurerFactory.getAllRemoteProperties();
-			if(null != remotePropsMap && remotePropsMap.size() > 0) {
-				for (Map.Entry<String, Properties> prop : remotePropsMap.entrySet()) {
-					Set<Entry<Object, Object>> entrySet = prop.getValue().entrySet();
-					String namespace = prop.getKey();
-					for (Entry<Object, Object> entry : entrySet) {
-						// local configurer first
-						if (configurerFactory.isRemoteFirst() == false ) {
-							if(properties.containsKey(entry.getKey()) || properties.containsKey(namespace + "." + entry.getKey())) {
-								continue;
-							}
-						}
-						properties.put(entry.getKey(), entry.getValue());
-						properties.put(namespace + "." + entry.getKey(), entry.getValue());
-						PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
-						PropertyConfigurer.add(namespace, entry.getKey().toString(), entry.getValue().toString());
-					}
-			    }
-			}
-
-			configurerFactory.onLoadFinish(properties);
-
-			if (!properties.isEmpty()) {
-				if(this.isPropertiesResource(name)) {
-					propertySourceList.add(new PropertiesPropertySource(name, properties));
-				}
-				else {
-					propertySourceList.addAll(new YamlPropertySourceLoader().load(resource.getFilename(), resource));
-				}
-			}
-			return propertySourceList;
-		}
-		else {
-			return null;
-		}	
-	}
-
-	@Override
-	public int getOrder() {
-		return HIGHEST_PRECEDENCE;
-	}
-
-	@Override
-	public void destroy() throws Exception {
-		configurerFactory.close();
-	}
-
 }
