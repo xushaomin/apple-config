@@ -97,6 +97,7 @@
 	<modules>
 		<module>apple-config-core</module>
 		<module>apple-config-nacos</module>
+		<module>apple-config-diamond</module>
     	<module>apple-config-apollo</module>
     	<module>apple-config-demo</module>
     	<module>apple-config-springboot</module>
