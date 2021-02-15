@@ -88,11 +88,11 @@ public class AppleConfigEventProcessor implements BeanFactoryPostProcessor, Envi
 	private void configEnv() {
 		String env = System.getProperty(Constants.KEY_APP_ENV); //系统读取 app.env
 		if(StringUtils.isNullOrEmpty(env)) {
-			env = System.getProperty(Constants.KEY_APOLLO_ENV); //系统读取 env
+			env = System.getProperty(Constants.KEY_ENV); //系统读取 env
 			if(StringUtils.isNullOrEmpty(env)) {
 				env = PropertyConfigurer.getString(Constants.KEY_APP_ENV); //配置文件读取 app.env
 				if(StringUtils.isNullOrEmpty(env)) {
-					env = PropertyConfigurer.getString(Constants.KEY_APOLLO_ENV); //配置文件读取 env
+					env = PropertyConfigurer.getString(Constants.KEY_ENV); //配置文件读取 env
 				} else {
 					env = "dev";
 				}
@@ -101,7 +101,7 @@ public class AppleConfigEventProcessor implements BeanFactoryPostProcessor, Envi
 		
 		if(!StringUtils.isNullOrEmpty(env)) {
 			System.setProperty(Constants.KEY_APP_ENV, env);
-			System.setProperty(Constants.KEY_APOLLO_ENV, env);
+			System.setProperty(Constants.KEY_ENV, env);
 		}
 	}
 

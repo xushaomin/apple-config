@@ -41,7 +41,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	
 	public void init() {
 		
-		Version.logVersion();
+		//Version.logVersion();
 				
 		initSystemProperties();
 
@@ -199,7 +199,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	private String getDeployEnv() {
 		String env = System.getProperty(Constants.KEY_APP_ENV);
 		if(null == env) {
-			env = System.getProperty(Constants.KEY_APOLLO_ENV);
+			env = System.getProperty(Constants.KEY_ENV);
 		}
 		return env;
 	}
@@ -222,7 +222,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	
 	//set
 	private void setDeployEnv(String env) {
-		System.setProperty(Constants.KEY_APOLLO_ENV, env);
+		System.setProperty(Constants.KEY_ENV, env);
 		System.setProperty(Constants.KEY_APP_ENV, env);
 	}
 	

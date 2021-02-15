@@ -263,11 +263,11 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	private String getDeployEnv() {
 		String env = System.getProperty(Constants.KEY_APP_ENV);
 		if(null == env) {
-			env = System.getProperty(Constants.KEY_APOLLO_ENV);
+			env = System.getProperty(Constants.KEY_ENV);
 			if(null == env) {
 				env = PropertyConfigurer.getString(Constants.KEY_APP_ENV);
 				if(null == env) {
-					env = PropertyConfigurer.getString(Constants.KEY_APOLLO_ENV);
+					env = PropertyConfigurer.getString(Constants.KEY_ENV);
 				}
 			}
 		}
@@ -298,9 +298,9 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	//set
 	private void setApolloEnv(String env) {
 		if(StringUtils.isNotBlank(env)) {
-			System.setProperty(Constants.KEY_APOLLO_ENV, env);
+			System.setProperty(Constants.KEY_ENV, env);
 			System.setProperty(Constants.KEY_APP_ENV, env);
-			PropertyConfigurer.setProperty(Constants.KEY_APOLLO_ENV, env);
+			PropertyConfigurer.setProperty(Constants.KEY_ENV, env);
 			PropertyConfigurer.setProperty(Constants.KEY_APP_ENV, env);
 		}
 		
