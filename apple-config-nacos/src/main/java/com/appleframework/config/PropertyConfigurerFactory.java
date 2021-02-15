@@ -26,7 +26,9 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	
 	private static String KEY_DEPLOY_GROUP     = "deploy.group";
 	private static String KEY_DEPLOY_DATAID    = "deploy.dataId";
-	//private static String KEY_DEPLOY_CONF_HOST = "deploy.confHost";
+	private static String KEY_DEPLOY_CONF_HOST = "deploy.confHost";
+	
+	private static String DEFAULT_DEPLOY_CONF_HOST = "cc-nacos.appleframework.com";
 	
 	private ConfigService configService;
 	
@@ -57,15 +59,17 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		if (!isLoadRemote()) {
 			return;
 		}
+		Properties properties = new Properties();
 		
 		group = PropertyConfigurer.getString(KEY_DEPLOY_GROUP);
 		dataId = PropertyConfigurer.getString(KEY_DEPLOY_DATAID);
 		
-//		String confHost = PropertyConfigurer.getString(KEY_DEPLOY_CONF_HOST);
-//		if (null != confHost) {
-//			com.taobao.diamond.common.Constants.DEFAULT_DOMAINNAME = confHost;
-//			com.taobao.diamond.common.Constants.DAILY_DOMAINNAME   = confHost;
-//		}
+		String confHost = PropertyConfigurer.getString(KEY_DEPLOY_CONF_HOST);
+		if (null != confHost) {
+	        properties.put(PropertyKeyConst.SERVER_ADDR, confHost);
+		} else {
+			properties.put(PropertyKeyConst.SERVER_ADDR, DEFAULT_DEPLOY_CONF_HOST);
+		}
 
 		if(null == group) {
 			group = this.getDeployEnv();
@@ -76,11 +80,6 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 			
 		logger.warn("配置项：group=" + group);
 		logger.warn("配置项：dataId=" + dataId);
-		
-		Properties properties = new Properties();
-        properties.put(PropertyKeyConst.ENDPOINT, "${endpoint}");
-        properties.put(PropertyKeyConst.NAMESPACE, "${namespace}");
-
 
 		if (!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
 			

@@ -20,9 +20,9 @@ import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.factory.ConfigurerFactory;
 import com.appleframework.config.core.util.SystemPropertiesUtil;
 
-public class ExtendPropertyDiamondLoader  {
+public class ExtendPropertyCenterLoader  {
 
-	private static Logger log = LoggerFactory.getLogger(ExtendPropertyDiamondLoader.class);
+	private static Logger log = LoggerFactory.getLogger(ExtendPropertyCenterLoader.class);
 					
 	private static PropertyPlaceholderHelper propertyPlaceholderHelper = new PropertyPlaceholderHelper("${", "}");
 	
@@ -50,7 +50,7 @@ public class ExtendPropertyDiamondLoader  {
 	}
 	
 	public static List<PropertySource<?>> load() throws IOException {
-		log.info("load diamond config");
+		log.info("load config center ");
 		init();
 
 		Properties properties = new Properties();		
@@ -76,14 +76,12 @@ public class ExtendPropertyDiamondLoader  {
 
 		configurerFactory.onLoadFinish(properties);
 		
-		
 		printProperties(properties);
 		
 		log.info("======================================================================");
 		
 		Set<String> propertyNames = properties.stringPropertyNames();
 		
-		//占位符
 		for (String key : propertyNames) {
 			String value = properties.getProperty(key);
 			value = propertyPlaceholderHelper.replacePlaceholders(value, properties);
@@ -99,7 +97,7 @@ public class ExtendPropertyDiamondLoader  {
 		
 		if (!properties.isEmpty()) {
 			List<PropertySource<?>> propertySourceList = new ArrayList<PropertySource<?>>();
-			propertySourceList.add(new PropertiesPropertySource("diamond", properties));
+			propertySourceList.add(new PropertiesPropertySource("center", properties));
 			return propertySourceList;
 		}
 		else {
@@ -121,7 +119,4 @@ public class ExtendPropertyDiamondLoader  {
 			}
 		}
 	}
-
-	
-	
 }

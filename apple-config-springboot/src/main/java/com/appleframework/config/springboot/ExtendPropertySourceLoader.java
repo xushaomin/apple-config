@@ -63,7 +63,7 @@ public class ExtendPropertySourceLoader implements EnvironmentPostProcessor {
 		
 		
 		try {
-			List<PropertySource<?>> propertySources = ExtendPropertyDiamondLoader.load();
+			List<PropertySource<?>> propertySources = ExtendPropertyCenterLoader.load();
 			if(null != propertySources && !propertySources.isEmpty()) {
 				propertySources.stream().forEach(environment.getPropertySources()::addLast);
 			}
