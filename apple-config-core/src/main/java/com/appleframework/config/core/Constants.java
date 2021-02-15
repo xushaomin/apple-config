@@ -11,7 +11,7 @@ public class Constants {
 		
 	public static String KEY_APP_ENV         = "app.env";
 	
-	public static String KEY_APOLLO_ENV      = "env";
+	public static String KEY_ENV             = "env";
 	
 	public static String KEY_NAMESPACE = "APPLE-CONFIG";
 	

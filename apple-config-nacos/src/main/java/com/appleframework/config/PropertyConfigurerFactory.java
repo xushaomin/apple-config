@@ -27,13 +27,15 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	private static String KEY_DEPLOY_GROUP     = "deploy.group";
 	private static String KEY_DEPLOY_DATAID    = "deploy.dataId";
 	private static String KEY_DEPLOY_CONF_HOST = "deploy.confHost";
+	private static String KEY_DEPLOY_ENV       = "deploy.env";
 	
-	private static String DEFAULT_DEPLOY_CONF_HOST = "cc-nacos.appleframework.com";
+	private static String DEFAULT_DEPLOY_CONF_HOST = "config-nacos.appleframework.com";
 	
 	private ConfigService configService;
 	
 	private String group;
 	private String dataId;
+	private String confHost;
 	
 	public PropertyConfigurerFactory() {
 		
@@ -55,7 +57,6 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 	
 	private void initDiamondManager() {
-		
 		if (!isLoadRemote()) {
 			return;
 		}
@@ -63,28 +64,23 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		
 		group = PropertyConfigurer.getString(KEY_DEPLOY_GROUP);
 		dataId = PropertyConfigurer.getString(KEY_DEPLOY_DATAID);
-		
-		String confHost = PropertyConfigurer.getString(KEY_DEPLOY_CONF_HOST);
-		if (null != confHost) {
-	        properties.put(PropertyKeyConst.SERVER_ADDR, confHost);
-		} else {
-			properties.put(PropertyKeyConst.SERVER_ADDR, DEFAULT_DEPLOY_CONF_HOST);
-		}
+		confHost = getServerAddr();
 
 		if(null == group) {
-			group = this.getDeployEnv();
+			group = this.getEnv();
 		}
 		if(null == dataId) {
 			dataId = this.getAppId();
 		}
-			
+		
+		properties.put(PropertyKeyConst.SERVER_ADDR, confHost);
+		
 		logger.warn("配置项：group=" + group);
 		logger.warn("配置项：dataId=" + dataId);
-
+		logger.warn("配置项：confHost=" + confHost);
+		
 		if (!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
-			
 			PropertiesListener springMamagerListener = new PropertiesListener() {
-
 				@Override
 	            public void innerReceive(Properties properties) {
 					logger.warn("已改动的配置：\n" + properties);
@@ -102,8 +98,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 				configService = NacosFactory.createConfigService(properties);
 				configService.addListener(dataId, group, springMamagerListener);
 			} catch (NacosException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		}
 	}
@@ -154,15 +149,40 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		return propsMap;
 	}
 	
-	private String getDeployEnv() {
+	private String getEnv() {
 		String env = System.getProperty(Constants.KEY_APP_ENV);
 		if (StringUtils.isEmpty(env)) {
-			env = PropertyConfigurer.getString(Constants.KEY_APP_ENV);
+			env = System.getProperty(Constants.KEY_ENV);
 			if (StringUtils.isEmpty(env)) {
-				env = EnvConfigurer.env;
+				env = PropertyConfigurer.getString(Constants.KEY_APP_ENV);
+				if (StringUtils.isEmpty(env)) {
+					env = PropertyConfigurer.getString(Constants.KEY_ENV);
+					if (StringUtils.isEmpty(env)) {
+						env = PropertyConfigurer.getString(KEY_DEPLOY_ENV);
+						if (StringUtils.isEmpty(env)) {
+							if (StringUtils.isEmpty(EnvConfigurer.env)) {
+								env = "dev";
+								logger.warn("the default env is dev !!! ");
+							} else {
+								env = EnvConfigurer.env;
+							}
+						}
+					}
+				}
 			}
 		}
 		return env;
+	}
+	
+	private String getServerAddr() {
+		String addr = System.getProperty(KEY_DEPLOY_CONF_HOST);
+		if (StringUtils.isEmpty(addr)) {
+			addr = PropertyConfigurer.getString(KEY_DEPLOY_CONF_HOST);
+			if (StringUtils.isEmpty(addr)) {
+				addr = DEFAULT_DEPLOY_CONF_HOST;
+			}
+		}
+		return addr;
 	}
 
 	@Override
