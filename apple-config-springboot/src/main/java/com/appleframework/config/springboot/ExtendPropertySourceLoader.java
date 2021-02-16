@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.env.PropertySourceLoader;
@@ -17,9 +15,13 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.util.ResourceUtils;
 
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
+import cn.hutool.log.dialect.console.ConsoleLogFactory;
+
 public class ExtendPropertySourceLoader implements EnvironmentPostProcessor {
 	
-	private static Logger log = LoggerFactory.getLogger(ExtendPropertySourceLoader.class);
+	private static final Log log = LogFactory.get(ExtendPropertySourceLoader.class);
 
 	private final ResourcePatternResolver resourceLoader = new PathMatchingResourcePatternResolver();
 	
@@ -31,6 +33,7 @@ public class ExtendPropertySourceLoader implements EnvironmentPostProcessor {
 	    
     public ExtendPropertySourceLoader() {
     	super();
+    	LogFactory.setCurrentLogFactory(new ConsoleLogFactory());
     	this.propertySourceLoaders = SpringFactoriesLoader.loadFactories(PropertySourceLoader.class, getClass().getClassLoader());
     }
         

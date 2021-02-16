@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.PropertyKeyConst;
 import com.alibaba.nacos.api.config.ConfigService;
@@ -20,10 +17,13 @@ import com.appleframework.config.core.factory.BaseConfigurerFactory;
 import com.appleframework.config.core.factory.ConfigurerFactory;
 import com.appleframework.config.core.util.StringUtils;
 
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
+
 public class PropertyConfigurerFactory extends BaseConfigurerFactory implements ConfigurerFactory {
 
-	private static Logger logger = LoggerFactory.getLogger(PropertyConfigurerFactory.class);
-	
+	private static Log logger = LogFactory.get(PropertyConfigurerFactory.class);
+
 	private static String KEY_DEPLOY_GROUP     = "deploy.group";
 	private static String KEY_DEPLOY_DATAID    = "deploy.dataId";
 	private static String KEY_DEPLOY_CONF_HOST = "deploy.confHost";

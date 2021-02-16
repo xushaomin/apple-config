@@ -8,9 +8,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.PropertySource;
@@ -22,10 +19,13 @@ import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.util.SystemPropertiesUtil;
 import com.appleframework.config.springboot.utils.YamlLoaderUtils;
 
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
+
 public class ExtendPropertyLocalLoader  {
 
-	private static Logger log = LoggerFactory.getLogger(ExtendPropertyLocalLoader.class);
-					
+	private static final Log log = LogFactory.get(ExtendPropertyLocalLoader.class);
+
 	private static PropertyPlaceholderHelper propertyPlaceholderHelper = new PropertyPlaceholderHelper("${", "}");
 		
 	private static boolean isPropertiesResource(String name) {
@@ -56,7 +56,6 @@ public class ExtendPropertyLocalLoader  {
 		
 		Set<String> propertyNames = properties.stringPropertyNames();
 		
-		//占位符
 		for (String key : propertyNames) {
 			String value = properties.getProperty(key);
 			value = propertyPlaceholderHelper.replacePlaceholders(value, properties);
@@ -101,7 +100,5 @@ public class ExtendPropertyLocalLoader  {
 			}
 		}
 	}
-
-	
 	
 }

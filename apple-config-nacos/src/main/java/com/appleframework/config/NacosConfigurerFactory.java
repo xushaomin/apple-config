@@ -10,11 +10,11 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.util.StringUtils;
+
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 
 /**
 * 专门提供apple-boot-java以
@@ -25,8 +25,8 @@ import com.appleframework.config.core.util.StringUtils;
 */
 public class NacosConfigurerFactory extends PropertyConfigurerFactory {
 
-	private static Logger logger = LoggerFactory.getLogger(NacosConfigurerFactory.class);
-	
+	private static Log logger = LogFactory.get(NacosConfigurerFactory.class);
+
 	public NacosConfigurerFactory() {
 		
 	}

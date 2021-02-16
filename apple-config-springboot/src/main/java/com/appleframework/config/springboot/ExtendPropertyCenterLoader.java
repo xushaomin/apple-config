@@ -10,8 +10,6 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.util.PropertyPlaceholderHelper;
@@ -20,10 +18,13 @@ import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.factory.ConfigurerFactory;
 import com.appleframework.config.core.util.SystemPropertiesUtil;
 
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
+
 public class ExtendPropertyCenterLoader  {
 
-	private static Logger log = LoggerFactory.getLogger(ExtendPropertyCenterLoader.class);
-					
+	private static final Log log = LogFactory.get(ExtendPropertyCenterLoader.class);
+	
 	private static PropertyPlaceholderHelper propertyPlaceholderHelper = new PropertyPlaceholderHelper("${", "}");
 	
 	private static ConfigurerFactory configurerFactory;

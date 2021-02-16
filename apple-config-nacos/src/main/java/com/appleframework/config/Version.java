@@ -5,12 +5,12 @@ import java.util.Enumeration;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 
 public class Version {
 
-	private static Logger logger = LoggerFactory.getLogger(Version.class);
+	private static Log logger = LogFactory.get(Version.class);
 
 	public static void logVersion() {
 		try {

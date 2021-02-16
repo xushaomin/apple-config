@@ -18,8 +18,8 @@
 	</bean>
 
 	<bean id="demoXML" class="com.appleframework.config.test.Demo">
-		<property name="config3" value="${jdbc.url}" />
-		<property name="config4" value="${sns.save.flag}" />
+		<property name="config3" value="${spring.datasource.url}" />
+		<property name="config4" value="${spring.datasource.maxActive}" />
 	</bean>
 
 </beans>
