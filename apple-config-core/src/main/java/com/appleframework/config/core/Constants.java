@@ -13,7 +13,7 @@ public class Constants {
 	
 	public static String KEY_ENV             = "env";
 	
-	public static String KEY_NAMESPACE = "APPLE-CONFIG";
+	public static String KEY_NAMESPACE       = "APPLE-CONFIG";
 	
 	public static Set<String> SET_SYSTEM_PROPERTIES = new HashSet<String>();
 	

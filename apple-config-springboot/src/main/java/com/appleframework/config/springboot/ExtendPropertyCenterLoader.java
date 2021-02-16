@@ -14,6 +14,7 @@ import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.util.PropertyPlaceholderHelper;
 
+import com.appleframework.config.core.Constants;
 import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.factory.ConfigurerFactory;
 import com.appleframework.config.core.util.SystemPropertiesUtil;
@@ -60,17 +61,30 @@ public class ExtendPropertyCenterLoader  {
 			for (Map.Entry<String, Properties> prop : remotePropsMap.entrySet()) {
 				Set<Entry<Object, Object>> entrySet = prop.getValue().entrySet();
 				String namespace = prop.getKey();
-				for (Entry<Object, Object> entry : entrySet) {
-					// local configurer first
-					if (configurerFactory.isRemoteFirst() == false ) {
-						if(properties.containsKey(entry.getKey()) || properties.containsKey(namespace + "." + entry.getKey())) {
-							continue;
+				if(namespace.equalsIgnoreCase(Constants.KEY_NAMESPACE)) {
+					for (Entry<Object, Object> entry : entrySet) {
+						// local configurer first
+						if (configurerFactory.isRemoteFirst() == false ) {
+							if(properties.containsKey(entry.getKey())) {
+								continue;
+							}
 						}
+						properties.put(entry.getKey(), entry.getValue());
+						PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
 					}
-					properties.put(entry.getKey(), entry.getValue());
-					properties.put(namespace + "." + entry.getKey(), entry.getValue());
-					PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
-					PropertyConfigurer.add(namespace, entry.getKey().toString(), entry.getValue().toString());
+				} else {
+					for (Entry<Object, Object> entry : entrySet) {
+						// local configurer first
+						if (configurerFactory.isRemoteFirst() == false ) {
+							if(properties.containsKey(entry.getKey()) || properties.containsKey(namespace + "." + entry.getKey())) {
+								continue;
+							}
+						}
+						properties.put(entry.getKey(), entry.getValue());
+						properties.put(namespace + "." + entry.getKey(), entry.getValue());
+						PropertyConfigurer.add(entry.getKey().toString(), entry.getValue().toString());
+						PropertyConfigurer.add(namespace, entry.getKey().toString(), entry.getValue().toString());
+					}
 				}
 		    }
 		}
