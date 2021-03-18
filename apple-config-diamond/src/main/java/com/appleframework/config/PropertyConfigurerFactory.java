@@ -84,7 +84,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		
 		for (String namespace : NAMESPACE_NAMES.values()) {
 			initManager(group, namespace);
-		}		
+		}
 	}	
 	
 	private void initManager(String group, String dataId) {

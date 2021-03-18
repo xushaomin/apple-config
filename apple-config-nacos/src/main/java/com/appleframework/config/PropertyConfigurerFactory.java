@@ -1,9 +1,12 @@
 package com.appleframework.config;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.PropertyKeyConst;
@@ -16,6 +19,7 @@ import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.factory.BaseConfigurerFactory;
 import com.appleframework.config.core.factory.ConfigurerFactory;
 import com.appleframework.config.core.util.StringUtils;
+import com.google.common.collect.ImmutableSortedSet;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
@@ -80,26 +84,35 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		logger.warn("配置项：confHost=" + confHost);
 		
 		if (!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
-			PropertiesListener springMamagerListener = new PropertiesListener() {
-				@Override
-	            public void innerReceive(Properties properties) {
-					logger.warn("已改动的配置：\n" + properties);
-					try {
-						PropertyConfigurer.load(properties);
-					} catch (Exception e) {
-						logger.error(e.getMessage());
-						return;
-					}					
-					//事件触发
-					notifyPropertiesChanged(PropertyConfigurer.getProps());
-	            }
-			};
-			try {
-				configService = NacosFactory.createConfigService(properties);
-				configService.addListener(dataId, group, springMamagerListener);
-			} catch (NacosException e) {
-				logger.error(e.getMessage());
+			addNamespace(dataId, 0);
+		}
+		try {
+			configService = NacosFactory.createConfigService(properties);
+			for (String namespace : NAMESPACE_NAMES.values()) {
+				PropertiesListener propertiesListener = new PropertiesListener() {
+					@Override
+					public void innerReceive(Properties properties) {
+						logger.warn("已改动的配置：\n" + properties);
+						Map<String, Properties> map = new HashMap<>();
+						try {
+							Set<String> propertyNames = properties.stringPropertyNames();
+							for (String key : propertyNames) {
+								String value = properties.getProperty(key, null);
+								PropertyConfigurer.setPropertyAll(namespace, key, value);
+							}
+							map.put(namespace, properties);
+						} catch (Exception e) {
+							logger.error(e);
+							return;
+						}
+						// 事件触发
+						notifyPropertiesChanged(map);
+					}
+				};
+				configService.addListener(namespace, group, propertiesListener);
 			}
+		} catch (NacosException e) {
+			logger.error(e.getMessage());
 		}
 	}
 	
@@ -128,7 +141,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 			return null;
 		}
 		try {
-			String configInfo = configService.getConfig(dataId, group, 30000);
+			String configInfo = configService.getConfig(namespace, group, 30000);
 			logger.warn("配置项内容: \n" + configInfo);
 			return configInfo;
 		} catch (Exception e) {
@@ -138,15 +151,62 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	}
 	
 	public Properties getRemoteProperties(String namespace) {
-		return this.getRemoteProperties();
+		String configInfo = this.getRemoteConfigInfo(namespace);
+		Properties properties = new Properties();
+		if (!StringUtils.isEmpty(configInfo)) {
+			try {
+				properties.load(new StringReader(configInfo));
+			} catch (IOException e) {
+				logger.error(e.getMessage());
+			}
+		}
+		return properties;
 	}
 
 	@Override
 	public Map<String, Properties> getAllRemoteProperties() {
-		Properties props = this.getRemoteProperties(null);
-		Map<String, Properties> propsMap = new HashMap<String, Properties>();
-		propsMap.put(Constants.KEY_NAMESPACE, props);
-		return propsMap;
+
+		if (!isLoadRemote() || null == configService) {
+			return null;
+		}
+		Map<String, Properties> map = new HashMap<>();
+		try {
+			
+			// sort by order asc
+			ImmutableSortedSet<Integer> orders = ImmutableSortedSet.copyOf(NAMESPACE_NAMES.keySet());
+			Iterator<Integer> iterator = orders.iterator();
+
+			while (iterator.hasNext()) {
+				int order = iterator.next();
+				for (String namespace : NAMESPACE_NAMES.get(order)) {
+					String configInfo = configService.getConfig(namespace, group, 30000);
+					Properties properties = new Properties();
+					if (!StringUtils.isEmpty(configInfo)) {
+						properties.load(new StringReader(configInfo));
+						
+						Set<String> propertyNames = properties.stringPropertyNames();
+						if (propertyNames.size() > 0) {
+							logger.info("The namespace [" + namespace + "] properties: ");
+						} else {
+							logger.info("The namespace [" + namespace + "] properties is null !!!");
+						}
+						
+						for (String key : propertyNames) {
+							String value = properties.getProperty(key, null);
+							if (null != value) {
+								logger.info("    " + key + "=" + value);
+							}
+						}
+					}
+					map.put(namespace, properties);
+				}
+			}			
+		} catch (Exception e) {
+			logger.error(e);
+		}
+		
+		return map;
+	
 	}
 	
 	private String getEnv() {
