@@ -2,8 +2,10 @@ package com.appleframework.config;
 
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.Executor;
 
 import org.apache.log4j.Logger;
@@ -13,6 +15,7 @@ import com.appleframework.config.core.PropertyConfigurer;
 import com.appleframework.config.core.factory.BaseConfigurerFactory;
 import com.appleframework.config.core.factory.ConfigurerFactory;
 import com.appleframework.config.core.util.StringUtils;
+import com.google.common.collect.ImmutableSortedSet;
 import com.taobao.diamond.manager.DiamondManager;
 import com.taobao.diamond.manager.ManagerListener;
 import com.taobao.diamond.manager.impl.DefaultDiamondManager;
@@ -29,8 +32,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 	public static String KEY_ENV = "env";
 	public static String KEY_DEFAULT_NAMESPACE = "default";
 	
-	
-	private DiamondManager manager;
+	private Map<String, DiamondManager> managerMap = new HashMap<>();
 	
 	public PropertyConfigurerFactory() {
 		
@@ -77,48 +79,91 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 		logger.warn("配置项：dataId=" + dataId);
 
 		if (!StringUtils.isEmpty(group) && !StringUtils.isEmpty(dataId)) {
-			
-			ManagerListener springMamagerListener = new ManagerListener() {
-
-				public Executor getExecutor() {
-					return null;
-				}
-
-				public void receiveConfigInfo(String configInfo) {
-					// 客户端处理数据的逻辑
-					logger.warn("已改动的配置：\n" + configInfo);
-					try {
-						PropertyConfigurer.load(new StringReader(configInfo));
-					} catch (Exception e) {
-						logger.error(e);
-						return;
-					}					
-					//事件触发
-					notifyPropertiesChanged(PropertyConfigurer.getProps());
-				}
-			};
-			manager = new DefaultDiamondManager(group, dataId, springMamagerListener);
+			addNamespace(dataId, 0);
 		}
+		
+		for (String namespace : NAMESPACE_NAMES.values()) {
+			initManager(group, namespace);
+		}		
+	}	
+	
+	private void initManager(String group, String dataId) {
+		
+		ManagerListener springMamagerListener = new ManagerListener() {
+
+			public Executor getExecutor() {
+				return null;
+			}
+
+			public void receiveConfigInfo(String configInfo) {
+				// 客户端处理数据的逻辑
+				logger.warn("已改动的配置：\n" + configInfo);
+				Map<String, Properties> map = new HashMap<>();
+				try {
+					Properties properties = new Properties();
+					properties.load(new StringReader(configInfo));
+						
+					Set<String> propertyNames = properties.stringPropertyNames();
+					for (String key : propertyNames) {
+						String value = properties.getProperty(key, null);
+						PropertyConfigurer.setPropertyAll(dataId, key, value);
+					}
+					map.put(dataId, properties);
+				} catch (Exception e) {
+					logger.error(e);
+					return;
+				}					
+				//事件触发				
+				notifyPropertiesChanged(map);
+			}
+		};
+		
+		DiamondManager manager = new DefaultDiamondManager(group, dataId, springMamagerListener);
+		managerMap.put(dataId, manager);
 	}
 	
 	public Map<String, Properties> getAllRemoteProperties() {
-		if (!isLoadRemote() || null == manager) {
+		if (!isLoadRemote() || managerMap.size() == 0) {
 			return null;
 		}
-		Properties properties = new Properties();
+		Map<String, Properties> map = new HashMap<>();
 		try {
-			String configInfo = manager.getAvailableConfigureInfomation(30000);
-			logger.warn("配置项内容: \n" + configInfo);
-			if (!StringUtils.isEmpty(configInfo)) {
-				properties.load(new StringReader(configInfo));
-			} else {
-				logger.error("在配置管理中心找不到配置信息");
-			}
+			
+			// sort by order asc
+			ImmutableSortedSet<Integer> orders = ImmutableSortedSet.copyOf(NAMESPACE_NAMES.keySet());
+			Iterator<Integer> iterator = orders.iterator();
+
+			while (iterator.hasNext()) {
+				int order = iterator.next();
+				for (String namespace : NAMESPACE_NAMES.get(order)) {
+					DiamondManager manager = managerMap.get(namespace);
+					String configInfo = manager.getAvailableConfigureInfomation(30000);
+					Properties properties = new Properties();
+					if (!StringUtils.isEmpty(configInfo)) {
+						properties.load(new StringReader(configInfo));
+						
+						Set<String> propertyNames = properties.stringPropertyNames();
+						if (propertyNames.size() > 0) {
+							logger.info("The namespace [" + namespace + "] properties: ");
+						} else {
+							logger.info("The namespace [" + namespace + "] properties is null !!!");
+						}
+						
+						for (String key : propertyNames) {
+							String value = properties.getProperty(key, null);
+							if (null != value) {
+								logger.info("    " + key + "=" + value);
+							}
+						}
+					}
+					map.put(namespace, properties);
+				
+				}
+			}			
 		} catch (Exception e) {
 			logger.error(e);
 		}
-		Map<String, Properties> map = new HashMap<>();
-		map.put(KEY_DEFAULT_NAMESPACE, properties);
+		
 		return map;
 	}
 		
@@ -144,9 +189,9 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 
 	@Override
 	public void close() {
-		if(null != manager) {
-			manager.close();
-		}
+		managerMap.entrySet().forEach(entry -> 
+			entry.getValue().close()
+		);
 	}
 	
 	private String getApplicationName() {
@@ -165,7 +210,7 @@ public class PropertyConfigurerFactory extends BaseConfigurerFactory implements 
 
 	@Override
 	public String getRemoteConfigInfo(String namespace) {
-		return manager.getAvailableConfigureInfomation(30000);
+		return managerMap.get(namespace).getAvailableConfigureInfomation(30000);
 	}	
 	
 }

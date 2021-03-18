@@ -46,4 +46,6 @@ public interface ConfigurerFactory {
 		
 	public void setRemotes(Resource... locations);
 	
+	public void setNamespaces(String namespaces);
+	
 }

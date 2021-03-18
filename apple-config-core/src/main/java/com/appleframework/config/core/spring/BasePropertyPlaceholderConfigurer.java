@@ -7,10 +7,10 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -38,6 +38,8 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 	protected boolean loadRemote = true;
 		
 	protected Resource[] remotes;
+	
+	protected String namespaces;
 
 	public boolean isLoadRemote() {
 		return loadRemote;
@@ -118,6 +120,7 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 		configurerFactory.setEventListenerClass(eventListenerClass);
 		configurerFactory.setEventListenerClasss(eventListenerClasss);
 		configurerFactory.setEventListeners(eventListeners);
+		configurerFactory.setNamespaces(namespaces);
 		configurerFactory.init();
 		
 		Map<String, Properties> remotePropsMap = configurerFactory.getAllRemoteProperties();
@@ -166,6 +169,10 @@ public class BasePropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 
 	public void setEventListenerClasss(Collection<String> eventListenerClasss) {
 		this.eventListenerClasss = eventListenerClasss;
+	}
+	
+	public void setNamespaces(String namespaces) {
+		this.namespaces = namespaces;
 	}
 	
 }

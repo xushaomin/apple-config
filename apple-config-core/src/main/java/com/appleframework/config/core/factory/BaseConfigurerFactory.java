@@ -1,10 +1,12 @@
 package com.appleframework.config.core.factory;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -42,10 +44,10 @@ public class BaseConfigurerFactory {
 	protected boolean remoteFirst = true;
 	
 	protected Resource[] remotes;
-	
+		
 	protected static final Multimap<Integer, String> NAMESPACE_NAMES = LinkedHashMultimap.create();
 	
-	private static final Multiset<String> NAMESPACE_SETS = HashMultiset.create();
+	protected static final Multiset<String> NAMESPACE_SETS = HashMultiset.create();
 	
 	public static void addNamespaces(Collection<String> namespaces, int order) {
 		for (String namespace : namespaces) {
@@ -229,6 +231,13 @@ public class BaseConfigurerFactory {
 	public Properties onLoadFinish(Properties props) {
 		setSystemProperty(props);
 		return null;
+	}
+
+	public void setNamespaces(String namespaces) {
+		if(!StringUtils.isNullOrEmpty(namespaces)) {
+			List<String> list = Arrays.asList(namespaces.trim().split(","));
+			addNamespaces(list, Integer.MAX_VALUE);
+		}
 	}
 	
 }
